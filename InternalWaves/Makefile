@@ -1,4 +1,5 @@
-SUNTANSHOME=../../main
+SUNTANSHOME1=$(dir $(patsubst %/,%,$(CURDIR)))
+SUNTANSHOME=$(SUNTANSHOME1)main
 include $(SUNTANSHOME)/Makefile.in
 
 ifneq ($(MPIHOME),)
@@ -11,10 +12,17 @@ else
   MPIINC = 
 endif
 
+OPTFLAGS = -O2
+
 ifneq ($(PARMETISHOME),)
   PARMETISINC = -I$(PARMETISHOME)/ParMETISLib
 endif
 
+ifneq ($(NETCDF4HOME),)
+  NETCDFINC = -I$(NETCDF4HOME)/include
+else
+  NETCDFINC = 
+endif
 LD = $(CC) 
 CFLAGS = 
 MATHLIB = -lm
@@ -23,9 +31,9 @@ EXEC = iwaves
 OBJS = 
 SUN = $(SUNTANSHOME)/sun
 datadir = data
-INCLUDES = -I$(SUNTANSHOME) $(MPIINC) $(PARMETISINC)
+INCLUDES = -I$(SUNTANSHOME) $(MPIINC) $(PARMETISINC) $(NETCDFINC)
 DEFS = $(MPIDEF)
-NUMPROCS = 1
+NUMPROCS = 15
 
 all:	data
 
