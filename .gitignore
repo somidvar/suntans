@@ -8,7 +8,7 @@ main/sun
 main/sunplot
 
 # Data Files
-data/
-*.dat.*
+InternalWaves/data/
+*.*
 
 
