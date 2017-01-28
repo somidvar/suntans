@@ -13,6 +13,7 @@
 #include "boundaries.h"
 #include "mynetcdf.h"
 #include "sediments.h"
+#include "initialization.h"
 
 // Local functions
 //static void GetBoundaryVelocity(REAL *ub, int *forced, REAL x, REAL y, REAL t, REAL h, REAL d, REAL omega, REAL amp);
@@ -97,7 +98,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			j = grid->edgep[jptr];
 			ib=grid->grad[2*j];
 			ii+=1;
-
+			
 			for(k=grid->ctop[ib];k<grid->Nk[ib];k++)
 			{
 				phys->boundary_T[jind][k]=bound->boundary_T[k][bound->ind2[ii]];
@@ -105,7 +106,8 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 				//printf("edge: %d, k : %d, boundary_s = %f\n",jind,k,phys->boundary_s[jind][k]);
 			}
 		}
-	}else
+	}
+	else
 	{//No NetCDF
 		for(jptr=grid->edgedist[2];jptr<grid->edgedist[3];jptr++)
 		{
@@ -113,14 +115,30 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			j = grid->edgep[jptr];
 			ib=grid->grad[2*j];
 
+			//suntans default
+			/*
 			for(k=grid->ctop[ib];k<grid->Nk[ib];k++)
 			{
 				phys->boundary_T[jind][k]=0;
 				phys->boundary_s[jind][k]=0;
 			}
+			*/
+			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition
+			REAL CalculatedDepth=0;
+			REAL OceanDepth=ReturnDepth(grid->xe[jptr],grid->ye[jptr]);
+
+			for(k=0;k<grid->Nkc[jptr];k++)
+			{
+				CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				
+				phys->boundary_T[jind][k]=ReturnTemperature(grid->xe[jptr],grid->ye[jptr],CalculatedDepth,OceanDepth);
+				phys->boundary_s[jind][k]=ReturnSalinity(grid->xe[jptr],grid->ye[jptr],CalculatedDepth,prop);
+				
+				CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+			}
 		}
 	}
-
+	//----ATTENTION---- should I keep this?start
   //Type-3 
   // ???? (NEEDS TESTING)
   // Set boundary cell to value in the boundary structure
@@ -151,10 +169,13 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			}
 		}
 	}
+	
 	//Need to communicate the cell data for type 3 boundaries
 	ISendRecvCellData3D(phys->T,grid,myproc,comm);
 	ISendRecvCellData3D(phys->s,grid,myproc,comm);
-
+	
+	//----ATTENTION---- should I keep this?end
+	
 	//Set the edge array to the value in the boundary array
   /* ii=-1;
  int myproc,int myproc,   for(jptr=grid->edgedist[3];jptr<grid->edgedist[4];jptr++) {
@@ -205,11 +226,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	{
 		rampfac = 1.0;
 	}
-
-   // Test
-	REAL amp = 0.25;
-	REAL omega = 7.27e-5;
-
    // Update the netcdf boundary data
 	if(prop->netcdfBdy==1)
 	{ 
@@ -222,6 +238,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii=-1;
 		for(jptr=grid->edgedist[2];jptr<grid->edgedist[3];jptr++)
 		{
+			printf("The model is using NETCDF for Boundary Velocities\n");
 			jind = jptr-grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ii+=1;
@@ -243,15 +260,65 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		{
 			jind = jptr-grid->edgedist[2];
 			j = grid->edgep[jptr];
+			//suntans defualt
+			/*
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
 				phys->boundary_u[jind][k]=0;
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}
+			*/
+			//Added by ----Sorush Omidvar---- to add tidal velocity to the boundaries
+			for(k=grid->etop[j];k<grid->Nke[j];k++)
+			{
+				phys->boundary_u[jind][k]=grid->n1[jind]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);//adding diurnal tide to the boundary
+				phys->boundary_u[jind][k]+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);//adding semi-diurnal tide to the boundary
+				phys->boundary_v[jind][k]=0;
+				phys->boundary_w[jind][k]=0;
+			}
+			if(FrshFrontFlag)//add a velocity profile at the boundary so it pushes the front shoreward and make it stable
+			{
+				//Calculating CBoundaryVelocity in a way that keeps the net flux zero
+				REAL CBoundaryVelocity,DepthBoundaryVelocity,MaxDepthBoundaryVelocity,MinDepthBoundaryVelocity;
+				
+				CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
+				CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
+				CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));//This formula can be derived analytically by getting integral
+				
+				MinDepthBoundaryVelocity=grid->dz[j]/2;//Calculate the minimum depth at the middle of edge
+				MaxDepthBoundaryVelocity=(grid->Nke[j]+0.5)*grid->dz[j];//Calculate the maximum depth at the middle of edge
+				
+				REAL FrontFlux1,FrontFlux2,CalculatedDepth;
+				CalculatedDepth=0;
+				FrontFlux1=0;
+				FrontFlux2=0;
+				for(k=grid->etop[j];k<grid->Nke[j];k++)
+				{
+					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+					if (CalculatedDepth<=prop->CSal)
+						FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CalculatedDepth-prop->CSal));
+					else
+						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));
+					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				}
+				CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one
+				
+				CalculatedDepth=0;
+				for(k=grid->etop[j];k<grid->Nke[j];k++)
+				{
+					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+					if (CalculatedDepth<=prop->CSal)
+						phys->boundary_u[jind][k]+=grid->n1[jind]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CalculatedDepth-prop->CSal));
+					else
+						phys->boundary_u[jind][k]+=grid->n1[jind]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));					
+					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				}
+			}
 		}
 	}
  
+	//----ATTENTION---- should I keep this?start
   // Type-3
 	if(prop->netcdfBdy)
 	{
@@ -307,6 +374,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	ISendRecvCellData3D(phys->uc,grid,myproc,comm);
 	ISendRecvCellData3D(phys->vc,grid,myproc,comm);
 	//ISendRecvCellData3D(phys->wc,grid,myproc,comm);
+	
+	//----ATTENTION---- should I keep this?end
 }
 	
 /*
