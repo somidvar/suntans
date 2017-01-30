@@ -64,6 +64,8 @@ int GetDZ(REAL *dz, REAL depth, REAL localdepth, int Nkmax, int myproc) {
  *
  */
 REAL ReturnDepth(REAL x, REAL y) {
+	//Sunatans default
+	/*
 	REAL Ls, xmid, Ds, D0;
 
 	Ls = 30000;
@@ -78,6 +80,16 @@ REAL ReturnDepth(REAL x, REAL y) {
 		return Ds;
 	else
 		return D0 - (D0 - Ds)*((x - xmid) / Ls + 0.5);
+	*/
+	
+	//Added by ----Sorush Omidvar---- when the shore is located at x=0.Start
+	REAL ABath, BBath, CBath, DBath;
+	ABath = 40;
+    BBath = 0.0009;
+    CBath = 1500;
+    DBath = 35;
+	return ABath*(tanh(-BBath*(-x + CBath))) + DBath;	
+	//Added by ----Sorush Omidvar---- when the shore is located at x=0.End
 }
 
 /*
@@ -101,6 +113,8 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d) {
  *
  */
 REAL ReturnSalinity(REAL x, REAL y, REAL z) {
+	//Suntans default
+	/*
 	REAL deltaS, alphaS, D_pycnocline;
 
 	deltaS = 0.024;
@@ -111,6 +125,61 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z) {
 		return deltaS*pow(-z, 0.0187);
 	else
 		return deltaS*pow(D_pycnocline, 0.0187);
+	*/
+	
+	//Added by ----Sorush Omidvar----. Salinity stratification and front.Start
+	REAL SalinityDifference,SalinityTemporary,FreshWater,SalinityMin,SalinityMax,SalinityVariation,DepthMax,SalinityCorrectionFactor;
+	if(prop->SalinityAdjustmentFlag)
+	{
+		//Finding the maximum and minimum depth to find the asymptote
+		DepthMax=ReturnDepth(prop->SpongeCellLocationX,prop->SpongeCellLocationY);
+		SalinityMax=prop->ASal*(tanh(prop->BSal*(DepthMax -prop->CSal))) + prop->DSal;
+		SalinityMin=prop->ASal*(tanh(prop->BSal*(0 -prop->CSal))) + prop->DSal;
+		SalinityVariation=SalinityMax-SalinityMin;
+		//Scale up or down the salinity variation
+		SalinityCorrectionFactor=prop->SalinitySpecifiedRange/SalinityVariation;		
+		//keeping min and max of salinity profile constant
+		SalinityMax=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(DepthMax -prop->CSal))) + prop->DSal;
+		SalinityDifference=prop->SalinitySpecifiedMax-SalinityMax;
+	}
+	else
+	{
+		//No modification to profile salinity is made
+		SalinityCorrectionFactor=1;
+		SalinityDifference=0;
+	}
+	if(prop->FrshFrontFlag)
+	{
+		REAL RossbyCurvatureRadius,PycnoclineDepth,AFront,DFront;
+		PycnoclineDepth=prop->CSal;
+		//The Rossby wave radius calculated as R=N*H/(n*pi*f) in which N, H, n and f are Brunt-Vaisala, height of the layer(pycnocline), mode and coriolis parameter
+		RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
+		//Calculating the depth of fresh water
+		if(x<=prop->CFront)
+		{
+			AFront=PycnoclineDepth/(1-exp(prop->BFront*RossbyCurvatureRadius));
+			DFront=-AFront*exp(prop->BFront*RossbyCurvatureRadius);
+			FreshWater=PycnoclineDepth;
+		}
+		else if(x<=(prop->CFront+RossbyCurvatureRadius))
+		{
+			FreshWater=AFront*exp(prop->BFront*(x-prop->CFront))+DFront;
+		}	
+		else
+		{
+			FreshWater=0;
+		}
+		SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(-z -FreshWater))) + prop->DSal;
+		SalinityTemporary+=SalinityDifference;
+		return SalinityTemporary;
+	}
+	else
+	{
+		SalinityTemporary=SalinityCorrectionFactor*(prop->ASal*(tanh(prop->BSal*(-z -prop->CSal))) + prop->DSal);
+		SalinityTemporary+=SalinityDifference;
+		return SalinityTemporary;
+	}
+	//Added by ----Sorush Omidvar----. Salinity stratification and front.End
 }
 
 /*
@@ -122,7 +191,7 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z) {
  *
  */
 REAL ReturnTemperature(REAL x, REAL y, REAL z, REAL depth) {
-	return 1;
+	return 10;
 }
 
 /*
