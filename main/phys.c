@@ -4096,6 +4096,38 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->ntout = (int)MPI_GetValue(DATAFILE,"ntout","ReadProperties",myproc);
   (*prop)->ntoutStore = (int)MPI_GetValue(DATAFILE,"ntoutStore","ReadProperties",myproc);
 
+  (*prop)->RadiationBoundary = MPI_GetValue(DATAFILE,"RadiationBoundary","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SpongeMean = MPI_GetValue(DATAFILE,"SpongeMean","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SpongeSTD = MPI_GetValue(DATAFILE,"SpongeSTD","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  
+  (*prop)->DiurnalTidePeriod = MPI_GetValue(DATAFILE,"DiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SemiDiurnalTidePeriod = MPI_GetValue(DATAFILE,"SemiDiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->DiurnalWindPeriod = MPI_GetValue(DATAFILE,"DiurnalWindPeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->DiurnalTideAmplitude = MPI_GetValue(DATAFILE,"DiurnalTideAmplitude","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SemiDiurnalTideAmplitude = MPI_GetValue(DATAFILE,"SemiDiurnalTideAmplitude","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+
+  (*prop)->ASal = MPI_GetValue(DATAFILE,"ASal","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->BSal = MPI_GetValue(DATAFILE,"BSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->CSal = MPI_GetValue(DATAFILE,"CSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->DSal = MPI_GetValue(DATAFILE,"DSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SalinityAdjustmentFlag = MPI_GetValue(DATAFILE,"SalinityAdjustmentFlag","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SalinitySpecifiedRange = MPI_GetValue(DATAFILE,"SalinitySpecifiedRange","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SalinitySpecifiedMax = MPI_GetValue(DATAFILE,"SalinitySpecifiedMax","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  
+  (*prop)->SpongeCellLocationX = MPI_GetValue(DATAFILE,"SpongeCellLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SpongeCellLocationY = MPI_GetValue(DATAFILE,"SpongeCellLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->SpongeEdgeLocationX = MPI_GetValue(DATAFILE,"SpongeEdgeLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SpongeEdgeLocationY = MPI_GetValue(DATAFILE,"SpongeEdgeLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  
+  (*prop)->FrshFrontFlag = MPI_GetValue(DATAFILE,"FrshFrontFlag","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->BFront = MPI_GetValue(DATAFILE,"BFront","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->CFront = MPI_GetValue(DATAFILE,"CFront","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->BruntVaisalaMax = MPI_GetValue(DATAFILE,"BruntVaisalaMax","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  
+  (*prop)->ABoundaryVelocity = MPI_GetValue(DATAFILE,"ABoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->BBoundaryVelocity = MPI_GetValue(DATAFILE,"BBoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->DBoundaryVelocity = MPI_GetValue(DATAFILE,"DBoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar    
+  
   if((*prop)->ntoutStore==0)
     (*prop)->ntoutStore=(*prop)->nsteps;
 

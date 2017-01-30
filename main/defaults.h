@@ -19,6 +19,92 @@
 */
 const int prettyplot_DEFAULT=0;
 
+//Added by ----Sorush Omidvar----
+const REAL DiurnalTidePeriod_DEFAULT=23.93*3600;
+const REAL SemiDiurnalTidePeriod_DEFAULT=12.42*3600;
+const REAL DiurnalWindPeriod_DEFAULT=24*3600;
+const REAL DiurnalTideAmplitude_DEFAULT=0;
+const REAL SemiDiurnalTideAmplitude_DEFAULT=0;
+
+
+//Added by ----Sorush Omidvar----default value for salinity function used by Omidvar and Woodson
+const REAL ASal_DEFAULT=0;
+const REAL BSal_DEFAULT=0;
+const REAL CSal_DEFAULT=0;
+const REAL DSal_DEFAULT=0;
+const int SalinityAdjustmentFlag_DEFAULT=0;
+const REAL SalinitySpecifiedRange_DEFAULT=0;
+const REAL SalinitySpecifiedMax_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default value is not a radiation boundary condition
+*/
+const int RadiationBoundary_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default value for formula exp((-Distance+SpongeMean)/SpongeSTD)
+*/
+const int SpongeMean_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default value for formula exp((-Distance+SpongeMean)/SpongeSTD)
+*/
+const int SpongeSTD_DEFAULT=0;
+
+
+/*Added by ----Sorush Omidvar----
+	default X value for calculation the distance in RampFactor (Xcell-XSponge)
+*/
+const REAL SpongeCellLocationX_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default Y value for calculation the distance in RampFactor (Ycell-XSponge)
+*/
+const REAL SpongeCellLocationY_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default X value for calculation the distance in RampFactor (Xedge-XSponge)
+*/
+const REAL SpongeEdgeLocationX_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default Y value for calculation the distance in RampFactor (Yedge-XSponge)
+*/
+const REAL SpongeEdgeLocationY_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	Wheather or not using a fresh water front used by Omidvar and Woodson, 0 is False and 1 is True
+*/
+const int FrshFrontFlag_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default values used for B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
+*/
+const REAL BFront_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default values used for C coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
+*/
+const REAL CFront_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	default value used for maximum of Brunt-Vaisala for the used density stratification
+*/
+const REAL BruntVaisalaMax_DEFAULT=0;
+/*Added by ----Sorush Omidvar----
+	Default value used for ABoundaryVelocity in the upper velocity profile and the function is U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
+*/
+const REAL ABoundaryVelocity_DEFAULT=0;
+/*Added by ----Sorush Omidvar----
+	Default value used for BBoundaryVelocity in the upper velocity profile and the function is U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
+*/
+const REAL BBoundaryVelocity_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	Default value used for DBoundaryVelocity in the lower velocity profile and the function is U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
+*/
+const REAL DBoundaryVelocity_DEFAULT=0;
+
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0
 */

@@ -190,7 +190,14 @@ typedef struct _propT {
     sponge_decay, thetaramptime, readSalinity, readTemperature, turbmodel, 
     TVD, horiTVD, vertTVD, TVDsalt, TVDtemp, TVDturb, laxWendroff, stairstep, AB, TVDmomentum, conserveMomentum,
     mergeArrays, computeSediments;
-  FILE *FreeSurfaceFID, *HorizontalVelocityFID, *VerticalVelocityFID, *SalinityFID, *BGSalinityFID, 
+	int RadiationBoundary,SalinityAdjustmentFlag,FrshFrontFlag;//Added by ----Sorush Omidvar----
+	
+	REAL SpongeMean,SpongeSTD,SpongeCellLocationX, SpongeCellLocationY,
+	SpongeEdgeLocationX, SpongeEdgeLocationY,DiurnalTidePeriod,SemiDiurnalTidePeriod,DiurnalWindPeriod,
+	DiurnalTideAmplitude,SemiDiurnalTideAmplitude,ASal,BSal,CSal,DSal,SalinitySpecifiedRange,SalinitySpecifiedMax,
+	BFront,CFront,BruntVaisalaMax,ABoundaryVelocity,BBoundaryVelocity,DBoundaryVelocity;//Added by ----Sorush Omidvar----
+  
+	FILE *FreeSurfaceFID, *HorizontalVelocityFID, *VerticalVelocityFID, *SalinityFID, *BGSalinityFID, 
        *InitSalinityFID, *InitTemperatureFID, *TemperatureFID, *PressureFID, *VerticalGridFID, *ConserveFID,    
        *StoreFID, *StartFID, *EddyViscosityFID, *ScalarDiffusivityFID; 
   interpolation interp; int prettyplot;

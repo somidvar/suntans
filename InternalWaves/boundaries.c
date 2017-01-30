@@ -267,7 +267,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}
-			if(FrshFrontFlag)//add a velocity profile at the boundary so it pushes the front shoreward and make it stable
+			if(prop->FrshFrontFlag)//add a velocity profile at the boundary so it pushes the front shoreward and make it stable
 			{
 				//Calculating CBoundaryVelocity in a way that keeps the net flux zero
 				REAL CBoundaryVelocity,DepthBoundaryVelocity,MaxDepthBoundaryVelocity,MinDepthBoundaryVelocity;

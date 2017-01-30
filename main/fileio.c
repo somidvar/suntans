@@ -282,6 +282,165 @@ double GetDefaultValue(char *str, int *status) {
     return prettyplot_DEFAULT;
 
   }
+
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"DiurnalTidePeriod")) {
+
+    return DiurnalTidePeriod_DEFAULT;
+
+  }  
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SemiDiurnalTidePeriod")) {
+
+    return SemiDiurnalTidePeriod_DEFAULT;
+
+  }  
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"DiurnalWindPeriod")) {
+
+    return DiurnalWindPeriod_DEFAULT;
+
+  }    
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"DiurnalTideAmplitude")) {
+
+    return DiurnalTideAmplitude_DEFAULT;
+
+  }    
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SemiDiurnalTideAmplitude")) {
+
+    return SemiDiurnalTideAmplitude_DEFAULT;
+
+  }    
+  
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"ASal")) {
+
+    return ASal_DEFAULT;
+
+  }  
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"BSal")) {
+
+    return BSal_DEFAULT;
+
+  }    
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"CSal")) {
+
+    return CSal_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"DSal")) {
+
+    return DSal_DEFAULT;
+
+  }  
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SalinityAdjustmentFlag")) {
+
+    return SalinityAdjustmentFlag_DEFAULT;
+
+  }  
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SalinitySpecifiedRange")) {
+
+    return SalinitySpecifiedRange_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SalinitySpecifiedMax")) {
+
+    return SalinitySpecifiedMax_DEFAULT;
+
+  }      
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"RadiationBoundary")) {
+
+    return RadiationBoundary_DEFAULT;
+
+  }  
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeMean")) {
+
+    return SpongeMean_DEFAULT;
+
+  }    
+ //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeSTD")) {
+
+    return SpongeSTD_DEFAULT;
+
+  }      
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeCellLocationX")) {
+
+    return SpongeCellLocationX_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeCellLocationY")) {
+
+    return SpongeCellLocationY_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeEdgeLocationX")) {
+
+    return SpongeEdgeLocationX_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"SpongeEdgeLocationY")) {
+
+    return SpongeEdgeLocationY_DEFAULT;
+
+  }      
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"FrshFrontFlag")) {
+
+    return FrshFrontFlag_DEFAULT;
+
+  }  
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"BFront")) {
+
+    return BFront_DEFAULT;
+
+  }    
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"CFront")) {
+
+    return CFront_DEFAULT;
+
+  }  
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"BruntVaisalaMax")) {
+
+    return BruntVaisalaMax_DEFAULT;
+
+  }   
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"ABoundaryVelocity")) {
+
+    return ABoundaryVelocity_DEFAULT;
+
+  }   
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"BBoundaryVelocity")) {
+
+    return BBoundaryVelocity_DEFAULT;
+
+  }   
+   //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"DBoundaryVelocity")) {
+
+    return DBoundaryVelocity_DEFAULT;
+
+  }       
+  
   else if(!strcmp(str,"linearFS")){
 
     return linearFS_DEFAULT;
