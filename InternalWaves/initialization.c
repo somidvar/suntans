@@ -112,7 +112,7 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d) {
  * in phys.c in the InitializePhysicalVariables function.
  *
  */
-REAL ReturnSalinity(REAL x, REAL y, REAL z) {
+REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	//Suntans default
 	/*
 	REAL deltaS, alphaS, D_pycnocline;
