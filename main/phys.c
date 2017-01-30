@@ -610,8 +610,8 @@ void InitializePhysicalVariables(gridT *grid, physT *phys, propT *prop, int mypr
       z = 0;
       for(k=grid->ctop[i];k<grid->Nk[i];k++) {
         z-=grid->dz[k]/2;
-        phys->s[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],z,prop);
-        phys->s0[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],z,prop);
+        phys->s[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],-z,prop);
+        phys->s0[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],-z,prop);
         z-=grid->dz[k]/2;
       }
     }
