@@ -135,42 +135,37 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	}
 	//----ATTENTION---- should I keep this?start
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		printf("\n\n\nWarning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+		printf("Warning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 	/*
 	
 	//Type-3 
 	// ???? (NEEDS TESTING)
 	// Set boundary cell to value in the boundary structure
-	if (prop->netcdfBdy) {
-		printf("The model is using NETCDF for Boundary Scalars\n");
-		ii = -1;
-		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
+	if(prop->netcdfBdy){
+		ii=-1;
+		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			i = grid->cellp[iptr];
-			ii += 1;
-			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {
-				// for(k=0;k<grid->Nk[i];k++){//Go from the very top
+			ii+=1;
+			for(k=grid->ctop[i];k<grid->Nk[i];k++) {
+			// for(k=0;k<grid->Nk[i];k++){//Go from the very top
 				phys->T[i][k] = bound->T[k][bound->ind3[ii]];
 				phys->s[i][k] = bound->S[k][bound->ind3[ii]];
 			}
 		}
-	}
-	else {
-		printf("Please be advised that Type 3 boundary is executed in BoundaryScalars\n");
-		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
+   }else{
+		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			i = grid->cellp[iptr];
-			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {
+			for(k=grid->ctop[i];k<grid->Nk[i];k++) {
 				phys->T[i][k] = 0;
 				phys->s[i][k] = 0;
 			}
 		}
 	}
-	// Need to communicate the cell data for type 3 boundaries
-	ISendRecvCellData3D(phys->T, grid, myproc, comm);
-	ISendRecvCellData3D(phys->s, grid, myproc, comm);
-	
+  // Need to communicate the cell data for type 3 boundaries
+  ISendRecvCellData3D(phys->T,grid,myproc,comm);
+  ISendRecvCellData3D(phys->s,grid,myproc,comm);
 	
 	//----ATTENTION---- should I keep this?end
-	
 	
 	*/
 	
@@ -318,7 +313,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 	
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		printf("\n\n\nWarning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+		printf("\nWarning. Type 3 boundary function is disabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 	
 	/*
 	// Type-3
