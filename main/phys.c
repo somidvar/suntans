@@ -2936,7 +2936,6 @@ static void UPredictor(gridT *grid, physT *phys,
     }
   }
   theta=theta0;
-
   for(j=0;j<grid->Ne;j++) 
     for(k=grid->etop[j];k<grid->Nke[j];k++) 
       if(phys->utmp[j][k]!=phys->utmp[j][k]) {

@@ -228,6 +228,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 
 	// Update the netcdf boundary data
 	if (prop->netcdfBdy == 1) {
+		printf("The model is using NETCDF for Boundary Velocities\n");
 		UpdateBdyNC(prop, grid, myproc, comm);
 	}
 	// Type-2
@@ -263,7 +264,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_w[jind][k]=0;
 			}
 			*/
-			
 			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.Start
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
@@ -297,8 +297,10 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));
 					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				}
-				CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one
-				
+				if(FrontFlux1==0)
+					CBoundaryVelocity=0;
+				else
+					CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one
 				CalculatedDepth=0;
 				for(k=grid->etop[j];k<grid->Nke[j];k++)
 				{
@@ -464,8 +466,6 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 			phys->tau_B[j] = 0;
 		}
 	}
-			   			printf("Hi\n");
-
 }
 
 /*
@@ -476,7 +476,6 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 * This is called from phys.c
 */
 void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
-
 	// Step 1) Allocate the structure array data
 	// Moved to phys.c
 
@@ -580,7 +579,6 @@ void UpdateBdyNC(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 		FluxtoUV(prop, grid, myproc, comm);
 	}
 	//printf("Finished updatiing boundaries on %d\n",myproc);
-
 }//End function
 
 /*
@@ -593,7 +591,6 @@ static void FluxtoUV(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	int ii, j, k, jptr, jind;
 	int ss, n;
 	REAL dz;
-
 	// Step 1) Find the total area of each segment
 	SegmentArea(prop, grid, myproc, comm);
 	//for (n=0;n<bound->Nseg;n++){
@@ -633,7 +630,6 @@ static void SegmentArea(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	int ii, j, k, jptr, jind;
 	int ss, n;
 	REAL dz;
-
 	//Zero the area first
 	for (n = 0; n < bound->Nseg; n++) {
 		bound->localsegarea[n] = 0.0;
@@ -675,7 +671,6 @@ static void SegmentArea(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 
 int isGhostEdge(int j, gridT *grid, int myproc) {
 	int ib, isGhost, nf, ne;
-
 	isGhost = 0;
 	// Cell index
 	ib = grid->grad[2 * j];
@@ -704,7 +699,6 @@ int isGhostEdge(int j, gridT *grid, int myproc) {
  */
 static void MatchBndPoints(propT *prop, gridT *grid, int myproc) {
 	int iptr, jptr, jj, ii, ne, nc1, nc2, nc, j, ib;
-
 
 
 	if (myproc == 0) printf("Boundary NetCDF file grid # type 2 points = %d\n", (int)bound->Ntype2);
@@ -769,7 +763,6 @@ static void MatchBndPoints(propT *prop, gridT *grid, int myproc) {
  * Allocate boundary structure arrays.
  */
 void AllocateBoundaryData(propT *prop, gridT *grid, boundT **bound, int myproc, MPI_Comm comm) {
-
 	int Ntype2, Ntype3, Nseg, Nt, Nk;
 	int j, k, i, n;
 	int n3, n2; // Number of type 2 and 3 on a processor's grid
@@ -1072,7 +1065,6 @@ void AllocateBoundaryData(propT *prop, gridT *grid, boundT **bound, int myproc, 
 void BoundarySediment(gridT *grid, physT *phys, propT *prop) {
 	int jptr, j, ib, k, nosize, i, iptr;
 	REAL z;
-
 	// At the upstream boundary
 	for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 		j = grid->edgep[jptr];
