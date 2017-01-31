@@ -313,7 +313,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 	
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		printf("\nWarning. Type 3 boundary function is disabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+		printf("Warning. Type 3 boundary function is disabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 	
 	/*
 	// Type-3

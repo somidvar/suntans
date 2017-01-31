@@ -261,9 +261,12 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.start
 	if(prop->FrshFrontFlag)
 	{
-		int LastEdgeNumber=grid->edgedist[2];
-		MaxDepthBoundaryVelocity=grid->dz[0]*grid->Nke[grid->edgep[LastEdgeNumber]]-grid->dz[0]/2;//getting the maximum depth at the center of the cell
+		int LayerCounter;
+		MaxDepthBoundaryVelocity=0;
+		for(LayerCounter=0;LayerCounter<grid->Nkmax;LayerCounter++)
+			MaxDepthBoundaryVelocity+=grid->dz[LayerCounter];
 		MinDepthBoundaryVelocity=grid->dz[0]/2;//getting the minimum depth at the center of the cell
+		MaxDepthBoundaryVelocity-=grid->dz[grid->Nkmax-1]/2;//getting the maximum depth at the center of the cell
 
 		CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
 		CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
