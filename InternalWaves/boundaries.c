@@ -118,24 +118,25 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			}
 			*/
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
-			REAL CalculatedDepth=0;
+			REAL CurrentDepth=0;
 			REAL OceanDepth=ReturnDepth(grid->xe[jptr],grid->ye[jptr]);
 
 			for(k=0;k<grid->Nkc[jptr];k++)
 			{
-				CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				
-				phys->boundary_T[jind][k]=ReturnTemperature(grid->xe[jptr],grid->ye[jptr],CalculatedDepth,OceanDepth);
-				phys->boundary_s[jind][k]=ReturnSalinity(grid->xe[jptr],grid->ye[jptr],CalculatedDepth,prop);
+				phys->boundary_T[jind][k]=ReturnTemperature(grid->xe[jptr],grid->ye[jptr],CurrentDepth,OceanDepth);
+				phys->boundary_s[jind][k]=ReturnSalinity(grid->xe[jptr],grid->ye[jptr],CurrentDepth,prop);
 				
-				CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 			}
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. End
 		}
 	}
 	//----ATTENTION---- should I keep this?start
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		printf("Warning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+		if(myproc==0)//Added by ----Sorush Omidvar----
+			printf("Warning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 	/*
 	
 	//Type-3 
@@ -279,32 +280,32 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				MinDepthBoundaryVelocity=grid->dz[j]/2;//Calculate the minimum depth at the middle of edge
 				MaxDepthBoundaryVelocity=(grid->Nke[j]+0.5)*grid->dz[j];//Calculate the maximum depth at the middle of edge
 				
-				REAL FrontFlux1,FrontFlux2,CalculatedDepth;
-				CalculatedDepth=0;
+				REAL FrontFlux1,FrontFlux2,CurrentDepth;
+				CurrentDepth=0;
 				FrontFlux1=0;
 				FrontFlux2=0;
 				for(k=grid->etop[j];k<grid->Nke[j];k++)
 				{
-					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-					if (CalculatedDepth<=prop->CSal)
-						FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CalculatedDepth-prop->CSal));
+					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+					if (CurrentDepth<=prop->CSal)
+						FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
 					else
-						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));
-					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
+					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				}
 				if(FrontFlux1==0)
 					CBoundaryVelocity=0;
 				else
 					CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one
-				CalculatedDepth=0;
+				CurrentDepth=0;
 				for(k=grid->etop[j];k<grid->Nke[j];k++)
 				{
-					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-					if (CalculatedDepth<=prop->CSal)
-						phys->boundary_u[jind][k]+=grid->n1[jind]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CalculatedDepth-prop->CSal));
+					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+					if (CurrentDepth<=prop->CSal)
+						phys->boundary_u[jind][k]+=grid->n1[jind]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
 					else
-						phys->boundary_u[jind][k]+=grid->n1[jind]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));					
-					CalculatedDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+						phys->boundary_u[jind][k]+=grid->n1[jind]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));					
+					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				}
 			}
 			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.End
@@ -313,7 +314,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 	
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		printf("Warning. Type 3 boundary function is disabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+		if(myproc==0)//Added by ----Sorush Omidvar----
+			printf("Warning. Type 3 boundary function is disabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 	
 	/*
 	// Type-3
