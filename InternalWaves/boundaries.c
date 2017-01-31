@@ -84,7 +84,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		}
 	}
 	*/
-
+	
 	// Type-2
 	if (prop->netcdfBdy) {
 		printf("The model is using NETCDF for Boundary Scalars\n");
@@ -133,7 +133,6 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. End
 		}
 	}
-
 	//----ATTENTION---- should I keep this?start
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
 		printf("\n\n\nWarning. Type 3 boundary function is disabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
@@ -231,7 +230,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	if (prop->netcdfBdy == 1) {
 		UpdateBdyNC(prop, grid, myproc, comm);
 	}
-
 	// Type-2
 	if (prop->netcdfBdy) {
 		printf("The model is using NETCDF for Boundary Velocities\n");
@@ -315,7 +313,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.End
 		}
 	}
-
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 	
 	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
@@ -462,11 +459,13 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 
 		for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++) {
 			j = grid->edgep[jptr];
-
-			phys->tau_T[j] = grid->n2[j] * prop->tau_T;
+			//phys->tau_T[j] = grid->n2[j] * prop->tau_T;//Suntans default
+			phys->tau_T[j]=-1.0*rampfac*grid->n1[j]*prop->tau_T*(sin(3*PI/2+(2*PI/prop->DiurnalWindPeriod)*prop->rtime)+1)/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
 			phys->tau_B[j] = 0;
 		}
 	}
+			   			printf("Hi\n");
+
 }
 
 /*
