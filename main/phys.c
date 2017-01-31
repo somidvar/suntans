@@ -1060,7 +1060,7 @@ void Solve(gridT *grid, physT *phys, propT *prop, int myproc, int numprocs, MPI_
   if(prop->laxWendroff && prop->nonlinear==2) LaxWendroff(grid,phys,prop,myproc,comm);
 
   // Initialize the Sponge Layer
-  //InitSponge(grid,myproc);
+  InitSponge(grid,myproc,prop);//Enabled by ----Sorush Omidvar---- to initailize sponge layer
 
   
   // Initialise the meteorological forcing input fields

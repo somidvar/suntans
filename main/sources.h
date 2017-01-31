@@ -19,7 +19,7 @@
 REAL **v_coriolis;
 REAL *rSponge;
 REAL *SpongeCellDistance;//Added by ----Sorush Omidvar----
-REAL *SpongeEdgeDistance;;//Added by ----Sorush Omidvar----
+REAL *SpongeEdgeDistance;//Added by ----Sorush Omidvar----
 REAL CBoundaryVelocity,MinDepthBoundaryVelocity,MaxDepthBoundaryVelocity;;//Added by ----Sorush Omidvar----
 
 void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop);
