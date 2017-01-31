@@ -18,10 +18,13 @@
 
 REAL **v_coriolis;
 REAL *rSponge;
+REAL *SpongeCellDistance;//Added by ----Sorush Omidvar----
+REAL *SpongeEdgeDistance;;//Added by ----Sorush Omidvar----
+REAL CBoundaryVelocity,MinDepthBoundaryVelocity,MaxDepthBoundaryVelocity;;//Added by ----Sorush Omidvar----
 
 void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop);
 void HeatSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT *met, int myproc, MPI_Comm comm);
 void SaltSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT *met);
-void InitSponge(gridT *grid, int myproc);
+void InitSponge(gridT *grid, int myproc, propT *prop);
 
 #endif

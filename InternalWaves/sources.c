@@ -12,6 +12,9 @@
 #include "phys.h"
 #include "sources.h"
 #include "memory.h"
+#include "sendrecv.h"
+#include "math.h"
+#include "initialization.h"
 
 void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	int j, jptr, nc1, nc2, k;
@@ -40,6 +43,75 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	}
 	*/
 	/* Coriolis for a 2d problem */
+	
+	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.Start
+	int EdgeCounter, DepthCounter;
+	if(SpongeCellDistance[0]!=SpongeCellDistance[0])
+	{
+		//InitSponge(grid,myproc,prop);
+		printf("\n\n\nWarning. Initializing of sponge layer is needed.\n\n\n");
+	}
+	if (prop->RadiationBoundary==1)
+	{
+		REAL CalculatedDepth,RampFactor,SalinityTemporary, ThresholdVelocity,ThresholdSalinity;
+		//It is suggested that ThresholdSalinity<ThresholdVelocity. In that way the salinity contour remain horizontal after propagation shoreward; otherwise vertical velocity can mess them since W and U should compensate
+		ThresholdSalinity=0;
+		ThresholdVelocity=0;
+		int CellCounter, DepthCounter, EdgeCounter;
+		
+		//Salinity relaxation at each cell
+		for(CellCounter=0;CellCounter<grid->Nc;CellCounter++)
+		{
+			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/prop->SpongeSTD);
+			if (RampFactor>1-ThresholdSalinity)
+				RampFactor=1;
+			if(ThresholdSalinity>RampFactor)
+				RampFactor=0;
+			CalculatedDepth=0;
+			
+			for(DepthCounter=0;DepthCounter<grid->Nk[CellCounter];DepthCounter++)
+			{			  
+				CalculatedDepth+=grid->dz[DepthCounter]/2;
+				//SUNTANS Default modified by ----Sorush Omidvar---- for the sake of simplicity
+				SalinityTemporary=ReturnSalinity(grid->xv[CellCounter],grid->yv[CellCounter],CalculatedDepth,prop);
+				REAL SalinityDifference=SalinityTemporary-phys->s[CellCounter][DepthCounter];
+				phys->s[CellCounter][DepthCounter]+=SalinityDifference*RampFactor;
+				CalculatedDepth+=grid->dz[DepthCounter]/2;
+			}
+		}
+		
+		//Velocity relaxation at each edge
+		for(EdgeCounter=0;EdgeCounter<grid->Ne;EdgeCounter++)
+		{
+			if(grid->n1[EdgeCounter]!=0)
+			{			
+				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
+				if(RampFactor>1-ThresholdVelocity)//Making the ramp factor 0 after a certain point
+					RampFactor=1;
+				else
+					RampFactor=0;
+				CalculatedDepth=0;
+				for(DepthCounter=0;DepthCounter<grid->Nkc[EdgeCounter];DepthCounter++)
+				{	
+					REAL HorizontalDifference=0;
+					HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);
+					HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);					
+					if(prop->FrshFrontFlag)
+					{
+						CalculatedDepth+=grid->dz[DepthCounter]/2;
+						if (CalculatedDepth<=prop->CSal)
+							HorizontalDifference+=grid->n1[EdgeCounter]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CalculatedDepth-prop->CSal));
+						else
+							HorizontalDifference+=grid->n1[EdgeCounter]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CalculatedDepth-prop->CSal));
+						CalculatedDepth+=grid->dz[DepthCounter]/2;
+					}
+					HorizontalDifference-=usource[EdgeCounter][DepthCounter];
+					usource[EdgeCounter][DepthCounter]+=HorizontalDifference*RampFactor;
+				}
+			}
+		}
+	}
+	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.end
 	if (prop->n == prop->nstart + 1) {
 		printf("Initializing v Coriolis for a 2.5D simulation\n");
 		v_coriolis = (REAL **)SunMalloc(grid->Ne * sizeof(REAL *), "MomentumSource");
@@ -50,7 +122,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				v_coriolis[j][k] = 0.0;
 		}
 	}
-
+	//----Took out by -----Sorush Omidvar---- since the model is 2d.start
+	/*
 	// Hard-code coriolis here so that it can be zero in the main code
 	Coriolis_f = 7.25e-5;
 
@@ -74,6 +147,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 		for (k = grid->etop[j]; k < grid->Nke[j]; k++)
 			v_coriolis[j][k] -= prop->dt*Coriolis_f*InterpToFace(j, k, phys->uc, phys->u, grid);
 	}
+	*/
+	//----Took out by -----Sorush Omidvar---- since the model is 2d.end
 }
 
 /*
@@ -117,7 +192,7 @@ void SaltSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT 
  * Apply a sponge layer to all type 2 boundaries.
  *
  */
-void InitSponge(gridT *grid, int myproc) {
+void InitSponge(gridT *grid, int myproc, propT *prop) {
 	int Nb, p1, p2, mark, g1, g2;
 	int j, n, NeAll, NpAll;
 	REAL *xb, *yb, *xp, *yp, r2;
@@ -130,6 +205,9 @@ void InitSponge(gridT *grid, int myproc) {
 	xp = (REAL *)SunMalloc(NpAll * sizeof(REAL), "InitSponge");
 	yp = (REAL *)SunMalloc(NpAll * sizeof(REAL), "InitSponge");
 	rSponge = (REAL *)SunMalloc(grid->Ne * sizeof(REAL), "InitSponge");
+	
+	SpongeCellDistance= (REAL *)SunMalloc(grid->Nc*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----
+	SpongeEdgeDistance= (REAL *)SunMalloc(grid->Ne*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----	
 
 	// Read in points on entire grid
 	ifile = MPI_FOpen(POINTSFILE, "r", "InitSponge", myproc);
@@ -164,7 +242,37 @@ void InitSponge(gridT *grid, int myproc) {
 		}
 	}
 	fclose(ifile);
+	
+	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. start
+	printf("Sponge Layer Cell Location X=%f, Y=%f\t CPU=%d\n",prop->SpongeCellLocationX,prop->SpongeCellLocationY,myproc);
+	printf("Sponge Layer Edge Location X=%f, Y=%f\t CPU=%d\n",prop->SpongeEdgeLocationX,prop->SpongeEdgeLocationY,myproc);
 
+	int CellCounter;
+	for(CellCounter=0;CellCounter<grid->Nc;CellCounter++)
+	{
+		SpongeCellDistance[CellCounter]=pow(prop->SpongeCellLocationX-grid->xv[CellCounter],2)+pow(prop->SpongeCellLocationY-grid->yv[CellCounter],2);
+		SpongeCellDistance[CellCounter]=sqrt(SpongeCellDistance[CellCounter]);
+	}
+	int EdgeCounter;
+	for(EdgeCounter=0;EdgeCounter<grid->Ne;EdgeCounter++)
+	{
+		SpongeEdgeDistance[EdgeCounter]=pow(prop->SpongeEdgeLocationX-grid->xe[EdgeCounter],2)+pow(prop->SpongeEdgeLocationY-grid->ye[EdgeCounter],2);
+		SpongeEdgeDistance[EdgeCounter]=sqrt(SpongeEdgeDistance[EdgeCounter]);
+	}
+	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. end
+	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.start
+	if(prop->FrshFrontFlag)
+	{
+		int LastEdgeNumber=grid->edgedist[2];
+		MaxDepthBoundaryVelocity=grid->dz[0]*grid->Nke[grid->edgep[LastEdgeNumber]]-grid->dz[0]/2;//getting the maximum depth at the center of the cell
+		MinDepthBoundaryVelocity=grid->dz[0]/2;//getting the minimum depth at the center of the cell
+
+		CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
+		CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
+		CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));	
+	}	
+	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.end
+	
 	// Now compute the minimum distance between the edge on the
 	// local processor and the boundary and place this in rSponge.
 	for (j = 0; j < grid->Ne; j++) {
