@@ -60,9 +60,9 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 		for(CellCounter=0;CellCounter<grid->Nc;CellCounter++)
 		{
 			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/prop->SpongeSTD);
-			if (RampFactor>=1-ThresholdSalinity)
+			if (RampFactor>=1-ThresholdSalinity)//Making the ramp factor 1 after a certain point
 				RampFactor=1;
-			if(ThresholdSalinity>RampFactor)
+			else if (RampFactor<ThresholdSalinity)//Making the ramp factor 0 after a certain point
 				RampFactor=0;
 			CurrentDepth=0;
 			for(k=0;k<grid->Nk[CellCounter];k++)
@@ -82,9 +82,9 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			if(grid->n1[EdgeCounter]!=0)
 			{			
 				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
-				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 0 after a certain point
+				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
 					RampFactor=1;
-				else
+				else if (RampFactor<ThresholdVelocity)//Making the ramp factor 0 after a certain point
 					RampFactor=0;
 				CurrentDepth=0;
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
