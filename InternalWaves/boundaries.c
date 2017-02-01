@@ -263,8 +263,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.Start
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
-				phys->boundary_u[jind][k]=grid->n1[jind]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);//adding diurnal tide to the boundary
-				phys->boundary_u[jind][k]+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);//adding semi-diurnal tide to the boundary
+				phys->boundary_u[jind][k]=grid->n1[jind]*prop->DiurnalTideAmplitude*(1+sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime))/2;//adding diurnal tide to the boundary and makes it positive
+				phys->boundary_u[jind][k]+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*(1+sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime))/2;//adding semi-diurnal tide to the boundary and makes it positive
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}

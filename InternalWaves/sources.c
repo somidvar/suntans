@@ -90,8 +90,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
 				{	
 					REAL HorizontalDifference=0;
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);					
+					HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*(1+sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime))/2;//Making the Diurnal tide positive always
+					HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*(1+sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime))/2;//Making the Semi-Diurnal tide positive always
 					if(prop->FrshFrontFlag)
 					{
 						CurrentDepth+=grid->dz[k]/2;
@@ -101,8 +101,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 							HorizontalDifference+=grid->n1[EdgeCounter]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
 						CurrentDepth+=grid->dz[k]/2;
 					}
-					if (HorizontalDifference!=HorizontalDifference)
-						printf("HorizontalDifference=%f\n",HorizontalDifference);
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
 				}
