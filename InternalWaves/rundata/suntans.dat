@@ -117,7 +117,7 @@ FrshFrontFlag					1				# Wheather or not using a fresh water front used by Omidv
 BFront							0.002			# B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
 CFront 							4500			# The length from shore at which front curvature starts
 BruntVaisalaMax					0.0212			# The maximum of Brunt-Vaisala for the used density stratification
-ABoundaryVelocity				0			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
+ABoundaryVelocity				0.2			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
 BBoundaryVelocity				-2e-1			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
 DBoundaryVelocity				-2e-1			# The velocity profile coefficient for lower layer U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
 ########################################################################

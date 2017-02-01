@@ -272,13 +272,15 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			{
 				//Calculating CBoundaryVelocity in a way that keeps the net flux zero
 				REAL CBoundaryVelocity,DepthBoundaryVelocity,MaxDepthBoundaryVelocity,MinDepthBoundaryVelocity;
+				MaxDepthBoundaryVelocity=0;
+				MinDepthBoundaryVelocity=grid->dz[j]/2;//Calculate the minimum depth at the middle of edge
+				for(k=0;k<grid->Nkmax;k++)
+					MaxDepthBoundaryVelocity+=grid->dz[k];
+				MaxDepthBoundaryVelocity-=grid->dz[grid->Nkmax-1]/2;//Calculate the maximum depth at the middle of edge
 				
 				CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
 				CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
 				CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));//This formula can be derived analytically by getting integral
-				
-				MinDepthBoundaryVelocity=grid->dz[j]/2;//Calculate the minimum depth at the middle of edge
-				MaxDepthBoundaryVelocity=(grid->Nke[j]+0.5)*grid->dz[j];//Calculate the maximum depth at the middle of edge
 				
 				REAL FrontFlux1,FrontFlux2,CurrentDepth;
 				CurrentDepth=0;
@@ -293,7 +295,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
 					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				}
-				if(FrontFlux1==0)
+				if(prop->ABoundaryVelocity==0)
 					CBoundaryVelocity=0;
 				else
 					CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one

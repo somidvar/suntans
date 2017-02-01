@@ -101,6 +101,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 							HorizontalDifference+=grid->n1[EdgeCounter]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
 						CurrentDepth+=grid->dz[k]/2;
 					}
+					if (HorizontalDifference!=HorizontalDifference)
+						printf("HorizontalDifference=%f\n",HorizontalDifference);
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
 				}
@@ -273,7 +275,7 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 		CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
 		CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
 		CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));	
-		
+		/*
 		REAL FrontFlux1,FrontFlux2,CurrentDepth;
 		CurrentDepth=0;
 		FrontFlux1=0;
@@ -287,10 +289,12 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 				FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
 			CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 		}
-		if(FrontFlux1==0)
+		
+		if(prop->ABoundaryVelocity==0)
 			CBoundaryVelocity=0;
 		else
 			CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one		
+		*/
 	}	
 	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.end
 	
