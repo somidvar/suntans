@@ -33,8 +33,8 @@ CdB	                			5e-3			# Drag coefficient at bottom
 CdW								0			# Drag coefficient at sidewalls
 turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5e0 			# Time step 
-Cmax 							1  				# Maximum permissible Courant number
-nsteps 							9e3    			# Number of steps
+Cmax 							0.5				# Maximum permissible Courant number
+nsteps 							9e2    			# Number of steps
 ntout   						18  			# How often to output data
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
@@ -117,7 +117,7 @@ FrshFrontFlag					1				# Wheather or not using a fresh water front used by Omidv
 BFront							0.002			# B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
 CFront 							4500			# The length from shore at which front curvature starts
 BruntVaisalaMax					0.0212			# The maximum of Brunt-Vaisala for the used density stratification
-ABoundaryVelocity				0.2			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
+ABoundaryVelocity				-0.2			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
 BBoundaryVelocity				-2e-1			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
 DBoundaryVelocity				-2e-1			# The velocity profile coefficient for lower layer U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
 ########################################################################
