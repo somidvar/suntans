@@ -274,7 +274,23 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 		CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
 		CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));	
 		
-		
+		REAL FrontFlux1,FrontFlux2,CurrentDepth;
+		CurrentDepth=0;
+		FrontFlux1=0;
+		FrontFlux2=0;
+		for(k=0;k<grid->Nkmax;k++)
+		{
+			CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+			if (CurrentDepth<=prop->CSal)
+				FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
+			else
+				FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
+			CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+		}
+		if(FrontFlux1==0)
+			CBoundaryVelocity=0;
+		else
+			CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one		
 	}	
 	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.end
 	
