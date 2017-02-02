@@ -52,8 +52,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	{
 		REAL CurrentDepth,RampFactor,SalinityTemporary, ThresholdVelocity,ThresholdSalinity;
 		//It is suggested that ThresholdSalinity<ThresholdVelocity. In that way the salinity contour remain horizontal after propagation shoreward; otherwise vertical velocity can mess them since W and U should compensate
-		ThresholdSalinity=0;
-		ThresholdVelocity=0;
+		ThresholdSalinity=0.003;
+		ThresholdVelocity=0.007;
 		int CellCounter, EdgeCounter;
 		
 		//Salinity relaxation at each cell
@@ -111,7 +111,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 					RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
 					if(grid->xe[EdgeCounter]<=(prop->CFront+RossbyCurvatureRadius+500))//Calculating wehere the front gets ended
 					{
-						if(prop->rtime<=3600*30)//Calculating the travel time of velocity profile stabilizer
+						if(prop->rtime<=3600*65)//Calculating the travel time of velocity profile stabilizer
 							for(k=0;k<grid->Nkc[EdgeCounter];k++)
 								usource[EdgeCounter][k]=0;//freezing the front till the stabilizer reach it
 					}
