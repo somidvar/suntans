@@ -647,7 +647,7 @@ void InitializePhysicalVariables(gridT *grid, physT *phys, propT *prop, int mypr
     for(k=0;k<grid->Nkc[j];k++) {
       z-=grid->dz[k]/2;
       phys->u[j][k]=ReturnHorizontalVelocity(
-          grid->xe[j],grid->ye[j],grid->n1[j],grid->n2[j],z);
+          grid->xe[j],grid->ye[j],grid->n1[j],grid->n2[j],z,prop);
       z-=grid->dz[k]/2;
     }
   }

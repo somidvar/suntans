@@ -151,7 +151,8 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	if(prop->FrshFrontFlag)
 	{
 		REAL RossbyCurvatureRadius,PycnoclineDepth,AFront,DFront;
-		PycnoclineDepth=prop->CSal;
+		//PycnoclineDepth=prop->CSal;
+		PycnoclineDepth=21;
 		//The Rossby wave radius calculated as R=N*H/(n*pi*f) in which N, H, n and f are Brunt-Vaisala, height of the layer(pycnocline), mode and coriolis parameter
 		RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
 		//Calculating the depth of fresh water
@@ -203,7 +204,7 @@ REAL ReturnTemperature(REAL x, REAL y, REAL z, REAL depth) {
  * in phys.c in the InitializePhysicalVariables function.
  *
  */
-REAL ReturnHorizontalVelocity(REAL x, REAL y, REAL n1, REAL n2, REAL z) {
+REAL ReturnHorizontalVelocity(REAL x, REAL y, REAL n1, REAL n2, REAL z,propT *prop) {
 	return 0;
 }
 REAL ReturnSediment(REAL x, REAL y, REAL z, int sizeno) {

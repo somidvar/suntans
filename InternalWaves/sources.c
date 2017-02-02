@@ -104,6 +104,18 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
 				}
+				if(prop->FrshFrontFlag)
+				{
+					REAL RossbyCurvatureRadius,PycnoclineDepth;
+					PycnoclineDepth=21;
+					RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
+					if(grid->xe[EdgeCounter]<=(prop->CFront+RossbyCurvatureRadius+500))//Calculating wehere the front gets ended
+					{
+						if(prop->rtime<=3600*30)//Calculating the travel time of velocity profile stabilizer
+							for(k=0;k<grid->Nkc[EdgeCounter];k++)
+								usource[EdgeCounter][k]=0;//freezing the front till the stabilizer reach it
+					}
+				}
 			}
 		}
 	}
@@ -196,6 +208,11 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	char str[BUFFERLENGTH];
 	FILE *ifile;
 
+	if(prop->n==0 && myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
+	{
+		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in sources.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
+		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in initialization.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
+	}
 	NeAll = MPI_GetSize(EDGEFILE, "InitSponge", myproc);
 	NpAll = MPI_GetSize(POINTSFILE, "InitSponge", myproc);
 
