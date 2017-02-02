@@ -204,7 +204,7 @@ REAL ReturnTemperature(REAL x, REAL y, REAL z, REAL depth) {
  * in phys.c in the InitializePhysicalVariables function.
  *
  */
-REAL ReturnHorizontalVelocity(REAL x, REAL y, REAL n1, REAL n2, REAL z,propT *prop) {
+REAL ReturnHorizontalVelocity(REAL x, REAL y, REAL n1, REAL n2, REAL z) {
 	return 0;
 }
 REAL ReturnSediment(REAL x, REAL y, REAL z, int sizeno) {

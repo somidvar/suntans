@@ -208,7 +208,7 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	char str[BUFFERLENGTH];
 	FILE *ifile;
 
-	if(prop->n==0 && myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
+	if(myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
 	{
 		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in sources.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
 		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in initialization.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
