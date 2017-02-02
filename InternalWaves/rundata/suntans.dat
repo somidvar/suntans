@@ -24,8 +24,8 @@ kappa_sH               	 		0       		# Horizontal mass diffusivity
 gamma 							1.0 			# Coefficient of expansivity of temperature.
 kappa_T                 		0       		# Vertical thermal diffusivity
 kappa_TH                		0       		# Horizontal thermal diffusivity
-nu 								1e-4  			# Laminar viscosity of water (m^2 s^-1)
-nu_H 							1e-2      		# Horizontal laminar viscosity of water (m^2 s^-1)
+nu 								1e-3  			# Laminar viscosity of water (m^2 s^-1) for vertical (W*W*dt=0.01*0.01*5)
+nu_H 							1e-1      		# Horizontal laminar viscosity of water (m^2 s^-1) (U*U*dt=0.2*0.2*5)
 z0T	               				0.0 			# Top roughness
 z0B	                			0.0				# Bottom roughness
 CdT	                			0.0 			# Drag coefficient at surface
