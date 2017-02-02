@@ -52,8 +52,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	{
 		REAL CurrentDepth,RampFactor,SalinityTemporary, ThresholdVelocity,ThresholdSalinity;
 		//It is suggested that ThresholdSalinity<ThresholdVelocity. In that way the salinity contour remain horizontal after propagation shoreward; otherwise vertical velocity can mess them since W and U should compensate
-		ThresholdSalinity=0.003;
-		ThresholdVelocity=0.007;
+		ThresholdSalinity=0;
+		ThresholdVelocity=0;
 		int CellCounter, EdgeCounter;
 		
 		//Salinity relaxation at each cell
