@@ -105,6 +105,11 @@ const REAL BBoundaryVelocity_DEFAULT=0;
 */
 const REAL DBoundaryVelocity_DEFAULT=0;
 
+/*Added by ----Sorush Omidvar----
+	Defualt value for freezing time of the front. Withing this period the front will keep its inialized situation by setting USource[i][k]=0 for x<FreezingX; after that, the front will resume its normal situation.
+*/
+const REAL FrontFreezingTime_DEFAULT=0;
+
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0
 */

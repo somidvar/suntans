@@ -42,7 +42,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	}
 	*/
 	/* Coriolis for a 2d problem */
-	
+
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.Start
 	int EdgeCounter;
 	if(SpongeCellDistance[0]!=SpongeCellDistance[0])
@@ -59,7 +59,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 		//Salinity relaxation at each cell
 		for(CellCounter=0;CellCounter<grid->Nc;CellCounter++)
 		{
-			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/prop->SpongeSTD);
+			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/(prop->SpongeSTD));
 			if (RampFactor>=1-ThresholdSalinity)//Making the ramp factor 1 after a certain point
 				RampFactor=1;
 			else if (RampFactor<ThresholdSalinity)//Making the ramp factor 0 after a certain point
@@ -111,7 +111,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 					RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
 					if(grid->xe[EdgeCounter]<=(prop->CFront+RossbyCurvatureRadius+500))//Calculating wehere the front gets ended
 					{
-						if(prop->rtime<=3600*65)//Calculating the travel time of velocity profile stabilizer
+						if(prop->rtime<=3600*60)//Calculating the travel time of velocity profile stabilizer
 							for(k=0;k<grid->Nkc[EdgeCounter];k++)
 								usource[EdgeCounter][k]=0;//freezing the front till the stabilizer reach it
 					}
@@ -207,7 +207,7 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	REAL *xb, *yb, *xp, *yp, r2;
 	char str[BUFFERLENGTH];
 	FILE *ifile;
-
+	
 	if(myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
 	{
 		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in sources.c.\n");//Added by ----Sorush Omidvar----. This should be changed later

@@ -435,12 +435,11 @@ double GetDefaultValue(char *str, int *status) {
 
   }   
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"DBoundaryVelocity")) {
+  if(!strcmp(str,"FrontFreezingTime")) {
 
-    return DBoundaryVelocity_DEFAULT;
+    return FrontFreezingTime_DEFAULT;
 
-  }       
-  
+  }         
   else if(!strcmp(str,"linearFS")){
 
     return linearFS_DEFAULT;

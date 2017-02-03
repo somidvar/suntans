@@ -4126,7 +4126,8 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->ABoundaryVelocity = MPI_GetValue(DATAFILE,"ABoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar  
   (*prop)->BBoundaryVelocity = MPI_GetValue(DATAFILE,"BBoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar  
   (*prop)->DBoundaryVelocity = MPI_GetValue(DATAFILE,"DBoundaryVelocity","ReadProperties",myproc);//Added by ----Sorush Omidvar    
-  
+  (*prop)->FrontFreezingTime = MPI_GetValue(DATAFILE,"FrontFreezingTime","ReadProperties",myproc);//Added by ----Sorush Omidvar      
+
   if((*prop)->ntoutStore==0)
     (*prop)->ntoutStore=(*prop)->nsteps;
 
