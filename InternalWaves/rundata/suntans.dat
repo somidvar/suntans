@@ -121,6 +121,7 @@ ABoundaryVelocity				0.4			# The velocity profile coefficient for upper layer U=
 BBoundaryVelocity				0.04			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
 DBoundaryVelocity				0.2			# The velocity profile coefficient for lower layer U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
 FrontFreezingTime				22e3			# Withing this period the front will be frozen by using Utmp[i][k]=0, after that the front will resume its normal situation
+FrontWindStress					0.0001			# Adding wind on the front to make it more stable. This is Tau value and formulated similar to tau_T= Tau/Rho
 ########################################################################
 #
 # NetCDF / Meteorological / Boundary parameters

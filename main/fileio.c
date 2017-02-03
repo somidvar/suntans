@@ -439,7 +439,13 @@ double GetDefaultValue(char *str, int *status) {
 
     return FrontFreezingTime_DEFAULT;
 
-  }         
+  }   
+  //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"FrontWindStress")) {
+
+    return FrontWindStress_DEFAULT;
+
+  }     
   else if(!strcmp(str,"linearFS")){
 
     return linearFS_DEFAULT;

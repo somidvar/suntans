@@ -110,6 +110,11 @@ const REAL DBoundaryVelocity_DEFAULT=0;
 */
 const REAL FrontFreezingTime_DEFAULT=0;
 
+/*Added by ----Sorush Omidvar----
+	Defualt value for shear stress applies on the front to make it more stable. Please be advised that it is formulated similar to tau_T (dividing by Rho).
+*/
+const REAL FrontWindStress_DEFAULT=0;
+
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0
 */
