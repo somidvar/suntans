@@ -35,7 +35,7 @@ turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5e0 			# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
 nsteps 							15e4   			# Number of steps
-ntout   						12  			# How often to output data
+ntout   						60  			# How often to output data
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
 nonhydrostatic					1				# 0 = hydrostatic, 1 = nonhydrostatic
