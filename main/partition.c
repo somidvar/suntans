@@ -172,7 +172,7 @@ static void GetGraph(GraphType *graph, gridT *grid, MPI_Comm comm)
     MPI_Recv((void *)graph->adjncy, graph->nedges, IDX_DATATYPE, 0, 1, comm, &status);
 
   if (myproc == 0) 
-    GKfree(&gxadj, &gadjncy, LTERM);
+    GKfree((void *)&gxadj, (void *)&gadjncy, LTERM);
 
   MALLOC_CHECK(NULL);
 }
