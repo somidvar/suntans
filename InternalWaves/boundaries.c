@@ -259,6 +259,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_w[jind][k]=0;
 			}
 			*/
+			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.start
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
 				REAL BoundaryUTides=0;
@@ -277,6 +278,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}
+			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.end
 		}
 	}
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
