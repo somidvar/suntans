@@ -483,7 +483,6 @@ static void CheckVertSpaceFile(char *filename, int myproc, int numprocs) {
   int Nkmax_specified, Nkmax_filesize;
   Nkmax_specified = MPI_GetValue(DATAFILE,"Nkmax","VertGrid",myproc);
   Nkmax_filesize = MPI_GetSize(filename,"ReadGrid",myproc);
-
   if(Nkmax_specified!=Nkmax_filesize) {
     printf("Error in reading in grid data!\n");
     printf("Length of %s: %d is not consistent with what is in %s: %d\n",
@@ -506,7 +505,6 @@ static void ReadVertSpaceData(char *filename, gridT *grid, int myproc) {
 static void WriteVertSpaceData(char *filename, gridT *grid, int myproc) {
   int n;
   FILE *ofile = MPI_FOpen(filename,"w","OutputData",myproc);
-
   for(n=0;n<grid->Nkmax;n++)
     fprintf(ofile,"%e\n",grid->dz[n]);
   fclose(ofile);
