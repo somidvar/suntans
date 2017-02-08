@@ -158,20 +158,15 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 		//Calculating the depth of fresh water
 		if(x<=prop->CFront)
 		{
-			//DFront=-AFront*exp(prop->BFront*RossbyCurvatureRadius);
-			//AFront=PycnoclineDepth/(1- (prop->BFront*RossbyCurvatureRadius));
 			DFront=prop->CSal*exp(prop->BFront*RossbyCurvatureRadius)/(exp(prop->BFront*RossbyCurvatureRadius)-1);
 			AFront=prop->CSal-DFront;
 			FreshWater=prop->CSal;
 		}
 		else if(x<=(prop->CFront+RossbyCurvatureRadius))
-		{
 			FreshWater=AFront*exp(prop->BFront*(x-prop->CFront))+DFront;
-		}	
 		else
-		{
 			FreshWater=0;
-		}
+
 		SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -FreshWater))) + prop->DSal;
 		SalinityTemporary+=SalinityDifference;
 		return SalinityTemporary;

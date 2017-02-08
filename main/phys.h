@@ -195,7 +195,7 @@ typedef struct _propT {
 	REAL SpongeMean,SpongeSTD,SpongeCellLocationX, SpongeCellLocationY,
 	SpongeEdgeLocationX, SpongeEdgeLocationY,DiurnalTidePeriod,SemiDiurnalTidePeriod,DiurnalWindPeriod,
 	DiurnalTideAmplitude,SemiDiurnalTideAmplitude,ASal,BSal,CSal,DSal,SalinitySpecifiedRange,SalinitySpecifiedMax,
-	BFront,CFront,BruntVaisalaMax,ABoundaryVelocity,BBoundaryVelocity,DBoundaryVelocity,FrontFreezingTime,FrontWindStress;//Added by ----Sorush Omidvar----
+	BFront,CFront,BruntVaisalaMax,FrontWindStress,FrontTidesWindsDelay;//Added by ----Sorush Omidvar----
   
 	FILE *FreeSurfaceFID, *HorizontalVelocityFID, *VerticalVelocityFID, *SalinityFID, *BGSalinityFID, 
        *InitSalinityFID, *InitTemperatureFID, *TemperatureFID, *PressureFID, *VerticalGridFID, *ConserveFID,    

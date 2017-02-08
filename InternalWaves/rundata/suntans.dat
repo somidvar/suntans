@@ -117,11 +117,8 @@ FrshFrontFlag					1				# Wheather or not using a fresh water front used by Omidv
 BFront							0.002			# B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
 CFront 							4500			# The length from shore at which front curvature starts
 BruntVaisalaMax					0.0212			# The maximum of Brunt-Vaisala for the used density stratification
-ABoundaryVelocity				0			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
-BBoundaryVelocity				0.04			# The velocity profile coefficient for upper layer U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
-DBoundaryVelocity				0.2			# The velocity profile coefficient for lower layer U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
-FrontFreezingTime				0			# With in this period the front will be frozen by using Utmp[i][k]=0 (usource in source.c) for x<Front, after that the front will resume its normal situation
 FrontWindStress					3e-5			# Adding wind on the front to make it more stable. This is Tau value and formulated similar to tau_T= Tau/Rho
+FrontTidesWindsDelay			0				# After this amount the tides and winds will apply on the domain, meanwhile the front gets stable
 ########################################################################
 #
 # NetCDF / Meteorological / Boundary parameters

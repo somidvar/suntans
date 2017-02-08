@@ -245,7 +245,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		}
 	}
 	else { // No NetCDF
-		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
+		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) 
+		{
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			
@@ -258,57 +259,24 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_w[jind][k]=0;
 			}
 			*/
-			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.Start
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
-				phys->boundary_u[jind][k]=grid->n1[jind]*prop->DiurnalTideAmplitude*(1+sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime))/2;//adding diurnal tide to the boundary and makes it positive
-				phys->boundary_u[jind][k]+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*(1+sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime))/2;//adding semi-diurnal tide to the boundary and makes it positive
+				REAL BoundaryUTides=0;
+				if(prop->rtime > prop->FrontTidesWindsDelay)
+				{
+					REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
+					BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+					BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+				}
+				else
+				{
+					BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);
+					BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);
+				}
+				phys->boundary_u[jind][k]=BoundaryUTides;
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}
-			if(prop->FrshFrontFlag)//add a velocity profile at the boundary so it pushes the front shoreward and make it stable
-			{
-				//Calculating CBoundaryVelocity in a way that keeps the net flux zero
-				REAL CBoundaryVelocity,DepthBoundaryVelocity,MaxDepthBoundaryVelocity,MinDepthBoundaryVelocity;
-				MaxDepthBoundaryVelocity=0;
-				MinDepthBoundaryVelocity=grid->dz[j]/2;//Calculate the minimum depth at the middle of edge
-				for(k=0;k<grid->Nkmax;k++)
-					MaxDepthBoundaryVelocity+=grid->dz[k];
-				MaxDepthBoundaryVelocity-=grid->dz[grid->Nkmax-1]/2;//Calculate the maximum depth at the middle of edge
-				
-				CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
-				CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
-				CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));//This formula can be derived analytically by getting integral
-				
-				REAL FrontFlux1,FrontFlux2,CurrentDepth;
-				CurrentDepth=0;
-				FrontFlux1=0;
-				FrontFlux2=0;
-				for(k=grid->etop[j];k<grid->Nke[j];k++)
-				{
-					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-					if (CurrentDepth<=prop->CSal)
-						FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
-					else
-						FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
-					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-				}
-				if(prop->ABoundaryVelocity==0)
-					CBoundaryVelocity=0;
-				else
-					CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one
-				CurrentDepth=0;
-				for(k=grid->etop[j];k<grid->Nke[j];k++)
-				{
-					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-					if (CurrentDepth<=prop->CSal)
-						phys->boundary_u[jind][k]+=grid->n1[jind]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
-					else
-						phys->boundary_u[jind][k]+=grid->n1[jind]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));					
-					CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-				}
-			}
-			//Added by ----Sorush Omidvar---- to add tidal velocity and make the front stable.End
 		}
 	}
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
@@ -461,13 +429,10 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 			j = grid->edgep[jptr];
 			//phys->tau_T[j] = grid->n2[j] * prop->tau_T;//Suntans default
 			phys->tau_B[j] = 0;			
-			if (prop->rtime>prop->FrontFreezingTime)
-			{
-				phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*(sin(3*PI/2+(2*PI/prop->DiurnalWindPeriod)*prop->rtime)+1)/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
-				if(grid->xe[j]<=20000)
-					phys->tau_T[j]+=-1.0*grid->n1[j]*prop->FrontWindStress;
-			}	
-		}
+			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*(sin(3*PI/2+(2*PI/prop->DiurnalWindPeriod)*prop->rtime)+1)/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
+			if(grid->xe[j]<=20000)
+				phys->tau_T[j]+=-1.0*grid->n1[j]*prop->FrontWindStress;
+		}	
 	}
 }
 

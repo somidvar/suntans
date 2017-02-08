@@ -91,29 +91,16 @@ const REAL CFront_DEFAULT=0;
 	default value used for maximum of Brunt-Vaisala for the used density stratification
 */
 const REAL BruntVaisalaMax_DEFAULT=0;
-/*Added by ----Sorush Omidvar----
-	Default value used for ABoundaryVelocity in the upper velocity profile and the function is U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
-*/
-const REAL ABoundaryVelocity_DEFAULT=0;
-/*Added by ----Sorush Omidvar----
-	Default value used for BBoundaryVelocity in the upper velocity profile and the function is U=ABoundaryVelocity*tanh(BBoundaryVelocity*(Z-Pycnocline))
-*/
-const REAL BBoundaryVelocity_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Default value used for DBoundaryVelocity in the lower velocity profile and the function is U=CBoundaryVelocity*tanh(DBoundaryVelocity*(Z-Pycnocline))
-*/
-const REAL DBoundaryVelocity_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Defualt value for freezing time of the front. Withing this period the front will keep its inialized situation by setting USource[i][k]=0 for x<FreezingX; after that, the front will resume its normal situation.
-*/
-const REAL FrontFreezingTime_DEFAULT=0;
 
 /*Added by ----Sorush Omidvar----
 	Defualt value for shear stress applies on the front to make it more stable. Please be advised that it is formulated similar to tau_T (dividing by Rho).
 */
 const REAL FrontWindStress_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
+	Defualt value for for FrontTidesWindsDelay. After this period of time the tides and winds will start.
+*/
+const REAL FrontTidesWindsDelay_DEFAULT=0;
 
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0

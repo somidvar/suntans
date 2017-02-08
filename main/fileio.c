@@ -422,30 +422,18 @@ double GetDefaultValue(char *str, int *status) {
     return BruntVaisalaMax_DEFAULT;
 
   }   
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"ABoundaryVelocity")) {
-
-    return ABoundaryVelocity_DEFAULT;
-
-  }   
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"BBoundaryVelocity")) {
-
-    return BBoundaryVelocity_DEFAULT;
-
-  }   
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"FrontFreezingTime")) {
-
-    return FrontFreezingTime_DEFAULT;
-
-  }   
   //Added by ----Sorush Omidvar----
   if(!strcmp(str,"FrontWindStress")) {
 
     return FrontWindStress_DEFAULT;
 
   }     
+  //Added by ----Sorush Omidvar----
+  if(!strcmp(str,"FrontTidesWindsDelay")) {
+
+    return FrontTidesWindsDelay_DEFAULT;
+
+  }       
   else if(!strcmp(str,"linearFS")){
 
     return linearFS_DEFAULT;

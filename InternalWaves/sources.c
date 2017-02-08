@@ -41,7 +41,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	  }
 	}
 	*/
-	/* Coriolis for a 2d problem */
 
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.Start
 	int EdgeCounter;
@@ -68,7 +67,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			for(k=0;k<grid->Nk[CellCounter];k++)
 			{			  
 				CurrentDepth+=grid->dz[k]/2;
-				//SUNTANS Default modified by ----Sorush Omidvar---- for the sake of simplicity
 				SalinityTemporary=ReturnSalinity(grid->xv[CellCounter],grid->yv[CellCounter],CurrentDepth,prop);
 				REAL SalinityDifference=SalinityTemporary-phys->s[CellCounter][k];
 				phys->s[CellCounter][k]+=SalinityDifference*RampFactor;
@@ -82,44 +80,35 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			if(grid->n1[EdgeCounter]!=0)
 			{			
 				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
+				
 				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
 					RampFactor=1;
 				else if (RampFactor<ThresholdVelocity)//Making the ramp factor 0 after a certain point
 					RampFactor=0;
-				CurrentDepth=0;
+				
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
-				{	
+				{
 					REAL HorizontalDifference=0;
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*(1+sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime))/2;//Making the Diurnal tide positive always
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*(1+sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime))/2;//Making the Semi-Diurnal tide positive always
-					if(prop->FrshFrontFlag)
+					if(prop->rtime>prop->FrontTidesWindsDelay)
 					{
-						CurrentDepth+=grid->dz[k]/2;
-						if (CurrentDepth<=prop->CSal)
-							HorizontalDifference+=grid->n1[EdgeCounter]*prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
-						else
-							HorizontalDifference+=grid->n1[EdgeCounter]*CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
-						CurrentDepth+=grid->dz[k]/2;
+						REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
+						HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+						HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+					}
+					else
+					{
+						HorizontalDifference=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
+						HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
 					}
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
-				}
-				if(prop->FrshFrontFlag)
-				{
-					REAL RossbyCurvatureRadius,PycnoclineDepth;
-					PycnoclineDepth=21;
-					RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
-					if(grid->xe[EdgeCounter]<=(prop->CFront+RossbyCurvatureRadius+500))//Calculating wehere the front gets ended
-					{
-						if(prop->rtime<=prop->FrontFreezingTime)//Calculating the travel time of velocity profile stabilizer
-							for(k=0;k<grid->Nkc[EdgeCounter];k++)
-								usource[EdgeCounter][k]=0;//freezing the front till the stabilizer reach it
-					}
 				}
 			}
 		}
 	}
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.end
+	
+	/* Coriolis for a 2d problem */
 	if (prop->n == prop->nstart + 1) {
 		printf("Initializing v Coriolis for a 2.5D simulation\n");
 		fflush(stdout);
@@ -209,10 +198,8 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	FILE *ifile;
 	
 	if(myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
-	{
-		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in sources.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
 		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in initialization.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
-	}
+
 	NeAll = MPI_GetSize(EDGEFILE, "InitSponge", myproc);
 	NpAll = MPI_GetSize(POINTSFILE, "InitSponge", myproc);
 
@@ -278,39 +265,6 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 		SpongeEdgeDistance[EdgeCounter]=sqrt(SpongeEdgeDistance[EdgeCounter]);
 	}
 	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. end
-	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.start
-	if(prop->FrshFrontFlag)
-	{
-		MaxDepthBoundaryVelocity=0;
-		for(k=0;k<grid->Nkmax;k++)
-			MaxDepthBoundaryVelocity+=grid->dz[k];
-		MinDepthBoundaryVelocity=grid->dz[0]/2;//getting the minimum depth at the center of the cell
-		MaxDepthBoundaryVelocity-=grid->dz[grid->Nkmax-1]/2;//getting the maximum depth at the center of the cell
-
-		CBoundaryVelocity=prop->ABoundaryVelocity*prop->DBoundaryVelocity/prop->BBoundaryVelocity;
-		CBoundaryVelocity*=log(cosh(prop->BBoundaryVelocity*(MinDepthBoundaryVelocity-prop->CSal)));
-		CBoundaryVelocity/=log(cosh(prop->DBoundaryVelocity*(MaxDepthBoundaryVelocity-prop->CSal)));	
-
-		REAL FrontFlux1,FrontFlux2,CurrentDepth;
-		CurrentDepth=0;
-		FrontFlux1=0;
-		FrontFlux2=0;
-		for(k=0;k<grid->Nkmax;k++)
-		{
-			CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-			if (CurrentDepth<=prop->CSal)
-				FrontFlux1+=prop->ABoundaryVelocity*tanh(prop->BBoundaryVelocity*(CurrentDepth-prop->CSal));
-			else
-				FrontFlux2+=CBoundaryVelocity*tanh(prop->DBoundaryVelocity*(CurrentDepth-prop->CSal));
-			CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-		}
-		
-		if(prop->ABoundaryVelocity==0)
-			CBoundaryVelocity=0;
-		else
-			CBoundaryVelocity*=fabs(FrontFlux1/FrontFlux2);//The net flux is not zero because CBoundaryVelocity is found in continuous world rather than a discrete one		
-	}	
-	//Added by ----Sorush Omidvar----. Calculating CBoundaryVelocity based on its analytical value derived by integrals.end
 	
 	// Now compute the minimum distance between the edge on the
 	// local processor and the boundary and place this in rSponge.
