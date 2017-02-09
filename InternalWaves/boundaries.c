@@ -266,8 +266,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
 				if (TimePhase<0)
 					TimePhase=0;
-				BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
-				BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=-1*grid->n1[j]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=-1*grid->n1[j]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
 
 				phys->boundary_u[jind][k]=BoundaryUTides;
 				phys->boundary_v[jind][k]=0;
@@ -430,7 +430,7 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 			REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;
 			if (TimePhase<0)
 				TimePhase=0;
-			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*sin(PI+(2*PI/prop->DiurnalWindPeriod)*TimePhase);//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
+			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*(1+sin(2*PI/prop->DiurnalWindPeriod*TimePhase))/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
 			if(prop->FrshFrontFlag)
 				if(grid->xe[j]<=prop->FrontWindStabilizerX)
 					phys->tau_T[j]+=-1.0*grid->n1[j]*prop->FrontWindStress;
