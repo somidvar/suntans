@@ -263,17 +263,12 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
 				REAL BoundaryUTides=0;
-				if(prop->rtime > prop->FrontTidesWindsDelay)
-				{
-					REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
-					BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
-					BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
-				}
-				else
-				{
-					BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin((2*PI/prop->DiurnalTidePeriod)*prop->rtime);
-					BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin((2*PI/prop->SemiDiurnalTidePeriod)*prop->rtime);
-				}
+				REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
+				if (TimePhase<0)
+					TimePhase=0;
+				BoundaryUTides+=grid->n1[jind]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=grid->n1[jind]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+
 				phys->boundary_u[jind][k]=BoundaryUTides;
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
@@ -427,13 +422,18 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 		REAL RossbyCurvatureRadius,PycnoclineDepth;
 		PycnoclineDepth=21;
 		RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
-		for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++) {
+		for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++)
+		{
 			j = grid->edgep[jptr];
 			//phys->tau_T[j] = grid->n2[j] * prop->tau_T;//Suntans default
 			phys->tau_B[j] = 0;			
-			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*(sin(3*PI/2+(2*PI/prop->DiurnalWindPeriod)*prop->rtime)+1)/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
-			if(grid->xe[j]<=20000)
-				phys->tau_T[j]+=-1.0*grid->n1[j]*prop->FrontWindStress;
+			REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;
+			if (TimePhase<0)
+				TimePhase=0;
+			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*sin(PI+(2*PI/prop->DiurnalWindPeriod)*TimePhase);//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from zero
+			if(prop->FrshFrontFlag)
+				if(grid->xe[j]<=prop->FrontWindStabilizerX)
+					phys->tau_T[j]+=-1.0*grid->n1[j]*prop->FrontWindStress;
 		}	
 	}
 }

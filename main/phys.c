@@ -4124,6 +4124,7 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->BruntVaisalaMax = MPI_GetValue(DATAFILE,"BruntVaisalaMax","ReadProperties",myproc);//Added by ----Sorush Omidvar  
   (*prop)->FrontWindStress = MPI_GetValue(DATAFILE,"FrontWindStress","ReadProperties",myproc);//Added by ----Sorush Omidvar      
   (*prop)->FrontTidesWindsDelay = MPI_GetValue(DATAFILE,"FrontTidesWindsDelay","ReadProperties",myproc);//Added by ----Sorush Omidvar      
+  (*prop)->FrontWindStabilizerX = MPI_GetValue(DATAFILE,"FrontWindStabilizerX","ReadProperties",myproc);//Added by ----Sorush Omidvar      
 
   if((*prop)->ntoutStore==0)
     (*prop)->ntoutStore=(*prop)->nsteps;

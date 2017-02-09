@@ -119,6 +119,7 @@ CFront 							4500			# The length from shore at which front curvature starts
 BruntVaisalaMax					0.0212			# The maximum of Brunt-Vaisala for the used density stratification
 FrontWindStress					3e-5			# Adding wind on the front to make it more stable. This is Tau value and formulated similar to tau_T= Tau/Rho
 FrontTidesWindsDelay			0				# After this amount the tides and winds will apply on the domain, meanwhile the front gets stable
+FrontWindStabilizerX			20000			# The wind profile will affect all the edges from 0 to this point
 ########################################################################
 #
 # NetCDF / Meteorological / Boundary parameters

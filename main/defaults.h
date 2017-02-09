@@ -102,6 +102,11 @@ const REAL FrontWindStress_DEFAULT=0;
 */
 const REAL FrontTidesWindsDelay_DEFAULT=0;
 
+/*Added by ----Sorush Omidvar----
+	Defualt value for for FrontWindStabilizerX. The winds affect all edges from X=0 to X=FrontWindStabilizerX.
+*/
+const REAL FrontWindStabilizerX_DEFAULT=0;
+
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0
 */
