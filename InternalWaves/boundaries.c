@@ -266,8 +266,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
 				if (TimePhase<0)
 					TimePhase=0;
-				BoundaryUTides+=-1*grid->n1[j]*prop->DiurnalTideAmplitude*(1+sin(2*PI/prop->DiurnalTidePeriod*TimePhase))/2;
-				BoundaryUTides+=-1*grid->n1[j]*prop->SemiDiurnalTideAmplitude*(1+sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase))/2;
+				BoundaryUTides+=-1*grid->n1[j]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=-1*grid->n1[j]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
 
 				phys->boundary_u[jind][k]=BoundaryUTides;
 				phys->boundary_v[jind][k]=0;
