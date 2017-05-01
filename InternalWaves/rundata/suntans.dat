@@ -102,9 +102,9 @@ SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationX				70000			# X Location of Sponge Layer
 SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod
-DiurnalTideAmplitude			0	# Diurnal Tidal amplitude at sea-side for 60 cm wave at shore-side -1.98e-2
+DiurnalTideAmplitude			0	# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -3.5e-2
 SemiDiurnalTidePeriod			44712			# Semi-Diurnal tidal priod
-SemiDiurnalTideAmplitude		0	# Semi-Diurnal Tidal amplitude at sea-side for 75 cm wave at shore-side -4.83e-2
+SemiDiurnalTideAmplitude		0	# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -10e-2
 DiurnalWindPeriod				86400			# Diurnal Wind Period
 ASal							0.821			# Salinity range variation Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 BSal							0.1				# Salinity gradient used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
