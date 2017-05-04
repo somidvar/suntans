@@ -51,8 +51,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	{
 		REAL CurrentDepth,RampFactor,SalinityTemporary, ThresholdVelocity,ThresholdSalinity;
 		//It is suggested that ThresholdSalinity<ThresholdVelocity. In that way the salinity contour remain horizontal after propagation shoreward; otherwise vertical velocity can mess them since W and U should compensate
-		ThresholdSalinity=0;
-		ThresholdVelocity=0;
+		ThresholdSalinity=0.01;
+		ThresholdVelocity=0.01;
 		int CellCounter, EdgeCounter;
 		
 		//Salinity relaxation at each cell
@@ -61,8 +61,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/(prop->SpongeSTD));
 			if (RampFactor>=1-ThresholdSalinity)//Making the ramp factor 1 after a certain point
 				RampFactor=1;
-			else if (RampFactor<ThresholdSalinity)//Making the ramp factor 0 after a certain point
-				RampFactor=0;
 			CurrentDepth=0;
 			for(k=0;k<grid->Nk[CellCounter];k++)
 			{			  
@@ -83,8 +81,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				
 				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
 					RampFactor=1;
-				else if (RampFactor<ThresholdVelocity)//Making the ramp factor 0 after a certain point
-					RampFactor=0;
 				
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
 				{
