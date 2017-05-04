@@ -551,11 +551,12 @@ void WriteOutputNC(propT *prop, gridT *grid, physT *phys, metT *met, int blowup,
 	ERR(retval);
     
     /* Write to the physical variables*/
+	
     if ((retval = nc_inq_varid(ncid, "eta", &varid)))
 	ERR(retval);
     if ((retval = nc_put_vara_double(ncid, varid, starttwo, counttwo, phys->h )))
  	ERR(retval);
-    
+	
     if ((retval = nc_inq_varid(ncid, "uc", &varid)))
 	ERR(retval);
     ravel(phys->uc, phys->tmpvar, grid);

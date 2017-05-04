@@ -79,6 +79,19 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			{			
 				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
 				
+
+				if(grid->xe[EdgeCounter]==84000)
+				{
+					if(fmod(prop->rtime,3600)==0)
+					{
+						REAL TotalDepth=0;
+						for(k=0;k<grid->Nkc[EdgeCounter];k++)
+						{
+							TotalDepth+=grid->dz[k];					
+						}
+						printf("Time=%f\tX=%f\tTotal depth=%f\n",prop->rtime,grid->xe[EdgeCounter],TotalDepth);
+					}
+				}
 				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
 					RampFactor=1;
 				
