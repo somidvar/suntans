@@ -260,14 +260,36 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			}
 			*/
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.start
+			
+			REAL HeightCell1,HeightCell2,ElevationCell1,ElevationCell2,ElevationAverage,Cell1Depth,DepthCell1,DepthCell2,DepthAverage,EdgeElevation,ElevationCorrectionFactor;	
+			int NeighbourCell1,NeighbourCell2;
+			
+			NeighbourCell1=grid->grad[2*j];
+			NeighbourCell2=grid->grad[2*j+1];				
+			if (NeighbourCell1==-1)
+				NeighbourCell1=NeighbourCell2;
+			if (NeighbourCell2==-1)
+				NeighbourCell2=NeighbourCell1;
+			if (NeighbourCell1==-1 && NeighbourCell2==-1)
+				printf("\n\n\nWarning. There is someting wrong with the grid. Take a look at the boundaries.c\n\n\n");
+			
+			ElevationCell1=phys->h[NeighbourCell1];
+			ElevationCell2=phys->h[NeighbourCell2];
+			ElevationAverage=(ElevationCell1+ElevationCell2)/2;
+			DepthCell1=ReturnDepth(grid->xv[NeighbourCell1],grid->yv[NeighbourCell1]);
+			DepthCell2=ReturnDepth(grid->xv[NeighbourCell2],grid->yv[NeighbourCell2]);
+			DepthAverage=(DepthCell1+DepthCell2)/2;
+			EdgeElevation=(DepthAverage+ElevationAverage);
+			ElevationCorrectionFactor=DepthAverage/EdgeElevation;//Correction factor for velocity to take into account that the sea level changes at the boundary so the velocity should be corrected to keep the discharge constant
+						
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{
 				REAL BoundaryUTides=0;
 				REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
 				if (TimePhase<0)
 					TimePhase=0;
-				BoundaryUTides+=-1*grid->n1[j]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
-				BoundaryUTides+=-1*grid->n1[j]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=-1*grid->n1[j]*ElevationCorrectionFactor*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+				BoundaryUTides+=-1*grid->n1[j]*ElevationCorrectionFactor*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
 
 				phys->boundary_u[jind][k]=BoundaryUTides;
 				phys->boundary_v[jind][k]=0;

@@ -77,32 +77,39 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 		{
 			if(grid->n1[EdgeCounter]!=0)
 			{			
-				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
+				REAL HeightCell1,HeightCell2,ElevationCell1,ElevationCell2,ElevationAverage,Cell1Depth,DepthCell1,DepthCell2,DepthAverage,EdgeElevation,ElevationCorrectionFactor;	
+				int NeighbourCell1,NeighbourCell2;
 				
-
-				if(grid->xe[EdgeCounter]==84000)
-				{
-					if(fmod(prop->rtime,3600)==0)
-					{
-						REAL TotalDepth=0;
-						for(k=0;k<grid->Nkc[EdgeCounter];k++)
-						{
-							TotalDepth+=grid->dz[k];					
-						}
-						printf("Time=%f\tX=%f\tTotal depth=%f\n",prop->rtime,grid->xe[EdgeCounter],TotalDepth);
-					}
-				}
+				NeighbourCell1=grid->grad[2*EdgeCounter];
+				NeighbourCell2=grid->grad[2*EdgeCounter+1];				
+				if (NeighbourCell1==-1)
+					NeighbourCell1=NeighbourCell2;
+				if (NeighbourCell2==-1)
+					NeighbourCell2=NeighbourCell1;
+				if (NeighbourCell1==-1 && NeighbourCell2==-1)
+					printf("\n\n\nWarning. There is someting wrong with the grid. Take a look at the sources.c\n\n\n");
+				
+				ElevationCell1=phys->h[NeighbourCell1];
+				ElevationCell2=phys->h[NeighbourCell2];
+				ElevationAverage=(ElevationCell1+ElevationCell2)/2;
+				DepthCell1=ReturnDepth(grid->xv[NeighbourCell1],grid->yv[NeighbourCell1]);
+				DepthCell2=ReturnDepth(grid->xv[NeighbourCell2],grid->yv[NeighbourCell2]);
+				DepthAverage=(DepthCell1+DepthCell2)/2;
+				EdgeElevation=(DepthAverage+ElevationAverage);
+				ElevationCorrectionFactor=DepthAverage/EdgeElevation;//Correction factor for velocity to take into account that the sea level changes at the boundary so the velocity should be corrected to keep the discharge constant		
+				
+				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
 				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
 					RampFactor=1;
-				
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
 				{
 					REAL HorizontalDifference=0;
 					REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
 					if (TimePhase<0)
 						TimePhase=0;
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
-					HorizontalDifference+=grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+						
+					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
+					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
 
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
