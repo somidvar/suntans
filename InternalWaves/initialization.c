@@ -173,7 +173,7 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	}
 	else
 	{
-		SalinityTemporary=SalinityCorrectionFactor*(prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal);
+		SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
 		SalinityTemporary+=SalinityDifference;
 		return SalinityTemporary;
 	}
