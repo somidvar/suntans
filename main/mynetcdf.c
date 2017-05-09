@@ -544,6 +544,11 @@ void WriteOutputNC(propT *prop, gridT *grid, physT *phys, metT *met, int blowup,
         printf("Outputting blowup data to netcdf at step %d of %d\n",prop->n,prop->nsteps+prop->nstart);
     }
     
+	printf("The program is here in mynetcdf.c\n");
+	fflush(stdout);
+	
+	
+	
     /* Write the time data*/
     if ((retval = nc_inq_varid(ncid, "time", &varid)))
 	ERR(retval);
