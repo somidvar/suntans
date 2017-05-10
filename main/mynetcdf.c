@@ -308,14 +308,11 @@ static void nc_write_3D_merge(int ncid, int tstep, REAL **array, propT *prop, gr
    //size_t startthree[] = {prop->nctimectr,0,0};
    size_t startthree[] = {tstep,0,0};
    size_t countthree[] = {1,grid->Nkmax,grid->Nc};
-
-    MergeCellCentered3DArray(array,grid,numprocs,myproc,comm);   
-
+   MergeCellCentered3DArray(array,grid,numprocs,myproc,comm);   
     if(myproc==0){
     	countthree[2]=mergedGrid->Nc;
 	if ((retval = nc_inq_varid(ncid, varname, &varid)))
 	    ERR(retval);
-
 	//Roll the array out into a vector
         for(i=0;i<mergedGrid->Nc;i++){
 	    for(k=0;k<mergedGrid->Nkmax;k++){
@@ -478,7 +475,8 @@ void WriteOutputNCmerge(propT *prop, gridT *grid, physT *phys, metT *met, int bl
     nc_write_3D_merge(ncid,prop->nctimectr,  phys->uc, prop, grid, "uc",0, numprocs, myproc, comm);
     nc_write_3D_merge(ncid,prop->nctimectr,  phys->vc, prop, grid, "vc",0, numprocs, myproc, comm);
     nc_write_3D_merge(ncid,prop->nctimectr,  phys->nu_tv, prop, grid, "nu_v",0, numprocs, myproc, comm);
-
+	//Added by ----Sorush Omidvar---- to implement non-hydrostatic pressure in the NETCDF file
+	nc_write_3D_merge(ncid,prop->nctimectr,  phys->q, prop, grid, "q",0, numprocs, myproc, comm);
 
     if(prop->beta>0)
 	nc_write_3D_merge(ncid,prop->nctimectr,  phys->s, prop, grid, "salt",0, numprocs, myproc, comm);
@@ -543,12 +541,7 @@ void WriteOutputNC(propT *prop, gridT *grid, physT *phys, metT *met, int blowup,
       else
         printf("Outputting blowup data to netcdf at step %d of %d\n",prop->n,prop->nsteps+prop->nstart);
     }
-    
-	printf("The program is here in mynetcdf.c\n");
-	fflush(stdout);
-	
-	
-	
+    	
     /* Write the time data*/
     if ((retval = nc_inq_varid(ncid, "time", &varid)))
 	ERR(retval);
@@ -1205,7 +1198,19 @@ static void InitialiseOutputNCugridMerge(propT *prop, physT *phys, gridT *grid, 
     nc_addattr(ncid, varid,"location","face");
     nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
    }
-   
+   //Added by ----Sorush Omidvar---- to implement non-hydrostatic pressure in NETCDF file
+     if ((retval = nc_def_var(ncid,"q",NC_DOUBLE,3,dimidthree,&varid)))
+      ERR(retval);
+     if ((retval = nc_def_var_fill(ncid,varid,nofill,&FILLVALUE))) // Sets a _FillValue attribute
+      ERR(retval);
+     if ((retval = nc_def_var_deflate(ncid,varid,0,DEFLATE,DEFLATELEVEL))) // Compresses the variable
+      ERR(retval);
+     nc_addattr(ncid, varid,"long_name","Non-hydrostatic pressure");
+     nc_addattr(ncid, varid,"units","Unknown");
+     nc_addattr(ncid, varid,"mesh","suntans_mesh");
+     nc_addattr(ncid, varid,"location","face");
+     nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
+	 
    //temperature
    if(prop->gamma>0){
      if ((retval = nc_def_var(ncid,"temp",NC_DOUBLE,3,dimidthree,&varid)))
