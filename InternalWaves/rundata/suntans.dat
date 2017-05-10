@@ -15,7 +15,7 @@ dzsmall							0.1				# Smallest grid spacing ratio before correction
 scaledepth 						0 				# Scale the depth by scalefactor
 scaledepthfactor 				0 				# Depth scaling factor (to test deep grids with explicit methods)
 thetaramptime	        		0  				# Timescale over which theta is ramped from 1 to theta (fs theta only)
-beta							6.05e-4			# Expansivity of salt
+beta							7.71e-4			# Expansivity of salt (previously 6.05e-4)
 theta							0.55			# 0: fully explicit, 1: fully implicit
 thetaS							0.55			# For scalar advection
 thetaB							0.55			# For scalar advection
