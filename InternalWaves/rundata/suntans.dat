@@ -34,8 +34,8 @@ CdW								0				# Drag coefficient at sidewalls
 turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5e0 			# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							12e0   		# Number of steps 6e5
-ntout   						6  		# How often to output data 60
+nsteps 							6e5		   		# Number of steps 6e5
+ntout   						60		  		# How often to output data 60
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
 nonhydrostatic					1				# 0 = hydrostatic, 1 = nonhydrostatic
@@ -102,9 +102,9 @@ SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationX				85000			# X Location of Sponge Layer
 SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod
-DiurnalTideAmplitude			0	# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -3.5e-2
+DiurnalTideAmplitude			0	# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -2.95e-2
 SemiDiurnalTidePeriod			44712			# Semi-Diurnal tidal priod
-SemiDiurnalTideAmplitude		-0.1	# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -10e-2
+SemiDiurnalTideAmplitude		-0.1	# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -7.5e-2
 DiurnalWindPeriod				86400			# Diurnal Wind Period
 ASal							0.821			# Salinity range variation Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 BSal							0.1				# Salinity gradient used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
