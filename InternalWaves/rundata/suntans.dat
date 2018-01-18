@@ -29,7 +29,7 @@ nu_H 							1e-1      		# Horizontal laminar viscosity of water (m^2 s^-1) (U*U*
 z0T	               				0.0 			# Top roughness
 z0B	                			0.0				# Bottom roughness
 CdT	                			0.0 			# Drag coefficient at surface
-CdB	                			5e-3			# Drag coefficient at bottom
+CdB	                			1e-3			# Drag coefficient at bottom
 CdW								0				# Drag coefficient at sidewalls
 turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5e0 			# Time step 
@@ -38,7 +38,7 @@ nsteps 							6e5		   		# Number of steps 6e5
 ntout   						60		  		# How often to output data 60
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
-nonhydrostatic					1				# 0 = hydrostatic, 1 = nonhydrostatic
+nonhydrostatic					0				# 0 = hydrostatic, 1 = nonhydrostatic
 cgsolver						1				# 0 = GS, 1 = CG
 maxiters						1e3				# Maximum number of CG iterations
 qmaxiters						2e3				# Maximum number of CG iterations for nonhydrostatic pressure
@@ -94,9 +94,9 @@ hprecond						1 				# 0:No preconditioner for free-surface solver, 1:Jacobi prec
 interp							0 				# default value uses classic SUNTANS Perot method (type 0) vs Quadratic (type 1)
 linearFS						0 				# value is for a nonlinear free surface
 smoothbot						0 				# Treatment in SetFluxHeight and ComputeVelocityVector for smooth bottom flow when partial stepping is used
-RadiationBoundary   			1   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
+RadiationBoundary   			0   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
 SpongeMean						0e4 	    	# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
-SpongeSTD						3e3		   		# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
+SpongeSTD						0e3		   		# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
 SpongeCellLocationX				84450			# X Location of Sponge Layer
 SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationX				85000			# X Location of Sponge Layer
@@ -117,7 +117,7 @@ FrshFrontFlag					0				# Wheather or not using a fresh water front used by Omidv
 BFront							0.002			# B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
 CFront 							4500			# The length from shore at which front curvature starts
 BruntVaisalaMax					0.0212			# The maximum of Brunt-Vaisala for the used density stratification
-FrontWindStress					3e-5			# Adding wind on the front to make it more stable. This is Tau value and formulated similar to tau_T= Tau/Rho
+FrontWindStress					0e-5			# Adding wind on the front to make it more stable. This is Tau value and formulated similar to tau_T= Tau/Rho
 FrontTidesWindsDelay			0		# After this amount the tides and winds will apply on the domain, meanwhile the front gets stable
 FrontWindStabilizerX			25000			# The wind profile will affect all the edges from 0 to this point
 ########################################################################

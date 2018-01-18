@@ -90,6 +90,10 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		printf("The model is using NETCDF for Boundary Scalars\n");
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("Type 2 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ib = grid->grad[2 * j];
@@ -105,6 +109,10 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	}
 	else {//No NetCDF
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("Type 2 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ib = grid->grad[2 * j];
@@ -133,17 +141,17 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. End
 		}
 	}
-	//----ATTENTION---- should I keep this?start
-	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		if(myproc==0)//Added by ----Sorush Omidvar----
-			printf("Warning. Type 3 boundary function is enabled in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
-	
+
 	//Type-3 
 	// ???? (NEEDS TESTING)
 	// Set boundary cell to value in the boundary structure
 	if(prop->netcdfBdy){
 		ii=-1;
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+					
 			i = grid->cellp[iptr];
 			ii+=1;
 			for(k=grid->ctop[i];k<grid->Nk[i];k++) {
@@ -154,19 +162,39 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		}
    }else{
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
-			printf("Please be advised that Type 3 boundary is executed in BoundaryScalars\n");
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+					
 			i = grid->cellp[iptr];
+			//Suntans Default
+			/*
 			for(k=grid->ctop[i];k<grid->Nk[i];k++) {
 				phys->T[i][k] = 0;
 				phys->s[i][k] = 0;
 			}
+			*/
+			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
+			
+			REAL CurrentDepth=0;
+			REAL OceanDepth=ReturnDepth(grid->xv[i],grid->yv[i]);
+			
+			for(k=grid->ctop[i];k<grid->Nk[i];k++)
+			{
+				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+				
+				phys->T[i][k]=ReturnTemperature(grid->xv[jptr],grid->yv[jptr],CurrentDepth,OceanDepth);
+				phys->s[i][k]=ReturnSalinity(grid->xv[jptr],grid->yv[jptr],CurrentDepth,prop);
+				
+				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
+			}
+			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. End
 		}
 	}
   // Need to communicate the cell data for type 3 boundaries
   ISendRecvCellData3D(phys->T,grid,myproc,comm);
   ISendRecvCellData3D(phys->s,grid,myproc,comm);
 	
-	//----ATTENTION---- should I keep this?end
 		
 	// Set the edge array to the value in the boundary array
    /* ii=-1;
@@ -208,7 +236,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	int i, ii, j, jj, jind, iptr, jptr, n, k;
 	REAL u, v, w, h, rampfac;
 
-	//printf("#####\nUpdating boundary velocities on processor: %d\n#####\n",myproc);
 	if (prop->thetaramptime > 0) {
 		rampfac = 1 - exp(-prop->rtime / prop->thetaramptime);//Tidal rampup factor 
 	}
@@ -227,9 +254,12 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	}
 	// Type-2
 	if (prop->netcdfBdy) {
-		printf("The model is using NETCDF for Boundary Velocities\n");
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("Type 2 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ii += 1;
@@ -247,6 +277,10 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	else { // No NetCDF
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) 
 		{
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("Type 2 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			
@@ -271,7 +305,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			if (NeighbourCell2==-1)
 				NeighbourCell2=NeighbourCell1;
 			if (NeighbourCell1==-1 && NeighbourCell2==-1)
-				printf("\n\n\nWarning. There is someting wrong with the grid. Take a look at the boundaries.c\n\n\n");
+				printf("\n\n\nWarning. There is something wrong with the grid. Take a look at the boundaries.c\n\n\n");
 			
 			ElevationCell1=phys->h[NeighbourCell1];
 			ElevationCell2=phys->h[NeighbourCell2];
@@ -300,15 +334,14 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	}
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 	
-	if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-		if(myproc==0)//Added by ----Sorush Omidvar----
-			printf("Warning. Type 3 boundary function is enabled in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
-	
 	// Type-3
 	if (prop->netcdfBdy) {
-		printf("The model is using NETCDF for Boundary Velocities\n");
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+					
 			i = grid->cellp[iptr];
 			ii += 1;
 			phys->h[i] = bound->h[bound->ind3[ii]] * rampfac;
@@ -316,9 +349,12 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	}
 	else { // No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
-			printf("Please be advised that Type 3 boundary is executed in BoundaryVelocities\n");
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+					
 			i = grid->cellp[iptr];
-			phys->h[i] = 0;
+			phys->h[i] = 0.10;//----Test----
 		}
 	}
 
@@ -329,6 +365,10 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	if (prop->netcdfBdy) {
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("2-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+			
 			i = grid->cellp[iptr];
 			ii += 1;
 			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {
@@ -340,7 +380,10 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	}
 	else {//No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
-			printf("Please be advised that Type 3 boundary is executed in BoundaryVelocities\n");
+			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
+				if(myproc==0)//Added by ----Sorush Omidvar----
+					printf("2-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+
 			i = grid->cellp[iptr];
 			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {
 				phys->uc[i][k] = 0;
@@ -351,7 +394,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	// Need to communicate the cell data for type 3 boundaries
 	ISendRecvCellData3D(phys->uc, grid, myproc, comm);
 	ISendRecvCellData3D(phys->vc, grid, myproc, comm);
-	//ISendRecvCellData3D(phys->wc,grid,myproc,comm);
+	ISendRecvCellData3D(phys->wc,grid,myproc,comm);
 	
 	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
 }
