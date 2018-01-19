@@ -91,8 +91,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("Type 2 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type 2 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -110,8 +109,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	else {//No NetCDF
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("Type 2 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type 2 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -149,8 +147,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		ii=-1;
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			ii+=1;
@@ -163,8 +160,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
    }else{
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			//Suntans Default
@@ -257,8 +253,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("Type 2 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("Type 2 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -278,8 +273,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) 
 		{
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("Type 2 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("Type 2 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -339,8 +333,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			ii += 1;
@@ -350,11 +343,10 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	else { // No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
-			phys->h[i] = 0.10;//----Test----
+			phys->h[i] = 0.49*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);//Added by ----Sorush Omidvar----
 		}
 	}
 
@@ -366,8 +358,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("2-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("2-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 			
 			i = grid->cellp[iptr];
 			ii += 1;
@@ -381,8 +372,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	else {//No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				if(myproc==0)//Added by ----Sorush Omidvar----
-					printf("2-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("2-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 
 			i = grid->cellp[iptr];
 			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {

@@ -1,13 +1,14 @@
 #PBS -S /bin/bash
 #PBS -q batch
 #PBS -N IW-10001
-#PBS -l nodes=1:ppn=48:aquarinode
+#PBS -l nodes=1:ppn=48:cbwnode
 #PBS -l walltime=15:00:00
-#PBS -l mem=10gb
+#PBS -l mem=50gb
 #PBS -M omidvar@uga.edu 
 #PBS -m ae
 
 cd $PBS_O_WORKDIR
+#aquarinode
 module load mvapich2/2.1/gcc/4.4.7
 module load hdf5/1.8.6/gcc/4.4.7
 module load netcdf/4.1.3-v4/gcc/4.4.7

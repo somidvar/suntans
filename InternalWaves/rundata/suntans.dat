@@ -34,7 +34,7 @@ CdW								0				# Drag coefficient at sidewalls
 turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5e0 			# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							6e5		   		# Number of steps 6e5
+nsteps 							1e5		   		# Number of steps 6e5
 ntout   						60		  		# How often to output data 60
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
