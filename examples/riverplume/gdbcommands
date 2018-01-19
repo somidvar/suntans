@@ -1,3 +1,0 @@
-break phys.c:1091
-run -g --datadir=data
-run -s --datadir=data
