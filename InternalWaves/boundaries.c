@@ -346,7 +346,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
-			phys->h[i] = 0.49*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);//Added by ----Sorush Omidvar----
+			phys->h[i] = 0;
 		}
 	}
 
@@ -384,9 +384,9 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	// Need to communicate the cell data for type 3 boundaries
 	ISendRecvCellData3D(phys->uc, grid, myproc, comm);
 	ISendRecvCellData3D(phys->vc, grid, myproc, comm);
-	ISendRecvCellData3D(phys->wc,grid,myproc,comm);
+	//ISendRecvCellData3D(phys->wc,grid,myproc,comm);
 	
-	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
+	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?End
 }
 
 /*
