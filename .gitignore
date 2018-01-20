@@ -2,13 +2,12 @@
 *.o
 
 # Executables
-*.exe
 *.out
 main/sun
 main/sunplot
 
 # Data Files
-InternalWaves/data/
-*.*
+InternalWaves/data
+
 
 
