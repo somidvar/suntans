@@ -12,6 +12,7 @@ https://github.com/ofringer/suntans/archive/master.zip
 
 Follow these steps:
 
+#Test
 1.  `unzip suntans-master.zip`
 2.  `cd suntans-master/examples/cylinder`
 3.  `make test`
