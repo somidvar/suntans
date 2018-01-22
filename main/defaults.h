@@ -26,7 +26,6 @@ const REAL DiurnalWindPeriod_DEFAULT=24*3600;
 const REAL DiurnalTideAmplitude_DEFAULT=0;
 const REAL SemiDiurnalTideAmplitude_DEFAULT=0;
 
-
 //Added by ----Sorush Omidvar----default value for salinity function used by Omidvar and Woodson
 const REAL ASal_DEFAULT=0;
 const REAL BSal_DEFAULT=0;
@@ -71,41 +70,6 @@ const REAL SpongeEdgeLocationX_DEFAULT=0;
 	default Y value for calculation the distance in RampFactor (Yedge-XSponge)
 */
 const REAL SpongeEdgeLocationY_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Wheather or not using a fresh water front used by Omidvar and Woodson, 0 is False and 1 is True
-*/
-const int FrshFrontFlag_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default values used for B coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
-*/
-const REAL BFront_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default values used for C coefficient used in the equation for depth of the front FrontDepth=AFront*exp(BFront*[X-CFront])+DFront
-*/
-const REAL CFront_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default value used for maximum of Brunt-Vaisala for the used density stratification
-*/
-const REAL BruntVaisalaMax_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Defualt value for shear stress applies on the front to make it more stable. Please be advised that it is formulated similar to tau_T (dividing by Rho).
-*/
-const REAL FrontWindStress_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Defualt value for for FrontTidesWindsDelay. After this period of time the tides and winds will start.
-*/
-const REAL FrontTidesWindsDelay_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	Defualt value for for FrontWindStabilizerX. The winds affect all edges from X=0 to X=FrontWindStabilizerX.
-*/
-const REAL FrontWindStabilizerX_DEFAULT=0;
 
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0

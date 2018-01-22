@@ -278,330 +278,205 @@ double GetDefaultValue(char *str, int *status) {
   *status=1;
 
   if(!strcmp(str,"prettyplot")) {
-
     return prettyplot_DEFAULT;
-
   }
-
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"DiurnalTidePeriod")) {
-
+  else if(!strcmp(str,"DiurnalTidePeriod")) {
     return DiurnalTidePeriod_DEFAULT;
-
   }  
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SemiDiurnalTidePeriod")) {
-
+  else if(!strcmp(str,"SemiDiurnalTidePeriod")) {
     return SemiDiurnalTidePeriod_DEFAULT;
-
   }  
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"DiurnalWindPeriod")) {
-
+  else if(!strcmp(str,"DiurnalWindPeriod")) {
     return DiurnalWindPeriod_DEFAULT;
-
   }    
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"DiurnalTideAmplitude")) {
-
+  else if(!strcmp(str,"DiurnalTideAmplitude")) {
     return DiurnalTideAmplitude_DEFAULT;
-
   }    
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SemiDiurnalTideAmplitude")) {
-
+  else if(!strcmp(str,"SemiDiurnalTideAmplitude")) {
     return SemiDiurnalTideAmplitude_DEFAULT;
-
   }    
-  
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"ASal")) {
-
+  else if(!strcmp(str,"ASal")) {
     return ASal_DEFAULT;
-
   }  
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"BSal")) {
-
+  else if(!strcmp(str,"BSal")) {
     return BSal_DEFAULT;
-
   }    
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"CSal")) {
-
+  else if(!strcmp(str,"CSal")) {
     return CSal_DEFAULT;
-
   }    
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"DSal")) {
-
+  else if(!strcmp(str,"DSal")) {
     return DSal_DEFAULT;
-
   }  
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SalinityAdjustmentFlag")) {
-
+  else if(!strcmp(str,"SalinityAdjustmentFlag")) {
     return SalinityAdjustmentFlag_DEFAULT;
-
   }  
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SalinitySpecifiedRange")) {
-
+  else if(!strcmp(str,"SalinitySpecifiedRange")) {
     return SalinitySpecifiedRange_DEFAULT;
-
   }    
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SalinitySpecifiedMax")) {
-
+  else if(!strcmp(str,"SalinitySpecifiedMax")) {
     return SalinitySpecifiedMax_DEFAULT;
-
   }      
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"RadiationBoundary")) {
-
+  else if(!strcmp(str,"RadiationBoundary")) {
     return RadiationBoundary_DEFAULT;
-
   }  
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeMean")) {
-
+  else if(!strcmp(str,"SpongeMean")) {
     return SpongeMean_DEFAULT;
-
   }    
  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeSTD")) {
-
+  else if(!strcmp(str,"SpongeSTD")) {
     return SpongeSTD_DEFAULT;
-
   }      
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeCellLocationX")) {
-
+  else if(!strcmp(str,"SpongeCellLocationX")) {
     return SpongeCellLocationX_DEFAULT;
-
   }    
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeCellLocationY")) {
-
+  else if(!strcmp(str,"SpongeCellLocationY")) {
     return SpongeCellLocationY_DEFAULT;
-
   }    
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeEdgeLocationX")) {
-
+  else if(!strcmp(str,"SpongeEdgeLocationX")) {
     return SpongeEdgeLocationX_DEFAULT;
-
   }    
    //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"SpongeEdgeLocationY")) {
-
+  else if(!strcmp(str,"SpongeEdgeLocationY")) {
     return SpongeEdgeLocationY_DEFAULT;
-
-  }      
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"FrshFrontFlag")) {
-
-    return FrshFrontFlag_DEFAULT;
-
-  }  
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"BFront")) {
-
-    return BFront_DEFAULT;
-
-  }    
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"CFront")) {
-
-    return CFront_DEFAULT;
-
-  }  
-   //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"BruntVaisalaMax")) {
-
-    return BruntVaisalaMax_DEFAULT;
-
-  }   
-  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"FrontWindStress")) {
-
-    return FrontWindStress_DEFAULT;
-
-  }     
-  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"FrontTidesWindsDelay")) {
-
-    return FrontTidesWindsDelay_DEFAULT;
-
-  }       
-  //Added by ----Sorush Omidvar----
-  if(!strcmp(str,"FrontWindStabilizerX")) {
-
-    return FrontWindStabilizerX_DEFAULT;
-
-  }    
+  }        
   else if(!strcmp(str,"linearFS")){
-
     return linearFS_DEFAULT;
-
-  } else if(!strcmp(str,"grav")){
-
+  }
+  else if(!strcmp(str,"grav")){
     return grav_DEFAULT;
-
-  } else if(!strcmp(str,"interp")) {
-
+  }
+  else if(!strcmp(str,"interp")) {
     return interp_DEFAULT;
-
-  } else if(!strcmp(str,"minimum_depth")) {
-
+  }
+  else if(!strcmp(str,"minimum_depth")) {
     return minimum_depth_DEFAULT;
-
-  } else if(!strcmp(str,"fixdzz")) {
-
+  }
+  else if(!strcmp(str,"fixdzz")) {
     return fixdzz_DEFAULT;
-
-  } else if(!strcmp(str,"TVDsalt")) {
-
+  }
+  else if(!strcmp(str,"TVDsalt")) {
     return TVDsalt_DEFAULT;
-
-  } else if(!strcmp(str,"TVDtemp")) {
-
+  }
+  else if(!strcmp(str,"TVDtemp")) {
     return TVDtemp_DEFAULT;
-
-  } else if(!strcmp(str,"TVDturb")) {
-
+  }
+  else if(!strcmp(str,"TVDturb")) {
     return TVDturb_DEFAULT;
-
-  } else if(!strcmp(str,"laxWendroff")) {
-
+  }
+  else if(!strcmp(str,"laxWendroff")) {
     return laxWendroff_DEFAULT;
-
-  } else if(!strcmp(str,"laxWendroff_Vertical")) {
-
+  }
+  else if(!strcmp(str,"laxWendroff_Vertical")) {
     return laxWendroff_Vertical_DEFAULT;
-
-  } else if(!strcmp(str,"hprecond")) {
-
+  }
+  else if(!strcmp(str,"hprecond")) {
     return hprecond_DEFAULT;
-
-  } else if(!strcmp(str,"ntoutStore")) {
-
+  }
+  else if(!strcmp(str,"ntoutStore")) {
     return ntoutStore_DEFAULT;
-
-  } else if(!strcmp(str,"AB")) {
-
+  }
+  else if(!strcmp(str,"AB")) {
     return AB_DEFAULT;
-
- } else if(!strcmp(str,"TVDmomentum")) {
-
+  }
+  else if(!strcmp(str,"TVDmomentum")) {
     return TVDmomentum_DEFAULT;
-
- } else if(!strcmp(str,"conserveMomentum")) {
-
+  }
+  else if(!strcmp(str,"conserveMomentum")) {
     return conserveMomentum_DEFAULT;
-
- } else if(!strcmp(str,"wetdry")) {
-
+  }
+  else if(!strcmp(str,"wetdry")) {
     return wetdry_DEFAULT;
-
- } else if(!strcmp(str,"thetaM")) {
-
+  }
+  else if(!strcmp(str,"thetaM")) {
     return thetaM_DEFAULT;
-
- } else if(!strcmp(str,"smoothbot")) {
-
+  }
+  else if(!strcmp(str,"smoothbot")) {
     return smoothbot_DEFAULT;
-
- } else if(!strcmp(str,"mergeArrays")) {
-
+  }
+  else if(!strcmp(str,"mergeArrays")) {
     return mergeArrays_DEFAULT;
-
- } else if(!strcmp(str,"computeSediments")) {
-
+  }
+  else if(!strcmp(str,"computeSediments")) {
     return computeSediments_DEFAULT;
-  
- } else if(!strcmp(str,"latitude")) {
-    
+  }
+  else if(!strcmp(str,"latitude")) {
    return latitude_DEFAULT;
-   
- } else if(!strcmp(str,"gmtoffset")) {
-    
+  }
+  else if(!strcmp(str,"gmtoffset")) {
    return gmtoffset_DEFAULT;
- 
- } else if(!strcmp(str,"metmodel")) {
-    
+  }
+  else if(!strcmp(str,"metmodel")) {
    return metmodel_DEFAULT;
- 
- } else if(!strcmp(str,"varmodel")) {
-    
+  }
+  else if(!strcmp(str,"varmodel")) {
    return varmodel_DEFAULT;
-   
- } else if(!strcmp(str,"nugget")) {
-    
+  }
+  else if(!strcmp(str,"nugget")) {
    return nugget_DEFAULT;
- 
- } else if(!strcmp(str,"sill")) {
-    
+  }
+  else if(!strcmp(str,"sill")) {
    return sill_DEFAULT;
- 
- } else if(!strcmp(str,"range")) {
-    
+  }
+  else if(!strcmp(str,"range")) {
    return range_DEFAULT;
-   
-} else if(!strcmp(str,"outputNetcdf")) {
-    
+  }
+  else if(!strcmp(str,"outputNetcdf")) {
    return outputNetcdf_DEFAULT;
-
-} else if(!strcmp(str,"nstepsperncfile")) {
-    
+  }
+  else if(!strcmp(str,"nstepsperncfile")) {  
    return nstepsperncfile_DEFAULT;
-
-} else if(!strcmp(str,"ncfilectr")) {
-    
+  }
+  else if(!strcmp(str,"ncfilectr")) {
    return ncfilectr_DEFAULT;
-
-} else if(!strcmp(str,"Lsw")) {
-    
+  } 
+  else if(!strcmp(str,"Lsw")) {
    return Lsw_DEFAULT;
- 
-} else if(!strcmp(str,"Cda")) {
-    
+  }
+  else if(!strcmp(str,"Cda")) {
    return Cda_DEFAULT;    
- 
-} else if(!strcmp(str,"Ce")) {
-    
+  } 
+  else if(!strcmp(str,"Ce")) {
    return Ce_DEFAULT; 
-  
-} else if(!strcmp(str,"Ch")) {
-    
+  }
+  else if(!strcmp(str,"Ch")) {
    return Ch_DEFAULT;   
-
-} else if(!strcmp(str,"netcdfBdy")) {
-    
+  }
+  else if(!strcmp(str,"netcdfBdy")) {
    return netcdfBdy_DEFAULT;   
-
-} else if(!strcmp(str,"readinitialnc")) {
-    
+  } 
+  else if(!strcmp(str,"readinitialnc")) {
    return readinitialnc_DEFAULT;   
-
-} else if(!strcmp(str,"calcage")) {
-    
+  } 
+  else if(!strcmp(str,"calcage")) {
    return calcage_DEFAULT;   
-
-} else if(!strcmp(str,"agemethod")) {
-    
+  } 
+  else if(!strcmp(str,"agemethod")) {    
    return agemethod_DEFAULT;   
-
-} else if(!strcmp(str,"calcaverage")) {
-    
+  } 
+  else if(!strcmp(str,"calcaverage")) {
    return calcaverage_DEFAULT;   
-
-} else if(!strcmp(str,"maxFaces")) {
-    
+  }
+  else if(!strcmp(str,"maxFaces")) {
    return maxFaces_DEFAULT;   
-
-
-}else {
+  }
+else{
     *status=0;
     return 0;
   }

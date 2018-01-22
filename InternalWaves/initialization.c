@@ -83,13 +83,28 @@ REAL ReturnDepth(REAL x, REAL y) {
 	*/
 	
 	//Added by ----Sorush Omidvar---- when the shore is located at x=0.Start
+	/*
 	REAL ABath, BBath, CBath, DBath;
 	ABath = 40;
     BBath = 0.0009;
     CBath = 1500;
     DBath = 35;
 	return ABath*(tanh(-BBath*(-x + CBath))) + DBath;	
+	*/
 	//Added by ----Sorush Omidvar---- when the shore is located at x=0.End
+	//Just for test
+	REAL ABath, BBath, CBath, DBath;
+	ABath = 800;
+    BBath = 0.00009;
+    CBath = 22000;
+    DBath = 350;
+	if(x>20000)
+		return ABath*(tanh(-BBath*(-x + CBath))) + DBath;		
+	else
+		return 200;
+	
+	//Test end
+	
 }
 
 /*
@@ -148,35 +163,10 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 		SalinityCorrectionFactor=1;
 		SalinityDifference=0;
 	}
-	if(prop->FrshFrontFlag)
-	{
-		REAL RossbyCurvatureRadius,PycnoclineDepth,AFront,DFront;
-		//PycnoclineDepth=prop->CSal;
-		PycnoclineDepth=21;
-		//The Rossby wave radius calculated as R=N*H/(n*pi*f) in which N, H, n and f are Brunt-Vaisala, height of the layer(pycnocline), mode and coriolis parameter
-		RossbyCurvatureRadius=prop->BruntVaisalaMax*PycnoclineDepth/(3.1415*8.75*0.00001);
-		//Calculating the depth of fresh water
-		if(x<=prop->CFront)
-		{
-			DFront=prop->CSal*exp(prop->BFront*RossbyCurvatureRadius)/(exp(prop->BFront*RossbyCurvatureRadius)-1);
-			AFront=prop->CSal-DFront;
-			FreshWater=prop->CSal;
-		}
-		else if(x<=(prop->CFront+RossbyCurvatureRadius))
-			FreshWater=AFront*exp(prop->BFront*(x-prop->CFront))+DFront;
-		else
-			FreshWater=0;
+	SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
+	SalinityTemporary+=SalinityDifference;
+	return SalinityTemporary;
 
-		SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -FreshWater))) + prop->DSal;
-		SalinityTemporary+=SalinityDifference;
-		return SalinityTemporary;
-	}
-	else
-	{
-		SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
-		SalinityTemporary+=SalinityDifference;
-		return SalinityTemporary;
-	}
 	//Added by ----Sorush Omidvar----. Salinity stratification and front.End
 }
 

@@ -104,12 +104,9 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				for(k=0;k<grid->Nkc[EdgeCounter];k++)
 				{
 					REAL HorizontalDifference=0;
-					REAL TimePhase=prop->rtime-prop->FrontTidesWindsDelay;//Calculating the phase difference and apply the tides after time reaches to FrontTidesWindsDelay
-					if (TimePhase<0)
-						TimePhase=0;
 						
-					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*TimePhase);
-					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*TimePhase);
+					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
+					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
 
 					HorizontalDifference-=usource[EdgeCounter][k];
 					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
