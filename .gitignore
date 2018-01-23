@@ -13,4 +13,11 @@ InternalWaves/data
 # MOBOXTERM Files
 *.nfs*
 
+#The output report and erro
+iwaves/IW-10001.e*
+iwaves/IW-10001.o*
+
+InternalWaves/IW-10001.e*
+InternalWaves/IW-10001.o*
+
 

@@ -68,13 +68,14 @@ REAL ReturnDepth(REAL x, REAL y) {
   D0 = 3000;
   Ds = 200;
   return D0 - 0.5*(D0-Ds)*(1+tanh(4*(x-xmid)/Ls));
-
+/*
   if(x<=xmid-Ls/2)
     return D0;
   else if(x>xmid+Ls/2)
     return Ds;
   else
     return D0-(D0-Ds)*((x-xmid)/Ls+0.5);
+*/
 }
 
  /*
@@ -97,7 +98,7 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d) {
  * in phys.c in the InitializePhysicalVariables function.
  *
  */
-REAL ReturnSalinity(REAL x, REAL y, REAL z) {
+REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
   REAL deltaS, alphaS, D_pycnocline;
 
   deltaS = 0.024;

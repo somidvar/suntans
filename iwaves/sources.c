@@ -117,7 +117,7 @@ void SaltSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT 
  * Apply a sponge layer to all type 2 boundaries.
  *
  */
-void InitSponge(gridT *grid, int myproc) {
+void InitSponge(gridT *grid, int myproc, propT *prop) {
   int Nb, p1, p2, mark, g1, g2;
   int j, n, NeAll, NpAll;
   REAL *xb, *yb, *xp, *yp, r2;

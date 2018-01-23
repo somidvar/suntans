@@ -5,7 +5,12 @@
 #
 ########################################################################
 
-SUNTANSHOME=../../main
+module load mvapich2/2.1/gcc/4.4.7
+module load hdf5/1.8.6/gcc/4.4.7
+module load netcdf/4.1.3-v4/gcc/4.4.7
+
+SUNTANSHOME=$(pwd)
+SUNTANSHOME=$(echo ${SUNTANSHOME%/*}/main)
 SUN=$SUNTANSHOME/sun
 SUNPLOT=$SUNTANSHOME/sunplot
 

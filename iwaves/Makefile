@@ -1,4 +1,5 @@
-SUNTANSHOME=../../main
+SUNTANSHOME1=$(dir $(patsubst %/,%,$(CURDIR)))
+SUNTANSHOME=$(SUNTANSHOME1)main
 include $(SUNTANSHOME)/Makefile.in
 
 ifneq ($(MPIHOME),)
