@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-dirname = 'C:\Users\omidvar\Desktop\data';
+dirname = 'C:\Users\omidvar\Desktop\iwaves\data';
 EMPTY = 999999;
 
 fname = [dirname,'\profdata.dat'];
@@ -26,11 +26,9 @@ dataY = dataXY(2:2:end);
 
 z = getz(dz);
 
-fname = [dirname,'\u.dat.prof'];
-fid = fopen(fname,'rb');
-
-data = fread(fid,'float64');
+data = fread(fopen([dirname,'\u.dat.prof'],'rb'),'float64');
 data(find(data==EMPTY))=nan;
+fclose(fid);
 
 nout = length(data)/(3*Nkmax*numInterpPoints*numTotalDataPoints);
 udata = reshape(data,Nkmax,numInterpPoints,numTotalDataPoints,3,nout);
@@ -46,20 +44,26 @@ V = squeeze(udata(:,:,2,:));
 W = squeeze(udata(:,:,3,:));
 Time=Time(1,:)';
 
-HTotal=repmat(ZC,1,76);
-HTotal=HTotal+U(:,:,1)*0;
-HTotalDiff=diff(HTotal,1,1);
-HTotalDiff(end+1,:)=HTotalDiff(end,:);
-UH=U.*repmat(HTotalDiff,1,1,size(Time,1));
-UH=squeeze(nansum(UH,1));
-Depth=abs(nanmin(HTotal,[],1))';
-Depth=repmat(Depth,1,600);
-UH=UH./Depth;
-pcolor(Time/3600,dataX/1000,UH);
-shading flat;
-colorbar;
 
+Eta = fread(fopen([dirname,'\fs.dat'],'rb'),'float64');
+fclose(fid);
 
+% 
+% 
+% HTotal=repmat(ZC,1,76);
+% HTotal=HTotal+U(:,:,1)*0;
+% HTotalDiff=diff(HTotal,1,1);
+% HTotalDiff(end+1,:)=HTotalDiff(end,:);
+% UH=U.*repmat(HTotalDiff,1,1,size(Time,1));
+% UH=squeeze(nansum(UH,1));
+% Depth=abs(nanmin(HTotal,[],1))';
+% Depth=repmat(Depth,1,600);
+% UH=UH./Depth;
+% pcolor(Time/3600,dataX/1000,UH);
+% shading flat;
+% colorbar;
+% 
+% 
 figure;
 for k=1:size(Time,1)
     pcolor(dataX/1000,ZC,U(:,:,k));
