@@ -17,20 +17,16 @@ namespace _1stVer
         List<double> YDataTemporary = new List<double>();
         List<double> XDataFinal = new List<double>();
         List<double> YDataFinal = new List<double>();
-        List<double> ZData = new List<double>();
-        List<double> XTempS = new List<double>();
-        bool XMeshControl, YMeshControl, GridControl, BoundaryControl, BathymetryControl;
+        bool XMeshControl, YMeshControl, GridControl, BoundaryControl;
         double[,] VerticalEdges, HorizontalEdges;
         double[,] cells;
-        double A, B, C, D;
 
         public QuadGridBathymetryInitiation()
         {
             InitializeComponent();
-            XMeshControl = YMeshControl = GridControl = BoundaryControl = BathymetryControl = false;
+            XMeshControl = YMeshControl = GridControl = BoundaryControl = false;
 
             FirstRun();
-
         }
         private void FirstRun()
         {
@@ -38,17 +34,11 @@ namespace _1stVer
             XEndingLocationTextbox.Text = "70000";
             XSteppingMethodCombo.SelectedIndex = 1;
             XCellNumberTextbox.Text = "700";
-
             YStartingLocationTextbox.Text = "0";
             YEndingLocationTextbox.Text = "100";
             YSteppingMethodCombo.SelectedIndex = 1;
             YCellNumberTextbox.Text = "1";
-            ATextbox.Text = "1";
-            BTextbox.Text = "1";
-            CTextbox.Text = "1";
-            DTextbox.Text = "1";
             ResultAdressTextbox.Text = "D:\\";
-            BathymetryCombo.SelectedIndex = 0;
             BottomBoundaryCombo.SelectedIndex = 1;
             TopBoundaryCombo.SelectedIndex = 1;
             RightBoundaryCombo.SelectedIndex = 2;
@@ -289,58 +279,8 @@ namespace _1stVer
             GridControl = true;
         }
 
-        private void BathymetryCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //In this program it is assumed that tha shore is align the Y direction at X=0
-            // 0 is Line and 1 is Hyperbolic Tangenet
-            if (BathymetryCombo.SelectedIndex == 0)
-                BathymetryFormula.Text = "A*X^3+B*X^2+C*X+D";
-            if (BathymetryCombo.SelectedIndex == 1)
-                BathymetryFormula.Text = "A*Tanh(B*X+C)+D";
-        }
-
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            if (!GridControl)
-            {
-                MessageBox.Show("Grid has not been successfully made, please rerun the program and makes sure you push the make grid button after adding X and Y dirctions", "Grid Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            try
-            {
-                A = Convert.ToDouble(ATextbox.Text);
-                B = Convert.ToDouble(BTextbox.Text);
-                C = Convert.ToDouble(CTextbox.Text);
-                D = Convert.ToDouble(DTextbox.Text);
-            }
-            catch (Exception Exp1)
-            {
-                MessageBox.Show(string.Format("{0}/r/n{1}", "The Bathymetry input format is not correct. Please make sure you have entered them as number.", Exp1.Message.ToString()), "Bathymetry Input Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            if (BathymetryCombo.SelectedIndex == 0)
-            {
-                for (int counter1 = 0; counter1 < YDataFinal.Count - 1; counter1++)
-                {
-                    for (int counter2 = 0; counter2 < XDataFinal.Count - 1; counter2++)
-                        cells[counter2 + counter1 * (XDataFinal.Count - 1), 10] = A * Math.Pow(cells[counter2 + counter1 * (XDataFinal.Count - 1), 0], 3) + B * Math.Pow(cells[counter2 + counter1 * (XDataFinal.Count - 1), 0], 2) + C * Math.Pow(cells[counter2 + counter1 * (XDataFinal.Count - 1), 0], 3) + D;
-                }
-                BathymetryControl = true;
-            }
-            if (BathymetryCombo.SelectedIndex == 1)
-            {
-
-                for (int counter1 = 0; counter1 < YDataFinal.Count - 1; counter1++)
-                {
-                    for (int counter2 = 0; counter2 < XDataFinal.Count - 1; counter2++)
-                        cells[counter2 + counter1 * (XDataFinal.Count - 1), 10] = A * Math.Tanh(B * (cells[counter2 + counter1 * (XDataFinal.Count - 1), 0]) + C) + D;
-                }
-                BathymetryControl = true;
-            }
-            if (!BathymetryControl)
-            {
-                MessageBox.Show("Bathymetry has not been successfully made, please check the parameters and type", "Bathymetry Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
             if (BottomBoundaryCombo.SelectedIndex != -1 && TopBoundaryCombo.SelectedIndex != -1 && RightBoundaryCombo.SelectedIndex != -1 && LeftBoundaryCombo.SelectedIndex != -1)
                 BoundaryControl = true;
             if (!BoundaryControl)
@@ -348,7 +288,6 @@ namespace _1stVer
                 MessageBox.Show("Boundary conditions have not been successfully made, please rerun the program and makes sure you press add for each direction", "Boundary Condition Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             WritingFunction();
         }
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -363,14 +302,11 @@ namespace _1stVer
             StreamWriter PointWriter;
             StreamWriter CellWriter;
             StreamWriter EdgeWriter;
-            StreamWriter BathymetryWriter;
             try
             {
                 PointWriter = new StreamWriter(ResultAdressTextbox.Text + "points.dat");
                 CellWriter = new StreamWriter(ResultAdressTextbox.Text + "cells.dat");
                 EdgeWriter = new StreamWriter(ResultAdressTextbox.Text + "edges.dat");
-                BathymetryWriter = new StreamWriter(ResultAdressTextbox.Text + "depth.dat");
-
             }
             catch (Exception Exp1)
             {
@@ -475,25 +411,7 @@ namespace _1stVer
                 }
             }
             EdgeWriter.Close();
-            //Writing depth.dat
-            for (int counter1 = 0; counter1 < YDataFinal.Count - 1; counter1++)
-            {
-                for (int counter2 = 0; counter2 < XDataFinal.Count - 1; counter2++)
-                {
-                    string Temporary = string.Format("{0}\t{1}\t{2}", cells[counter2 + counter1 * (XDataFinal.Count - 1), 0], cells[counter2 + counter1 * (XDataFinal.Count - 1), 1], cells[counter2 + counter1 * (XDataFinal.Count - 1), 10]);
-                    BathymetryWriter.Write(Temporary);
-                    BathymetryWriter.Write("\n");
-                    /*
-                    BathymetryWriter.Write(cells[counter2 + counter1 * (XDataFinal.Count - 1), 0]);
-                    BathymetryWriter.Write("    ");
-                    BathymetryWriter.Write(cells[counter2 + counter1 * (XDataFinal.Count - 1), 1]);
-                    BathymetryWriter.Write("    ");
-                    BathymetryWriter.WriteLine(cells[counter2 + counter1 * (XDataFinal.Count - 1), 10]);
-                     */
-                }
-            }
-            BathymetryWriter.Close();
-            MessageBox.Show("The grid and bathymetry have been made successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show("The grid have been made successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
     }
 }

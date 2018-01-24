@@ -35,6 +35,8 @@
             this.XCellNumberTextbox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.XStepRatioTextbox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.XInitialStepTextbox = new System.Windows.Forms.TextBox();
             this.XSteppingMethodCombo = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,6 +50,8 @@
             this.YCellNumberTextbox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.YStepRatioTextbox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.YInitialStepTextbox = new System.Windows.Forms.TextBox();
             this.YSteppingMethodCombo = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -68,28 +72,10 @@
             this.RightBoundaryCombo = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.TopBoundaryCombo = new System.Windows.Forms.ComboBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.DTextbox = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.CTextbox = new System.Windows.Forms.TextBox();
-            this.BathymetryFormula = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.BTextbox = new System.Windows.Forms.TextBox();
-            this.BathymetryCombo = new System.Windows.Forms.ComboBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.ATextbox = new System.Windows.Forms.TextBox();
-            this.YInitialStepTextbox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.XInitialStepTextbox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.BoundaryConditionGroupbox.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -156,6 +142,23 @@
             this.XStepRatioTextbox.Name = "XStepRatioTextbox";
             this.XStepRatioTextbox.Size = new System.Drawing.Size(80, 20);
             this.XStepRatioTextbox.TabIndex = 22;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Initial Step";
+            // 
+            // XInitialStepTextbox
+            // 
+            this.XInitialStepTextbox.Enabled = false;
+            this.XInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
+            this.XInitialStepTextbox.Name = "XInitialStepTextbox";
+            this.XInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
+            this.XInitialStepTextbox.TabIndex = 20;
             // 
             // XSteppingMethodCombo
             // 
@@ -286,6 +289,23 @@
             this.YStepRatioTextbox.Size = new System.Drawing.Size(80, 20);
             this.YStepRatioTextbox.TabIndex = 22;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 95);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Initial Step";
+            // 
+            // YInitialStepTextbox
+            // 
+            this.YInitialStepTextbox.Enabled = false;
+            this.YInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
+            this.YInitialStepTextbox.Name = "YInitialStepTextbox";
+            this.YInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
+            this.YInitialStepTextbox.TabIndex = 20;
+            // 
             // YSteppingMethodCombo
             // 
             this.YSteppingMethodCombo.FormattingEnabled = true;
@@ -345,7 +365,7 @@
             this.groupBox3.Controls.Add(this.BrowseButton);
             this.groupBox3.Controls.Add(this.ResultAdressTextbox);
             this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Location = new System.Drawing.Point(12, 400);
+            this.groupBox3.Location = new System.Drawing.Point(12, 317);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(386, 98);
             this.groupBox3.TabIndex = 28;
@@ -422,9 +442,9 @@
             "Velocity-Specified",
             "Heigh-Specified",
             "No-Slip"});
-            this.BottomBoundaryCombo.Location = new System.Drawing.Point(45, 48);
+            this.BottomBoundaryCombo.Location = new System.Drawing.Point(52, 48);
             this.BottomBoundaryCombo.Name = "BottomBoundaryCombo";
-            this.BottomBoundaryCombo.Size = new System.Drawing.Size(135, 21);
+            this.BottomBoundaryCombo.Size = new System.Drawing.Size(128, 21);
             this.BottomBoundaryCombo.TabIndex = 32;
             // 
             // label16
@@ -491,174 +511,16 @@
             "Velocity-Specified",
             "Heigh-Specified",
             "No-Slip"});
-            this.TopBoundaryCombo.Location = new System.Drawing.Point(45, 13);
+            this.TopBoundaryCombo.Location = new System.Drawing.Point(52, 13);
             this.TopBoundaryCombo.Name = "TopBoundaryCombo";
-            this.TopBoundaryCombo.Size = new System.Drawing.Size(135, 21);
+            this.TopBoundaryCombo.Size = new System.Drawing.Size(128, 21);
             this.TopBoundaryCombo.TabIndex = 20;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.label23);
-            this.groupBox5.Controls.Add(this.DTextbox);
-            this.groupBox5.Controls.Add(this.label19);
-            this.groupBox5.Controls.Add(this.label18);
-            this.groupBox5.Controls.Add(this.CTextbox);
-            this.groupBox5.Controls.Add(this.BathymetryFormula);
-            this.groupBox5.Controls.Add(this.label20);
-            this.groupBox5.Controls.Add(this.label21);
-            this.groupBox5.Controls.Add(this.BTextbox);
-            this.groupBox5.Controls.Add(this.BathymetryCombo);
-            this.groupBox5.Controls.Add(this.label22);
-            this.groupBox5.Controls.Add(this.ATextbox);
-            this.groupBox5.Location = new System.Drawing.Point(12, 317);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(386, 77);
-            this.groupBox5.TabIndex = 34;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Bathymetry";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(312, 51);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(15, 13);
-            this.label23.TabIndex = 35;
-            this.label23.Text = "D";
-            // 
-            // DTextbox
-            // 
-            this.DTextbox.Location = new System.Drawing.Point(334, 48);
-            this.DTextbox.Name = "DTextbox";
-            this.DTextbox.Size = new System.Drawing.Size(42, 20);
-            this.DTextbox.TabIndex = 34;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(311, 23);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(14, 13);
-            this.label19.TabIndex = 32;
-            this.label19.Text = "C";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 51);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(44, 13);
-            this.label18.TabIndex = 33;
-            this.label18.Text = "Formula";
-            // 
-            // CTextbox
-            // 
-            this.CTextbox.Location = new System.Drawing.Point(334, 20);
-            this.CTextbox.Name = "CTextbox";
-            this.CTextbox.Size = new System.Drawing.Size(42, 20);
-            this.CTextbox.TabIndex = 31;
-            // 
-            // BathymetryFormula
-            // 
-            this.BathymetryFormula.AutoSize = true;
-            this.BathymetryFormula.Location = new System.Drawing.Point(56, 51);
-            this.BathymetryFormula.Name = "BathymetryFormula";
-            this.BathymetryFormula.Size = new System.Drawing.Size(0, 13);
-            this.BathymetryFormula.TabIndex = 29;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(226, 51);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(14, 13);
-            this.label20.TabIndex = 30;
-            this.label20.Text = "B";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 23);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(31, 13);
-            this.label21.TabIndex = 27;
-            this.label21.Text = "Type";
-            // 
-            // BTextbox
-            // 
-            this.BTextbox.Location = new System.Drawing.Point(248, 48);
-            this.BTextbox.Name = "BTextbox";
-            this.BTextbox.Size = new System.Drawing.Size(42, 20);
-            this.BTextbox.TabIndex = 29;
-            // 
-            // BathymetryCombo
-            // 
-            this.BathymetryCombo.FormattingEnabled = true;
-            this.BathymetryCombo.Items.AddRange(new object[] {
-            "Polynomial",
-            "Hyperbolic Tangent"});
-            this.BathymetryCombo.Location = new System.Drawing.Point(45, 20);
-            this.BathymetryCombo.Name = "BathymetryCombo";
-            this.BathymetryCombo.Size = new System.Drawing.Size(135, 21);
-            this.BathymetryCombo.TabIndex = 20;
-            this.BathymetryCombo.SelectedIndexChanged += new System.EventHandler(this.BathymetryCombo_SelectedIndexChanged);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(226, 23);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(14, 13);
-            this.label22.TabIndex = 28;
-            this.label22.Text = "A";
-            // 
-            // ATextbox
-            // 
-            this.ATextbox.Location = new System.Drawing.Point(248, 20);
-            this.ATextbox.Name = "ATextbox";
-            this.ATextbox.Size = new System.Drawing.Size(42, 20);
-            this.ATextbox.TabIndex = 27;
-            // 
-            // YInitialStepTextbox
-            // 
-            this.YInitialStepTextbox.Enabled = false;
-            this.YInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
-            this.YInitialStepTextbox.Name = "YInitialStepTextbox";
-            this.YInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
-            this.YInitialStepTextbox.TabIndex = 20;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 95);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Initial Step";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 95);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Initial Step";
-            // 
-            // XInitialStepTextbox
-            // 
-            this.XInitialStepTextbox.Enabled = false;
-            this.XInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
-            this.XInitialStepTextbox.Name = "XInitialStepTextbox";
-            this.XInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
-            this.XInitialStepTextbox.TabIndex = 20;
             // 
             // QuadGridBathymetryInitiation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 504);
-            this.Controls.Add(this.groupBox5);
+            this.ClientSize = new System.Drawing.Size(405, 430);
             this.Controls.Add(this.BoundaryConditionGroupbox);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -674,8 +536,6 @@
             this.groupBox3.PerformLayout();
             this.BoundaryConditionGroupbox.ResumeLayout(false);
             this.BoundaryConditionGroupbox.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -720,19 +580,6 @@
         private System.Windows.Forms.ComboBox RightBoundaryCombo;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox TopBoundaryCombo;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label BathymetryFormula;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ComboBox BathymetryCombo;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox DTextbox;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.TextBox CTextbox;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox BTextbox;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox ATextbox;
         private System.Windows.Forms.Button MakingGridButt;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox XInitialStepTextbox;
