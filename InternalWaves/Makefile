@@ -62,6 +62,9 @@ valgrind: data
 
 clean:
 	rm -f *.o
+	rm -f IW-10001.e*
+	rm -f IW-10001.o*
+	rm -f *.pbs*
 
 clobber: clean
 	rm -rf *~ \#*\# PI* $(EXEC) gmon.out data rundata/*~

@@ -95,11 +95,11 @@ REAL ReturnDepth(REAL x, REAL y) {
 	//Added by ----Sorush Omidvar---- when the shore is located at x=0.In this the shore side is extended by 1 Km and also the bathymetry is cut by Z=-10.Start
 	REAL ABath, BBath, CBath, DBath;
 	ABath = 40;
-    BBath = 0.00009;
+    BBath = 0.0009;
     CBath = 1500;
     DBath = 35;
 	REAL Temporary=ABath*(tanh(-BBath*(-(x-1000) + CBath))) + DBath;
-	if Temporary<10
+	if (Temporary<10)
 		return 10;
 	else
 		return Temporary;

@@ -24,17 +24,17 @@ kappa_sH               	 		0       		# Horizontal mass diffusivity
 gamma 							1.0 			# Coefficient of expansivity of temperature.
 kappa_T                 		0       		# Vertical thermal diffusivity
 kappa_TH                		0       		# Horizontal thermal diffusivity
-nu 								0  			# Laminar viscosity of water (m^2 s^-1) for vertical (W*W*dt=0.01*0.01*5)
+nu 								1e-6  			# Laminar viscosity of water (m^2 s^-1) for vertical (W*W*dt=0.01*0.01*5)
 nu_H 							1      		# Horizontal laminar viscosity of water (m^2 s^-1) (U*U*dt=0.2*0.2*5)
 z0T	               				0.0 			# Top roughness
 z0B	                			0.0				# Bottom roughness
 CdT	                			0.0 			# Drag coefficient at surface
-CdB	                			1e-3			# Drag coefficient at bottom
+CdB	                			5e-3			# Drag coefficient at bottom
 CdW								0				# Drag coefficient at sidewalls
 turbmodel						0			# Turbulence model (0 for none, 1 for MY25)
-dt 								60			# Time step 
+dt 								10			# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							1000   		# Number of steps 6e5
+nsteps 							8000   		# Number of steps 6e5
 ntout   						1	  		# How often to output data 60
 ntprog   						5 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
