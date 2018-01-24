@@ -178,20 +178,28 @@ namespace _1stVer
             }
             YMeshControl = true;
         }
-        private void MakingGridButt_Click(object sender, EventArgs e)
-        {
 
+        private void CreateButton_Click(object sender, EventArgs e)
+        {
             if (YMeshControl && XMeshControl)
             {
                 XDataFinal.AddRange(XDataTemporary.Distinct().ToList());
                 YDataFinal.AddRange(YDataTemporary.Distinct().ToList());
                 MakingGrid();
             }
-            if (!XMeshControl || !YMeshControl)
+            else
             {
                 MessageBox.Show("X Grid or Y Grid has not been successfully made, please rerun the program and makes sure you press add for each direction", "Griding Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (BottomBoundaryCombo.SelectedIndex != -1 && TopBoundaryCombo.SelectedIndex != -1 && RightBoundaryCombo.SelectedIndex != -1 && LeftBoundaryCombo.SelectedIndex != -1)
+                BoundaryControl = true;
+            else
+            {
+                MessageBox.Show("Boundary conditions have not been successfully made, please rerun the program and makes sure you press add for each direction", "Boundary Condition Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            WritingFunction();
         }
         private void MakingGrid()
         {
@@ -279,17 +287,6 @@ namespace _1stVer
             GridControl = true;
         }
 
-        private void CreateButton_Click(object sender, EventArgs e)
-        {
-            if (BottomBoundaryCombo.SelectedIndex != -1 && TopBoundaryCombo.SelectedIndex != -1 && RightBoundaryCombo.SelectedIndex != -1 && LeftBoundaryCombo.SelectedIndex != -1)
-                BoundaryControl = true;
-            if (!BoundaryControl)
-            {
-                MessageBox.Show("Boundary conditions have not been successfully made, please rerun the program and makes sure you press add for each direction", "Boundary Condition Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            WritingFunction();
-        }
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog ResultBrowser = new FolderBrowserDialog();

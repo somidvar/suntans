@@ -44,7 +44,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.XStartingLocationTextbox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.MakingGridButt = new System.Windows.Forms.Button();
             this.YAddButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.YCellNumberTextbox = new System.Windows.Forms.TextBox();
@@ -215,7 +214,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.MakingGridButt);
             this.groupBox2.Controls.Add(this.YAddButton);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.YCellNumberTextbox);
@@ -235,16 +233,6 @@
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Y Direction";
-            // 
-            // MakingGridButt
-            // 
-            this.MakingGridButt.Location = new System.Drawing.Point(100, 182);
-            this.MakingGridButt.Name = "MakingGridButt";
-            this.MakingGridButt.Size = new System.Drawing.Size(80, 23);
-            this.MakingGridButt.TabIndex = 27;
-            this.MakingGridButt.Text = "Make Grid";
-            this.MakingGridButt.UseVisualStyleBackColor = true;
-            this.MakingGridButt.Click += new System.EventHandler(this.MakingGridButt_Click);
             // 
             // YAddButton
             // 
@@ -580,7 +568,6 @@
         private System.Windows.Forms.ComboBox RightBoundaryCombo;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox TopBoundaryCombo;
-        private System.Windows.Forms.Button MakingGridButt;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox XInitialStepTextbox;
         private System.Windows.Forms.Label label9;
