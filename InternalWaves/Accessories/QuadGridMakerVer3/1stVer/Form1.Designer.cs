@@ -34,9 +34,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.XCellNumberTextbox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.XSteppingRatioTextbox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.XStartingValueTextbox = new System.Windows.Forms.TextBox();
+            this.XStepRatioTextbox = new System.Windows.Forms.TextBox();
             this.XSteppingMethodCombo = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -49,9 +47,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.YCellNumberTextbox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.YSteppingRatioTextbox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.YStartingValueTextbox = new System.Windows.Forms.TextBox();
+            this.YStepRatioTextbox = new System.Windows.Forms.TextBox();
             this.YSteppingMethodCombo = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -85,6 +81,10 @@
             this.BathymetryCombo = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.ATextbox = new System.Windows.Forms.TextBox();
+            this.YInitialStepTextbox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.XInitialStepTextbox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -98,9 +98,9 @@
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.XCellNumberTextbox);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.XSteppingRatioTextbox);
+            this.groupBox1.Controls.Add(this.XStepRatioTextbox);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.XStartingValueTextbox);
+            this.groupBox1.Controls.Add(this.XInitialStepTextbox);
             this.groupBox1.Controls.Add(this.XSteppingMethodCombo);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -145,34 +145,17 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 121);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 13);
+            this.label5.Size = new System.Drawing.Size(57, 13);
             this.label5.TabIndex = 23;
-            this.label5.Text = "Stepping Ratio";
+            this.label5.Text = "Step Ratio";
             // 
-            // XSteppingRatioTextbox
+            // XStepRatioTextbox
             // 
-            this.XSteppingRatioTextbox.Enabled = false;
-            this.XSteppingRatioTextbox.Location = new System.Drawing.Point(100, 118);
-            this.XSteppingRatioTextbox.Name = "XSteppingRatioTextbox";
-            this.XSteppingRatioTextbox.Size = new System.Drawing.Size(80, 20);
-            this.XSteppingRatioTextbox.TabIndex = 22;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 95);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Starting Value";
-            // 
-            // XStartingValueTextbox
-            // 
-            this.XStartingValueTextbox.Enabled = false;
-            this.XStartingValueTextbox.Location = new System.Drawing.Point(100, 92);
-            this.XStartingValueTextbox.Name = "XStartingValueTextbox";
-            this.XStartingValueTextbox.Size = new System.Drawing.Size(80, 20);
-            this.XStartingValueTextbox.TabIndex = 20;
+            this.XStepRatioTextbox.Enabled = false;
+            this.XStepRatioTextbox.Location = new System.Drawing.Point(100, 118);
+            this.XStepRatioTextbox.Name = "XStepRatioTextbox";
+            this.XStepRatioTextbox.Size = new System.Drawing.Size(80, 20);
+            this.XStepRatioTextbox.TabIndex = 22;
             // 
             // XSteppingMethodCombo
             // 
@@ -234,9 +217,9 @@
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.YCellNumberTextbox);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.YSteppingRatioTextbox);
+            this.groupBox2.Controls.Add(this.YStepRatioTextbox);
             this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.YStartingValueTextbox);
+            this.groupBox2.Controls.Add(this.YInitialStepTextbox);
             this.groupBox2.Controls.Add(this.YSteppingMethodCombo);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.label11);
@@ -291,34 +274,17 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(6, 121);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 13);
+            this.label8.Size = new System.Drawing.Size(57, 13);
             this.label8.TabIndex = 23;
-            this.label8.Text = "Stepping Ratio";
+            this.label8.Text = "Step Ratio";
             // 
-            // YSteppingRatioTextbox
+            // YStepRatioTextbox
             // 
-            this.YSteppingRatioTextbox.Enabled = false;
-            this.YSteppingRatioTextbox.Location = new System.Drawing.Point(100, 118);
-            this.YSteppingRatioTextbox.Name = "YSteppingRatioTextbox";
-            this.YSteppingRatioTextbox.Size = new System.Drawing.Size(80, 20);
-            this.YSteppingRatioTextbox.TabIndex = 22;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 95);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(73, 13);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Starting Value";
-            // 
-            // YStartingValueTextbox
-            // 
-            this.YStartingValueTextbox.Enabled = false;
-            this.YStartingValueTextbox.Location = new System.Drawing.Point(100, 92);
-            this.YStartingValueTextbox.Name = "YStartingValueTextbox";
-            this.YStartingValueTextbox.Size = new System.Drawing.Size(80, 20);
-            this.YStartingValueTextbox.TabIndex = 20;
+            this.YStepRatioTextbox.Enabled = false;
+            this.YStepRatioTextbox.Location = new System.Drawing.Point(100, 118);
+            this.YStepRatioTextbox.Name = "YStepRatioTextbox";
+            this.YStepRatioTextbox.Size = new System.Drawing.Size(80, 20);
+            this.YStepRatioTextbox.TabIndex = 22;
             // 
             // YSteppingMethodCombo
             // 
@@ -653,6 +619,40 @@
             this.ATextbox.Size = new System.Drawing.Size(42, 20);
             this.ATextbox.TabIndex = 27;
             // 
+            // YInitialStepTextbox
+            // 
+            this.YInitialStepTextbox.Enabled = false;
+            this.YInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
+            this.YInitialStepTextbox.Name = "YInitialStepTextbox";
+            this.YInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
+            this.YInitialStepTextbox.TabIndex = 20;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 95);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Initial Step";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Initial Step";
+            // 
+            // XInitialStepTextbox
+            // 
+            this.XInitialStepTextbox.Enabled = false;
+            this.XInitialStepTextbox.Location = new System.Drawing.Point(100, 92);
+            this.XInitialStepTextbox.Name = "XInitialStepTextbox";
+            this.XInitialStepTextbox.Size = new System.Drawing.Size(80, 20);
+            this.XInitialStepTextbox.TabIndex = 20;
+            // 
             // QuadGridBathymetryInitiation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -687,9 +687,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox XCellNumberTextbox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox XSteppingRatioTextbox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox XStartingValueTextbox;
+        private System.Windows.Forms.TextBox XStepRatioTextbox;
         private System.Windows.Forms.ComboBox XSteppingMethodCombo;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
@@ -701,9 +699,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox YCellNumberTextbox;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox YSteppingRatioTextbox;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox YStartingValueTextbox;
+        private System.Windows.Forms.TextBox YStepRatioTextbox;
         private System.Windows.Forms.ComboBox YSteppingMethodCombo;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
@@ -738,7 +734,10 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox ATextbox;
         private System.Windows.Forms.Button MakingGridButt;
-
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox XInitialStepTextbox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox YInitialStepTextbox;
     }
 }
 

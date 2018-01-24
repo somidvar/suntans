@@ -30,9 +30,10 @@ shading flat;
 colorbar;
 figure;
 
+
 for k=1:size(Time,1)
-    %pcolor(U(:,:,k));shading flat;colorbar;
-    %caxis([-0.015 0.015]);
-    %camroll(-90);
+    pcolor(U(:,:,k));shading flat;colorbar;
+    caxis([0.8*nanmin(nanmin(nanmin(U))) 0.8*nanmax(nanmax(nanmax(U)))]);
+    camroll(-90);
     pause(0.1);
 end

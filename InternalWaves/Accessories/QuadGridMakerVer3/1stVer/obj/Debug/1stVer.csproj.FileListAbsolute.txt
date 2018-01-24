@@ -97,3 +97,12 @@ D:\OneDrive - University of Georgia\SUNTANS-Programs\QuadGridMakerVer3\1stVer\ob
 D:\OneDrive - University of Georgia\SUNTANS-Programs\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.csproj.GenerateResource.Cache
 D:\OneDrive - University of Georgia\SUNTANS-Programs\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.exe
 D:\OneDrive - University of Georgia\SUNTANS-Programs\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.pdb
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\bin\Debug\1stVer.exe.config
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\bin\Debug\1stVer.exe
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\bin\Debug\1stVer.pdb
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.csprojResolveAssemblyReference.cache
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\_1stVer.QuadGridBathymetryInitiation.resources
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\_1stVer.Properties.Resources.resources
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.csproj.GenerateResource.Cache
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.exe
+D:\github\suntans\InternalWaves\Accessories\QuadGridMakerVer3\1stVer\obj\Debug\1stVer.pdb
