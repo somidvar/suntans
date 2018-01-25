@@ -92,18 +92,28 @@ REAL ReturnDepth(REAL x, REAL y) {
 	return ABath*(tanh(-BBath*(-x + CBath))) + DBath;	
 	*/
 	//Added by ----Sorush Omidvar---- when the shore is located at x=0.End
-	//Added by ----Sorush Omidvar---- when the shore is located at x=0.In this the shore side is extended by 1 Km and also the bathymetry is cut by Z=-10.Start
-	REAL ABath, BBath, CBath, DBath;
-	ABath = 40;
-    BBath = 0.0009;
-    CBath = 1500;
-    DBath = 35;
-	REAL Temporary=ABath*(tanh(-BBath*(-(x-1000) + CBath))) + DBath;
-	if (Temporary<10)
-		return 10;
-	else
-		return Temporary;
-	//Added by ----Sorush Omidvar---- when the shore is located at x=0.In this the shore side is extended by 1 Km and also the bathymetry is cut by Z=-10.End
+	REAL p1,p2,p3,p4,p5;
+	if (x<51)
+        return 5;
+    else if (x<1080)
+	{
+        p1 = 5e-11;
+        p2 = -3e-8;
+        p3 = -7e-5;
+        p4 = .0032;
+        p5 = -5;
+        return -1*(p1*X(i).^4+p2*X(i).^3+p3*X(i).^2+p4*X(i)+p5);
+	}
+    else if (x<7280)
+	{
+        p1 = 4e-7;
+        p2 = -0.0069;
+        p3 = -45.97;
+        return -1*(p1*X(i).^2+p2*X(i)+p3);
+	}
+    else
+        return 75;
+	//Added by ----Sorush Omidvar---- when the shore is located at x=0.Based on Walter's 2012 paper.end
 	
 }
 
