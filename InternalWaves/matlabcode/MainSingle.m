@@ -6,7 +6,6 @@ clear all;
 clc
 
 CaseNumber=10010;
-
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
 
@@ -18,7 +17,8 @@ if SapeloFlag
 else
     DataPath=strcat('F:\6th\suntans-6th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
 end
-
+DataPath='D:\Result_0000.nc';
+CurrentPath='D:\';
 if exist(DataPath,'file')==0
     disp('There is no NETCDF file to process')
     return;
@@ -38,7 +38,7 @@ AnalysisSpeed=2;
 FPSMovie=5;
 
 %Setting the wind frequency based on the cases
-WindTauMax=0;
+TauMax=0;
 SemiDiurnalTideOmega=0;
 DiurnalTideOmega=0;
 WindOmega=2*pi/(24*3600);
@@ -87,8 +87,8 @@ elseif mod(CaseNumber,4)==3
     DiurnalTideOmega=2*pi/(23.93*3600);
     SemiDiurnalTideOmega=2*pi/(12.42*3600);        
 end
-WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,strcat(DataPath,'Result_0000.nc'),CurrentPath,CaseName);
+WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,CurrentPath,CaseNumber);
 % EnergyFluxCalculatorVer14(DataPath,CaseNumber,...
 %     KnuH,KappaH,g,InterpolationEnhancement,XLocation,XEndIndex,...
-%     DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
+%     DiurnalTideOmega,SemiDiurnalTideOmega,TauMax,TimeStartIndex,...
 %     TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);

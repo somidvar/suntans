@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-dirname = 'C:\Users\omidvar\Desktop\iwaves\data';
+dirname = 'C:\Users\omidvar\Desktop';
 EMPTY = 999999;
 
 fname = [dirname,'\profdata.dat'];
