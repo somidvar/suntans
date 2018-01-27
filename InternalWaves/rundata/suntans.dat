@@ -3,7 +3,7 @@
 #  Input file for SUNTANS.
 #
 ########################################################################
-Nkmax							150			# Number of cells in the vertical
+Nkmax							150				# Number of cells in the vertical
 stairstep						0				# 1 if stair-stepping, 0 if partial-stepping
 rstretch						1				# Stretching factor for vertical grid (1<=rstretch<1.1)
 CorrectVoronoi					0				# Whether or not to correct Voronoi points
@@ -24,21 +24,21 @@ kappa_sH               	 		0       		# Horizontal mass diffusivity
 gamma 							1.0 			# Coefficient of expansivity of temperature.
 kappa_T                 		0       		# Vertical thermal diffusivity
 kappa_TH                		0       		# Horizontal thermal diffusivity
-nu 								1e-6  			# Laminar viscosity of water (m^2 s^-1) for vertical (W*W*dt=0.01*0.01*5)
-nu_H 							1      		# Horizontal laminar viscosity of water (m^2 s^-1) (U*U*dt=0.2*0.2*5)
+nu 								5e-3	  		# Vertical eddy viscosity of water (m^2 s^-1) for vertical (NuV>0.5*Wmax*Wmax*dt=0.5*0.005^2*10)
+nu_H 							1	    	  	# Horizontal laminar viscosity of water (m^2 s^-1) (NuH>0.5*Umax*Umax*dt=0.5*0.1^2*10)
 z0T	               				0.0 			# Top roughness
 z0B	                			0.0				# Bottom roughness
 CdT	                			0.0 			# Drag coefficient at surface
-CdB	                			5e-3			# Drag coefficient at bottom
+CdB	                			1e-3			# Drag coefficient at bottom
 CdW								0				# Drag coefficient at sidewalls
-turbmodel						0			# Turbulence model (0 for none, 1 for MY25)
-dt 								10			# Time step 
+turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
+dt 								10				# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							4000   		# Number of steps 6e5
-ntout   						1	  		# How often to output data 60
-ntprog   						5 				# How often to report progress (in %)
+nsteps 							86000   		# Number of steps 6e5
+ntout   						30	  			# How often to output data 60
+ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
-nonhydrostatic					0			# 0 = hydrostatic, 1 = nonhydrostatic
+nonhydrostatic					1				# 0 = hydrostatic, 1 = nonhydrostatic
 cgsolver						1				# 0 = GS, 1 = CG
 maxiters						1e3				# Maximum number of CG iterations
 qmaxiters						2e3				# Maximum number of CG iterations for nonhydrostatic pressure
@@ -48,7 +48,7 @@ qepsilon						1e-5			# Tolerance for CG convergence for nonhydrostatic pressure
 resnorm							0				# Normalized or non-normalized residual
 relax							1				# Relaxation parameter for GS solver.	
 amp 							0				# amplitude
-omega 							7.268e-5		# frequency
+omega 							0				# frequency
 flux 							0				# flux
 timescale						0				# timescale for open boundary condition
 volcheck						0				# Check for volume conservation
@@ -94,7 +94,7 @@ hprecond						1 				# 0:No preconditioner for free-surface solver, 1:Jacobi prec
 interp							0 				# default value uses classic SUNTANS Perot method (type 0) vs Quadratic (type 1)
 linearFS						0 				# value is for a nonlinear free surface
 smoothbot						0 				# Treatment in SetFluxHeight and ComputeVelocityVector for smooth bottom flow when partial stepping is used
-RadiationBoundary   			0   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
+RadiationBoundary   			1   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
 SpongeMean						0e4 	    	# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
 SpongeSTD						2e3		   		# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
 SpongeCellLocationX				49950			# X Location of Sponge Layer
@@ -102,9 +102,9 @@ SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationX				50000			# X Location of Sponge Layer
 SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod
-DiurnalTideAmplitude			0			# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -2.95e-2
+DiurnalTideAmplitude			-0.0581		# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -2.95e-2
 SemiDiurnalTidePeriod			44712			# Semi-Diurnal tidal priod
-SemiDiurnalTideAmplitude		-0.07		# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -7.5e-2
+SemiDiurnalTideAmplitude		-0.0791		# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -7.5e-2
 DiurnalWindPeriod				86400			# Diurnal Wind Period
 ASal							0.821			# Salinity range variation Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 BSal							0.1				# Salinity gradient used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal

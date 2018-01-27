@@ -73,6 +73,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 		}
 		
 		//Velocity relaxation at each edge
+		/*
 		for(EdgeCounter=0;EdgeCounter<grid->Ne;EdgeCounter++)
 		{
 			if(grid->n1[EdgeCounter]!=0)
@@ -113,6 +114,7 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				}
 			}
 		}
+		*/
 	}
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.end
 	

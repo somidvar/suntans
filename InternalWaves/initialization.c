@@ -100,16 +100,16 @@ REAL ReturnDepth(REAL x, REAL y) {
         p1 = 5e-11;
         p2 = -3e-8;
         p3 = -7e-5;
-        p4 = .0032;
+        p4 = 0.0032;
         p5 = -5;
-        return -1*(p1*X(i).^4+p2*X(i).^3+p3*X(i).^2+p4*X(i)+p5);
+        return -1*(p1*x*x*x*x+p2*x*x*x+p3*x*x+p4*x+p5);
 	}
     else if (x<7280)
 	{
         p1 = 4e-7;
         p2 = -0.0069;
         p3 = -45.97;
-        return -1*(p1*X(i).^2+p2*X(i)+p3);
+        return -1*(p1*x*x+p2*x+p3);
 	}
     else
         return 75;
