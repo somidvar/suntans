@@ -28,4 +28,8 @@ for i=1:size(X,1)
         Bathymetry(i)=-75;
     end
 end
-plot(X,Bathymetry);
+plot(X(1:1000)/1000,Bathymetry(1:1000));
+xlabel('Offshore Distance (Km)')
+ylabel('Depth (m)');
+title('Bathymetry');
+

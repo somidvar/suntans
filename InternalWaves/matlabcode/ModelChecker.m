@@ -3,7 +3,8 @@ close all;
 clc
 
 
-DataPath='D:\Result_0000.nc';
+DataPath='D:\test3\InternalWaves\data\Result_0000.nc';
+%DataPath='D:\Result_0000.nc';
 
 U=ncread(DataPath,'uc');
 Eta=ncread(DataPath,'eta');
@@ -20,6 +21,16 @@ HTotalDiff=diff(HTotal,1,2);
 HTotalDiff(:,end+1,:)=HTotalDiff(:,end,:);
 
 UH=squeeze(nansum(U.*HTotalDiff,2))./Depth;
+plot(UH(21,:));
+xlabel('time');
+ylabel('UBT 15 m');
+figure 
+pcolor(Eta);
+shading flat;
+colorbar;
+xlabel('time');
+ylabel('offshore');
+
 % pcolor(UH);
 % shading flat;
 % colorbar;
@@ -29,11 +40,12 @@ UH=squeeze(nansum(U.*HTotalDiff,2))./Depth;
 % shading flat;
 % colorbar;
 % figure;
-
-
-for k=1:size(Time,1)
-    pcolor(U(:,:,k));shading flat;colorbar;
-    %caxis([0.8*nanmin(nanmin(nanmin(U))) 0.8*nanmax(nanmax(nanmax(U)))]);
-    camroll(-90);
-    pause(0.1);
-end
+% 
+% figure('units','normalized','outerposition',[0 0 1 1])
+% for k=1:size(Time,1)
+%     pcolor(Z,X(1:250),U(1:250,:,k));shading flat;colorbar;caxis([-0.01 0.01]);
+%     camroll(90);
+%     str=strcat('Time is:',num2str(Time(k)/3600),' (hr)');
+%     title(str);
+%     pause(0.01);
+% end

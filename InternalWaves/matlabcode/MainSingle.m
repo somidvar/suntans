@@ -17,7 +17,7 @@ if SapeloFlag
 else
     DataPath=strcat('F:\6th\suntans-6th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
 end
-DataPath='D:\Result_0000.nc';
+%DataPath='D:\New folder\test1\InternalWaves\data\Result_0000.nc';
 CurrentPath='D:\';
 if exist(DataPath,'file')==0
     disp('There is no NETCDF file to process')
