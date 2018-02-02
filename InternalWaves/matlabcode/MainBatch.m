@@ -36,7 +36,6 @@ for CaseNumber=70001:1:70047
     DragCoeff=0.005;
     InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
     XEndIndex=550;% The data trim after this X point
-    XLocation=17;
     TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
     TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
     
@@ -87,7 +86,7 @@ for CaseNumber=70001:1:70047
     end
     %WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
     EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
-        KnuH,KappaH,g,InterpolationEnhancement,XLocation,XEndIndex,...
+        KnuH,KnuV,g,InterpolationEnhancement,XEndIndex,...
         DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
         TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
 end
