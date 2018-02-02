@@ -6,29 +6,22 @@
 %"Energetics of Barotropic and Baroclinic Tides in the Monterey Bay Area"
 %in 2011
 
-function EnergyFluxCalculatorVer14(DataPath,CaseNumber,KnuH,KappaH,g,...
+function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,~,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
     PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag)
 
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
     disp('Reading the NETCDF')
-    InputNETCDF=DataPath;%The NETCDF file from SUNTANS
-    if SapeloFlag
-        OutputNETCDF=strcat('/lustre1/omidvar/work-directory_0801/6th-Processed/',num2str(CaseNumber),'-EnergyFlux.nc');%The energy
-    else
-        %OutputNETCDF=strcat('F:\6th-Processed\',num2str(CaseNumber),'-EnergyFlux.nc');%The energy flux calculation results
-        OutputNETCDF=strcat('D:\10010-EnergyFlux.nc');%The energy flux calculation results
-    end
-    X=ncread(InputNETCDF,'xv',1,XEndIndex);
-    Time=ncread(InputNETCDF,'time',TimeStartIndex,CountTimeIndex);
-    ZC=-ncread(InputNETCDF,'z_r');%I changed ZC and ZE sign to make it compatible with formulas
-    Eta=ncread(InputNETCDF,'eta',[1,TimeStartIndex],[XEndIndex,CountTimeIndex]);
-    Density=1000*ncread(InputNETCDF,'rho',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex])+1000;
+    X=ncread(DataPath,'xv',1,XEndIndex);
+    Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex);
+    ZC=-ncread(DataPath,'z_r');%I changed ZC and ZE sign to make it compatible with formulas
+    Eta=ncread(DataPath,'eta',[1,TimeStartIndex],[XEndIndex,CountTimeIndex]);
+    Density=1000*ncread(DataPath,'rho',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex])+1000;
     Rho0=1025;%Setting the reference density
 %     Q=ncread(InputNETCDF,'q',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
 %     Q=Q.*Rho0;%Scaling the non-hydrostatic pressure
-    u=ncread(InputNETCDF,'uc',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
+    u=ncread(DataPath,'uc',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
 %     w=ncread(InputNETCDF,'w',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
 %     w=movsum(w,2,2)/2;%Averaging the w over two horizontal edge to get the center value
 %     w(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
@@ -53,12 +46,12 @@ function EnergyFluxCalculatorVer14(DataPath,CaseNumber,KnuH,KappaH,g,...
     Z3DDiff(:,end+1,:)=Z3DDiff(:,end,:);    
     
 
-%     disp('EPPrime calculation is started')
-%     EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,Rho0,InterpolationEnhancement,g,SapeloFlag);
-%     EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
-%     EPPrime= cell2mat(EPPrimeConv);
-%     clear EPPrimeCell EPPrimeConv;
-%     disp('EPPrime calculation is done')
+    disp('EPPrime calculation is started')
+    EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,Rho0,InterpolationEnhancement,g,SapeloFlag);
+    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
+    EPPrime= cell2mat(EPPrimeConv);
+    clear EPPrimeCell EPPrimeConv;
+    disp('EPPrime calculation is done')
 
     RhoB=Density(:,:,1)-Rho0;
     RhoPrime=Density-repmat(RhoB,1,1,size(Time,1))-Rho0;
@@ -79,7 +72,7 @@ function EnergyFluxCalculatorVer14(DataPath,CaseNumber,KnuH,KappaH,g,...
     %Creating the output NETCDF
     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
     mode = netcdf.getConstant('CLOBBER');
-    NETCDFID = netcdf.create(OutputNETCDF,mode);
+    NETCDFID = netcdf.create(strcat(OutputAddress,num2str(CaseNumber),'EnergyFlux.nc'),mode);
     disp('The NETCDF file for energy flux is created')
 
     %Creating the dimensions for the NETCDF

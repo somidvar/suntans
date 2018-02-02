@@ -1,6 +1,6 @@
 %This code is plotting the SUNTANS results for several case scenarios with similar names
 %Code written by Sorush Omidvar in July 2016 at UGA
-function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,CurrentPath,CaseName)
+function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,OutputAddress,CaseNumber)
     %Reading time and setting some 5 basic variables
     Time=ncread(DataPath,'time');
     %Reading Density
@@ -11,45 +11,45 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     
     Results=1000*ncread(DataPath,'rho')+1000;
     DiagramTitle=sprintf('Density (Kg/m^3)');
-    MovieName=strcat(CaseName,'-Density');
+    MovieName=strcat(CaseNumber,'-Density');
     YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Density (Kg/m^3) Anamoly');
 %     MovieName=strcat(CaseName,'-Density Anamoly');
 %     %Removing the background Density
 %     BenchMark=Results(:,:,1);
 %     Results=Results-repmat(BenchMark,1,1,size(Results,3));
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
     
     %Reading Salinity
     Results=ncread(DataPath,'salt');
     DiagramTitle=sprintf('Salinity (PSU)');
-    MovieName=strcat(CaseName,'-Salinity');
+    MovieName=strcat(CaseNumber,'-Salinity');
     YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Salinity (PSU) Anamoly');
 %     MovieName=strcat(CaseName,'-Salinity Anamoly');
 %     %Removing the background salinity
 %     BenchMark=Results(:,:,1);
 %     Results=Results-repmat(BenchMark,1,1,size(Results,3));
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
 %     %Reading Pressure
 %     Results=ncread(DataPath,'q');
 %     DiagramTitle=sprintf('Non-Hydrostatic Pressure (Pa)');
 %     MovieName=strcat(CaseName,'-Non Hydrostatic Pressure');
 %     YLabel='Depth (m)';
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
 %     clear Results;
 
     %Reading Horizontal Velocity
     Results=ncread(DataPath,'uc');
     DiagramTitle=sprintf('Horizontal Velocity (m/s)');
-    MovieName=strcat(CaseName,'-Horizontal Velocity');
+    MovieName=strcat(CaseNumber,'-Horizontal Velocity');
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
     
     
     %Reading Vertical Velocity
@@ -58,21 +58,21 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     Z=-Z;
     [XX,ZZ]=meshgrid(Z,X);
     DiagramTitle=sprintf('Vertical Velocity (m/s)');
-    MovieName=strcat(CaseName,'-Vertical Velocity');   
+    MovieName=strcat(CaseNumber,'-Vertical Velocity');   
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
     X=ncread(DataPath,'xv');
     DiagramTitle=sprintf('Water Level (m)');
-    MovieName=strcat(CaseName,'-Water Level');
+    MovieName=strcat(CaseNumber,'-Water Level');
     YLabel='Elevation (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
 end
 
-function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,CurrentPath)
+function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress)
     close all;
     %Making the figure as big as possible based on the monitor resolution
     FigureSize=[1900,850];
@@ -216,7 +216,7 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
         end        
     end
     %Creating movie using the MPEG-4 to conserve quality and make it smaller 
-    ResultVideoWriter=VideoWriter(strcat(CurrentPath,MovieName),'MPEG-4');
+    ResultVideoWriter=VideoWriter(strcat(OutputAddress,MovieName),'MPEG-4');
     ResultVideoWriter.FrameRate=FPSMovie;
     open(ResultVideoWriter);
     for counter=1:size(MovieData,2)
