@@ -1,75 +1,74 @@
 %This code is plotting the SUNTANS results for several case scenarios with similar names
 %Code written by Sorush Omidvar in July 2016 at UGA
 function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,OutputAddress,CaseNumber)
-    %Reading time and setting some 5 basic variables
     Time=ncread(DataPath,'time');
-    %Reading Density
-    X=ncread(DataPath,'xv');
+    X=ncread(DataPath,'xv');   
     Z=ncread(DataPath,'z_r');
     Z=-Z;
-    [XX,ZZ]=meshgrid(Z,X);
     
     Results=1000*ncread(DataPath,'rho')+1000;
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated);  
     DiagramTitle=sprintf('Density (Kg/m^3)');
     MovieName=strcat(CaseNumber,'-Density');
     YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Density (Kg/m^3) Anamoly');
 %     MovieName=strcat(CaseName,'-Density Anamoly');
 %     %Removing the background Density
 %     BenchMark=Results(:,:,1);
 %     Results=Results-repmat(BenchMark,1,1,size(Results,3));
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
     
     %Reading Salinity
     Results=ncread(DataPath,'salt');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated);  
     DiagramTitle=sprintf('Salinity (PSU)');
     MovieName=strcat(CaseNumber,'-Salinity');
     YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
-%     DiagramTitle=sprintf('Salinity (PSU) Anamoly');
-%     MovieName=strcat(CaseName,'-Salinity Anamoly');
-%     %Removing the background salinity
-%     BenchMark=Results(:,:,1);
-%     Results=Results-repmat(BenchMark,1,1,size(Results,3));
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
-
 %     %Reading Pressure
 %     Results=ncread(DataPath,'q');
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     [XX,ZZ]=meshgrid(Z,XTruncated); 
 %     DiagramTitle=sprintf('Non-Hydrostatic Pressure (Pa)');
 %     MovieName=strcat(CaseName,'-Non Hydrostatic Pressure');
 %     YLabel='Depth (m)';
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
 %     clear Results;
 
     %Reading Horizontal Velocity
     Results=ncread(DataPath,'uc');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated); 
     DiagramTitle=sprintf('Horizontal Velocity (m/s)');
     MovieName=strcat(CaseNumber,'-Horizontal Velocity');
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
-    
-    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+        
     %Reading Vertical Velocity
     Results=ncread(DataPath,'w');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    
     Z=ncread(DataPath,'z_w');
     Z=-Z;
-    [XX,ZZ]=meshgrid(Z,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated); 
     DiagramTitle=sprintf('Vertical Velocity (m/s)');
     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
     X=ncread(DataPath,'xv');
+    [Results,XTruncated]=DataXTruncator(Results,X);
     DiagramTitle=sprintf('Water Level (m)');
     MovieName=strcat(CaseNumber,'-Water Level');
     YLabel='Elevation (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
-
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 end
 
 function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress)
@@ -223,4 +222,34 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
         writeVideo(ResultVideoWriter,MovieData(counter).cdata);
     end
     close(ResultVideoWriter);
+end
+
+function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
+    %This function reduce the resolution in X direction to save some space.
+    %The high resolution was inforced by stability in SUNTANS.
+    DataIndex=[];
+    for i=1:size(X,1)
+        if X(i)<5000
+            continue;
+        elseif (X(i)>5000 && X(i)<10000)
+            if mod(X(i)-5000,100)~=10%make it each 100 meter
+                DataIndex(end+1)=i;
+            end
+        else
+            if mod(X(i)-10000,500)~=10%make it each 100 meter
+                DataIndex(end+1)=i;
+            end            
+        end
+    end
+    XTruncated=X;
+    XTruncated(DataIndex)=[];
+    DataTruncated=Data;
+    if ndims(Data)==2
+        DataTruncated(DataIndex,:)=[];
+    elseif ndims(Data)==3
+        DataTruncated(DataIndex,:,:)=[];
+    else
+        disp('Error happened in DataXTruncator function');
+        return;
+    end
 end

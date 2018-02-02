@@ -6,32 +6,38 @@
 %"Energetics of Barotropic and Baroclinic Tides in the Monterey Bay Area"
 %in 2011
 
-function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KnuV,g,...
+function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
     PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag)
-    
-    KappaH=0;
+
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
     disp('Reading the NETCDF')
     X=ncread(DataPath,'xv',1,XEndIndex);
     Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex);
     ZC=-ncread(DataPath,'z_r');%I changed ZC and ZE sign to make it compatible with formulas
     Eta=ncread(DataPath,'eta',[1,TimeStartIndex],[XEndIndex,CountTimeIndex]);
+    [Eta,~]=DataXTruncator(Eta,X);
+    disp('Eta is done')
     Density=1000*ncread(DataPath,'rho',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex])+1000;
+    [Density,~]=DataXTruncator(Density,X);
+    disp('Density is done')
     Rho0=1025;%Setting the reference density
-%     Q=ncread(InputNETCDF,'q',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
-%     Q=Q.*Rho0;%Scaling the non-hydrostatic pressure
-    u=ncread(DataPath,'uc',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
-%     w=ncread(InputNETCDF,'w',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
-%     w=movsum(w,2,2)/2;%Averaging the w over two horizontal edge to get the center value
-%     w(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
+    RhoB=1000*ncread(DataPath,'rho',[1,1,1],[XEndIndex,Inf,1])+1000-Rho0;
+    [RhoB,~]=DataXTruncator(RhoB,X);
+    Q=ncread(DataPath,'q',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]).*Rho0;%Scaling the non-hydrostatic pressure
+    [Q,~]=DataXTruncator(Q,X);
+    disp('Q is done')
+    UC=ncread(DataPath,'uc',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
+    [UC,~]=DataXTruncator(UC,X);
+    disp('UC is done')
+    W=ncread(DataPath,'w',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]);
+    W=movsum(W,2,2)/2;%Averaging the w over two horizontal edge to get the center value
+    W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
+    [W,X]=DataXTruncator(W,X);
+    disp('W is done')
+    
     disp('NETCDF reading is compeleted')
-    %Calculating Brunt-Vaisala max at the pycnocline
-    BruntVaisalaMax=diff(transpose(squeeze(Density(end,:,1))),1,1)...
-        ./diff(ZC,1,1)/Rho0*g;
-    BruntVaisalaMax=(-BruntVaisalaMax).^0.5;
-    BruntVaisalaMax=max(BruntVaisalaMax);
 
     XXT=repmat(X,1,size(Time,1));%Repeating the X array in 3D for later used
     XXZT=repmat(X,1,size(ZC,1),size(Time,1));%Repeating the X array in 2D for later used
@@ -48,19 +54,18 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KnuV,g,...
     
 
     disp('EPPrime calculation is started')
-    EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,Rho0,InterpolationEnhancement,g,SapeloFlag);
+    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoB,InterpolationEnhancement,g,SapeloFlag);
     EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
     EPPrime= cell2mat(EPPrimeConv);
     clear EPPrimeCell EPPrimeConv;
     disp('EPPrime calculation is done')
 
-    RhoB=Density(:,:,1)-Rho0;
     RhoPrime=Density-repmat(RhoB,1,1,size(Time,1))-Rho0;
 
     HTotal=squeeze(nanmax(Z3D,[],2)-nanmin(Z3D,[],2));
     
-    UH=squeeze(nansum(u.*Z3DDiff,2))./HTotal;
-    UPrime=u-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
+    UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
+    UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
     DPlusZ=permute(repmat(HTotal,1,1,size(ZC,1)),[1,3,2])+Z3D;
     DPlusZ=DPlusZ+repmat(RhoB,1,1,size(Time,1))*0;%To consider the NAN values
@@ -88,13 +93,12 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KnuV,g,...
     WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
     WritingParameter(NETCDFID,PycnoclineDepthIndex,'PycnoclineIndex','NC_FLOAT',SingleID,'Index of Z at which Pycnocline is located','-','Index');
     WritingParameter(NETCDFID,BathymetryXLocationAtPycnoclineIndex,'BathymetryXPycnoclineIndex','NC_FLOAT',SingleID,'Index of X at which bathymetry confront with pycnocline (offshore distance)','-','index');
-    WritingParameter(NETCDFID,BruntVaisalaMax,'BruntVaisalaMax','NC_FLOAT',SingleID,'Maximum Brunt Vaisala at the pycnocline','-','1/s');
     WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
     WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
-    WritingParameter(NETCDFID,u,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
-    WritingParameter(NETCDFID,w,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
+    WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
+    WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
 
     PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
@@ -103,7 +107,7 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KnuV,g,...
     WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated)','17','Wat/m^2');
 
     EK0=0.5*Rho0*UH.^2;
-    EKPrime=0.5*Rho0*(UPrime.^2+w.^2);
+    EKPrime=0.5*Rho0*(UPrime.^2+W.^2);
     EKPrime0=Rho0*permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]).*UPrime;
 
     Advection1=UH.*EK0.*HTotal;%it is depth integrated by itself!
@@ -129,17 +133,17 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KnuV,g,...
     WritingParameter(NETCDFID,F0Bar,'F0Bar','NC_FLOAT',[XDimID,TimeDimID],'Barotropic Energy Flux (Depth integrated)','15','Wat/m');
     disp('F0Bar calculation is done')
 
-    AdvectionPrime1=u.*EKPrime;
+    AdvectionPrime1=UC.*EKPrime;
     Temporary=squeeze(nansum(AdvectionPrime1.*Z3DDiff,2));
     Temporary=nanmean(Temporary,2);
     WritingParameter(NETCDFID,Temporary,'AdvectionPrime1','NC_FLOAT',XDimID,'Advection of the baroclinic kinetic energy (Depth integrated and time averaged)','16','Wat/m');
 
-    AdvectionPrime2=u.*EKPrime0;
+    AdvectionPrime2=UC.*EKPrime0;
     Temporary=squeeze(nansum(AdvectionPrime2.*Z3DDiff,2));
     Temporary=nanmean(Temporary,2);  
     WritingParameter(NETCDFID,Temporary,'AdvectionPrime2','NC_FLOAT',XDimID,'Advection of the barotropic-baroclinic kinetic energy (Depth integrated and time averaged)','16','Wat/m');
 
-    AdvectionPrime3=u.*EPPrime;
+    AdvectionPrime3=UC.*EPPrime;
     WritingParameter(NETCDFID,AdvectionPrime3,'AdvectionPrime3','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Advection of available potential energy','16','Wat/m');
 
     PressureWorkPrime1=UPrime.*PPrime;
@@ -402,7 +406,7 @@ function EnergyFluxInterpreter(X,Time,XLocation,CaseNumber...
     saveas(FIG,[num2str(CaseNumber),'-Dissipation.png']);
 end
 
-function EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,RhoKnot,Accuracy,g,SapeloFlag)
+function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,SapeloFlag)
     
     if(SapeloFlag)
         c = parcluster('local');
@@ -419,7 +423,6 @@ function EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,RhoKnot,Accuracy,g,Sape
 
     Z=linspace(ZC(1),ZC(end),Accuracy*size(ZC,1));
     ZStep=Z(1)-Z(2);
-    RhoB=squeeze(Density(:,:,1))-RhoKnot;
     EPPrimeCell=cell(size(X,1),1);
     DensityCell=cell(size(X,1),1);
 
@@ -476,5 +479,35 @@ function EPPrimeCell=EPCalculatorVer12(X,ZC,Time,Density,RhoKnot,Accuracy,g,Sape
         ProgressString=num2str(ProgressStatus/size(X,1)*100,'%2.2f');
         disp(strcat('Progress Percentage=',ProgressString))
         ProgressStatus= ProgressStatus + 1;
+    end
+end
+
+function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
+    %This function reduce the resolution in X direction to save some space.
+    %The high resolution was inforced by stability in SUNTANS.
+    DataIndex=[];
+    for i=1:size(X,1)
+        if X(i)<5000
+            continue;
+        elseif (X(i)>5000 && X(i)<10000)
+            if mod(X(i)-5000,100)~=10%make it each 100 meter
+                DataIndex(end+1)=i;
+            end
+        else
+            if mod(X(i)-10000,500)~=10%make it each 100 meter
+                DataIndex(end+1)=i;
+            end            
+        end
+    end
+    XTruncated=X;
+    XTruncated(DataIndex)=[];
+    DataTruncated=Data;
+    if ndims(Data)==2
+        DataTruncated(DataIndex,:)=[];
+    elseif ndims(Data)==3
+        DataTruncated(DataIndex,:,:)=[];
+    else
+        disp('Error happened in DataXTruncator function');
+        return;
     end
 end

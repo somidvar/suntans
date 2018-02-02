@@ -22,7 +22,6 @@ for CaseNumber=70001:1:70047
         CaseName=num2str(CaseNumber);
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'\InternalWaves\data\Result_0000.nc');
-        DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
     end
 
     if exist(DataPath,'file')==0
@@ -30,16 +29,16 @@ for CaseNumber=70001:1:70047
         continue;
     end
     
-    KnuH=0.1;
+    KnuH=1;
     g=9.8;  
     KappaH=0;
-    DragCoeff=0.005;
+    DragCoeff=0.001;
     InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
-    XEndIndex=550;% The data trim after this X point
+    XEndIndex=2000;% The data trim after this X point
     TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
     TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
     
-    AnalysisSpeed=2;
+    AnalysisSpeed=1;
     FPSMovie=15;
     
     %Setting the wind frequency based on the cases
@@ -61,13 +60,13 @@ for CaseNumber=70001:1:70047
     end    
     %Setting the pycnocline depth based on the cases
     if mod(CaseNumber-70000,12)<4
-        PycnoclineDepthIndex=11;%-5 meter
+        PycnoclineDepthIndex=14;%-10 meter
         BathymetryXLocationAtPycnoclineIndex=10;
     elseif mod(CaseNumber-70000,20)<8
-        PycnoclineDepthIndex=22;%-10 meter
+        PycnoclineDepthIndex=20;%-15 meter
         BathymetryXLocationAtPycnoclineIndex=15;
     elseif mod(CaseNumber-70000,20)<12
-        PycnoclineDepthIndex=33;%-15 meter
+        PycnoclineDepthIndex=24;%-20 meter
         BathymetryXLocationAtPycnoclineIndex=20;
     end    
     %Setting the dirunal and semi-dirunal tide frequency based on the cases
@@ -86,7 +85,7 @@ for CaseNumber=70001:1:70047
     end
     %WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
     EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
-        KnuH,KnuV,g,InterpolationEnhancement,XEndIndex,...
+        KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
         DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
         TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
 end
