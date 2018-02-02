@@ -5,26 +5,27 @@ close all;
 clear all;
 clc
 
-CaseNumber=10010;
+CaseNumber=70010;
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
 
 SapeloFlag=0;
 if SapeloFlag
-    DataPath=strcat('/lustre1/omidvar/work-directory_0801/6th-New/suntans-6th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
-    OutputAddress=strcat(CurrentPath,'\');
+    DataPath=strcat('/lustre1/omidvar/work-directory_0801/7th/suntans-7th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
+    OutputAddress='/lustre1/omidvar/work-directory_0801/7th-New/'
 else
-    DataPath=strcat('F:\6th\suntans-6th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
+    DataPath=strcat('F:\7th\suntans-7th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
     OutputAddress='F:\';
+    DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
 end
-DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
+
 if exist(DataPath,'file')==0
     disp('There is no NETCDF file to process')
     return;
 end
 
 KnuH=1;
-KnuV=5e-3;
+KappaH=0;
 g=9.8;
 InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
 XEndIndex=250;% The data trim after this X point
