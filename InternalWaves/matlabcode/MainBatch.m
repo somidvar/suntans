@@ -17,8 +17,8 @@ for CaseNumber=70001:1:70047
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'/InternalWaves/data/Result_0000.nc');
     else
-        Prefix='F:\6th\suntans-7th-';
-        OutputAddress='F:\7th\';
+        Prefix='F:\7th\suntans-7th-';
+        OutputAddress='D:\7th\';
         CaseName=num2str(CaseNumber);
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'\InternalWaves\data\Result_0000.nc');
@@ -38,15 +38,11 @@ for CaseNumber=70001:1:70047
     TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
     TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
     
-    AnalysisSpeed=1;
+    AnalysisSpeed=2;
     FPSMovie=15;
     
     %Setting the wind frequency based on the cases
-    WindTauMax=0;
-    SemiDiurnalTideOmega=0;
-    DiurnalTideOmega=0;
     WindOmega=2*pi/(24*3600);
-    PycnoclineDepthIndex=0;
     
     %Setting the wind stress based on the cases
     if floor((CaseNumber-70000)/12)==0
@@ -83,9 +79,9 @@ for CaseNumber=70001:1:70047
         DiurnalTideOmega=2*pi/(23.93*3600);
         SemiDiurnalTideOmega=2*pi/(12.42*3600);        
     end
-    %WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
-    EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
-        KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
-        DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
-        TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
+    WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax*1e4,DataPath,OutputAddress,CaseNumber);
+%     EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
+%         KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
+%         DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
+%         TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
 end

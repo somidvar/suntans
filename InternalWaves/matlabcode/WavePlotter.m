@@ -21,14 +21,14 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
 %     Results=Results-repmat(BenchMark,1,1,size(Results,3));
 %     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
     
-    %Reading Salinity
-    Results=ncread(DataPath,'salt');
-    [Results,XTruncated]=DataXTruncator(Results,X);
-    [XX,ZZ]=meshgrid(Z,XTruncated);  
-    DiagramTitle=sprintf('Salinity (PSU)');
-    MovieName=strcat(CaseNumber,'-Salinity');
-    YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+%     %Reading Salinity
+%     Results=ncread(DataPath,'salt');
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     [XX,ZZ]=meshgrid(Z,XTruncated);  
+%     DiagramTitle=sprintf('Salinity (PSU)');
+%     MovieName=strcat(CaseNumber,'-Salinity');
+%     YLabel='Depth (m)';
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     %Reading Pressure
 %     Results=ncread(DataPath,'q');
@@ -50,16 +50,15 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
         
     %Reading Vertical Velocity
-    Results=ncread(DataPath,'w');
-    [Results,XTruncated]=DataXTruncator(Results,X);
-    
-    Z=ncread(DataPath,'z_w');
-    Z=-Z;
-    [XX,ZZ]=meshgrid(Z,XTruncated); 
-    DiagramTitle=sprintf('Vertical Velocity (m/s)');
-    MovieName=strcat(CaseNumber,'-Vertical Velocity');   
-    YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+%     Results=ncread(DataPath,'w');
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     Z=ncread(DataPath,'z_w');
+%     Z=-Z;
+%     [XX,ZZ]=meshgrid(Z,XTruncated); 
+%     DiagramTitle=sprintf('Vertical Velocity (m/s)');
+%     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
+%     YLabel='Depth (m)';    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
