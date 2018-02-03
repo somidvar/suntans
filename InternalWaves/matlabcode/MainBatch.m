@@ -56,14 +56,14 @@ for CaseNumber=70001:1:70047
     end    
     %Setting the pycnocline depth based on the cases
     if mod(CaseNumber-70000,12)<4
-        PycnoclineDepthIndex=14;%-10 meter
-        BathymetryXLocationAtPycnoclineIndex=10;
+        PycnoclineDepthIndex=20;%-10 meter
+        BathymetryXLocationAtPycnoclineIndex=14;
     elseif mod(CaseNumber-70000,20)<8
-        PycnoclineDepthIndex=20;%-15 meter
-        BathymetryXLocationAtPycnoclineIndex=15;
-    elseif mod(CaseNumber-70000,20)<12
-        PycnoclineDepthIndex=24;%-20 meter
+        PycnoclineDepthIndex=30;%-15 meter
         BathymetryXLocationAtPycnoclineIndex=20;
+    elseif mod(CaseNumber-70000,20)<12
+        PycnoclineDepthIndex=40;%-20 meter
+        BathymetryXLocationAtPycnoclineIndex=24;
     end    
     %Setting the dirunal and semi-dirunal tide frequency based on the cases
     if mod(CaseNumber,4)==0
@@ -79,7 +79,7 @@ for CaseNumber=70001:1:70047
         DiurnalTideOmega=2*pi/(23.93*3600);
         SemiDiurnalTideOmega=2*pi/(12.42*3600);        
     end
-    WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax*1e4,DataPath,OutputAddress,CaseNumber);
+    WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax*1e4,DataPath,OutputAddress,num2str(CaseNumber));
 %     EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
 %         KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
 %         DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
