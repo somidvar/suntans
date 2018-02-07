@@ -3,7 +3,7 @@
 #PBS -N MATLABJob10000
 #PBS -l nodes=1:ppn=24:aquarinode
 #PBS -l walltime=20:00:00
-#PBS -l mem=200gb
+#PBS -l mem=120gb
 #PBS -M omidvar@uga.edu 
 #PBS -m e
 

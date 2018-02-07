@@ -1,11 +1,11 @@
 %This program has been written by Sorush Omidvar under supervision of 
 %Dr. Woodson in Cobia lab at UGA in May 2017 to
 %calculate wave energy flux from SUNTANS netcdf files.
+%Modification is applied on Feb 2018
 
 %Notation which is used in this program is based on the article
 %"Energetics of Barotropic and Baroclinic Tides in the Monterey Bay Area"
 %in 2011
-
 function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
@@ -46,12 +46,9 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     
     Z3D=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3]);
     Temp=permute(repmat(Eta,1,1,size(ZC,1)),[1,3,2]);
-    Temp(:,2:end,:)=0;
-    Z3D=Z3D+Temp;
-    clear Temp;
+    Z3D=Z3D+Temp(:,1,:);
     Z3DDiff=-diff(Z3D,1,2);%dz should always be positive, the negative sign is to make it positive!
-    Z3DDiff(:,end+1,:)=Z3DDiff(:,end,:);    
-    
+    Z3DDiff(:,end+1,:)=Z3DDiff(:,end,:);     
 
     disp('EPPrime calculation is started')
     EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoB,InterpolationEnhancement,g,SapeloFlag);
@@ -59,22 +56,32 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     EPPrime= cell2mat(EPPrimeConv);
     clear EPPrimeCell EPPrimeConv;
     disp('EPPrime calculation is done')
+        
+    Temp=UC*0+Z3D;%To enforce the nan values
+    HTotal=squeeze(nanmax(Temp,[],2)-nanmin(Temp,[],2));
+    DPlusZ=Temp-nanmin(Temp,[],2);    
+    clear Temp;
 
-    RhoPrime=Density-repmat(RhoB,1,1,size(Time,1))-Rho0;
-
-    HTotal=squeeze(nanmax(Z3D,[],2)-nanmin(Z3D,[],2));
-    
     UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
-    DPlusZ=permute(repmat(HTotal,1,1,size(ZC,1)),[1,3,2])+Z3D;
-    DPlusZ=DPlusZ+repmat(RhoB,1,1,size(Time,1))*0;%To consider the NAN values
-    DPlusZDiff=diff(DPlusZ,1,2);
-    DPlusZDiff(:,end+1,:)=DPlusZDiff(:,end,:);
-    WBarotropic=-DPlusZ.*permute(repmat(DiffCustom(UH,1),1,1,size(ZC,1)),[1,3,2]) ...
-        -permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]).*DPlusZDiff;
+    WBarotropic=-diff(DPlusZ.*permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]),1,1);
+    WBarotropic(end+1,:,:)=WBarotropic(end,:,:);
     WBarotropic=WBarotropic./XXZTDiff;
 
+    %We shall reset RhoB to the value of Density(:,:,k) whenever UH(XSpecified,k)=0
+    RhoB=Density(:,:,1)-Rho0;
+    for k=2:size(Time,1)
+        UHOld=UH(50,k-1);%50 is set arbitrary because it is seen that UH(i,:)=UH(j,:) for any i,j
+        UHNew=UH(50,k);
+        if UHNew*UHOld<0
+            RhoB(:,:,k)=Density(:,:,k)-Rho0;
+        else
+            RhoB(:,:,k)=RhoB(:,:,k-1);
+        end
+    end
+    RhoPrime=Density-RhoB-Rho0;
+    
     %Creating the output NETCDF
     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
     mode = netcdf.getConstant('CLOBBER');
@@ -100,6 +107,10 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
+    WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
+    WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
+    WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
+    WritingParameter(NETCDFID,WBarotropic,'WBT','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Barotropic Vertical velocity','7','m/s');
 
     PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
     ConversionRate=DiffCustom(Q,2)./(-Z3DDiff).*WBarotropic ...
@@ -224,7 +235,7 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
     
     if(SapeloFlag)
         c = parcluster('local');
-        c.NumWorkers = 12;
+        c.NumWorkers = 24;
         parpool(c, c.NumWorkers);%Assigning the number of wrokers on SAPELO
     else
         if isempty(gcp('nocreate'))

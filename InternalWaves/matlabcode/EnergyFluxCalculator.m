@@ -6,8 +6,6 @@
 %Notation which is used in this program is based on the article
 %"Energetics of Barotropic and Baroclinic Tides in the Monterey Bay Area"
 %in 2011
-
-
 function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
@@ -109,6 +107,7 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
+    WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
     WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     WritingParameter(NETCDFID,WBarotropic,'WBT','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Barotropic Vertical velocity','7','m/s');
@@ -232,192 +231,6 @@ function WritingParameter(NETCDFID,ParameterName,ParameterNETCDFName,ParameterTy
     disp([ParameterNETCDFName,' is saved in the NETCDF'])
 end
 
-function EnergyFluxInterpreter(X,Time,XLocation,CaseNumber...
-    ,Advection1,PressureWork1,PressureWork2,PressureWork3,Diffusion1,BTDissipation...
-    ,AdvectionPrime1,AdvectionPrime2,AdvectionPrime3,PressureWorkPrime1,PressureWorkPrime2,DiffusionPrime1,DiffusionPrime2,BCDissipation...
-    ,ConversionRate)
-    close all;
-    
-    FIG=figure('units','normalized','outerposition',[0 0 1 1]);
-    subplot(2,6,1);
-    pcolor(X/1000,Time/3600,Advection1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    ylabel('Time (hour)');
-    title('A 1 (Wat/m)');
-
-    subplot(2,6,2);
-    pcolor(X/1000,Time/3600,PressureWork1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('PW 1 (Wat/m)');
-
-    subplot(2,6,3);
-    pcolor(X/1000,Time/3600,PressureWork2');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('PW 2 (Wat/m)');
-
-    subplot(2,6,4);
-    pcolor(X/1000,Time/3600,PressureWork3');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('PW 3 (Wat/m)');
-
-    subplot(2,6,5);
-    pcolor(X/1000,Time/3600,Diffusion1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('D 1 (Wat/m)');
-
-    %Now plotting the prime terms
-    subplot(2,6,7);
-    pcolor(X/1000,Time/3600,AdvectionPrime1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    ylabel('Time (hour)');
-    title('AP 1 (Wat/m)');
-
-    subplot(2,6,8);
-    pcolor(X/1000,Time/3600,AdvectionPrime2');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('AP 2 (Wat/m)');
-
-    subplot(2,6,9);
-    pcolor(X/1000,Time/3600,AdvectionPrime3');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('AP 3 (Wat/m)');
-
-    subplot(2,6,10);
-    pcolor(X/1000,Time/3600,PressureWorkPrime1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('PWP 1 (Wat/m)');
-
-    subplot(2,6,11);
-    pcolor(X/1000,Time/3600,PressureWorkPrime2');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('PWP 2 (Wat/m)');
-
-    subplot(2,6,12);
-    pcolor(X/1000,Time/3600,DiffusionPrime1');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('X (km)');
-    title('DP 1 (Wat/m)');
-    saveas(FIG,[num2str(CaseNumber),'-Detailed Energy Flux.png']);
-
-    FIG=figure;
-    pcolor(X/1000,Time/3600,ConversionRate');
-    shading flat;
-    colorbar;
-    set(gca,'layer','top');
-    grid on;
-    xlabel('off-shore distance (km)');
-    ylabel('Time (hour)');
-    title('Depth-Integrated Conversion rate (Wat/m^2)');
-    saveas(FIG,[num2str(CaseNumber),'-Conversion Rate.png']);
-
-    FIG=figure;
-    plot(Time/3600,Advection1(XLocation,:),Time/3600,PressureWork1(XLocation,:),Time/3600,PressureWork2(XLocation,:),...
-        Time/3600,PressureWork3(XLocation,:),Time/3600,Diffusion1(XLocation,:));
-    grid minor;
-    legend('BT Advection','BT Pressure Work 1','BT Pressure Work 2','BT Pressure Work 3','BT Diffusion');
-    xlabel('Time (hour)');
-    ylabel('Wat/m');
-    title('Baratropic Depth-Integrated Energy Flux Components at X=1700 m');
-    saveas(FIG,[num2str(CaseNumber),'-Barotropic Energy Flux.png']);
-
-    FIG=figure;
-    plot(Time/3600,AdvectionPrime1(XLocation,:),Time/3600,AdvectionPrime2(XLocation,:),Time/3600,AdvectionPrime3(XLocation,:),...
-        Time/3600,PressureWorkPrime1(XLocation,:),Time/3600,PressureWorkPrime2(XLocation,:), Time/3600,DiffusionPrime1(XLocation,:)...
-        ,Time/3600,DiffusionPrime2(XLocation,:));
-    grid minor;
-    legend('BC Advection 1','BC Advection 2','BC Advection 3','BC Pressure Work 1','BC Pressure Work 2',...
-    'BC Diffusion 1','BC Diffusion 2');
-    xlabel('Time (hour)');
-    ylabel('Wat/m');
-    title('Baroclinic Depth-Integrated Energy Flux Components at X=1700 m');
-    saveas(FIG,[num2str(CaseNumber),'-Baroclinic Energy Flux.png']);
-
-    AD1=abs(mean(Advection1(XLocation,:)));
-    PW1=abs(mean(PressureWork1(XLocation,:)));
-    PW2=abs(mean(PressureWork2(XLocation,:)));
-    PW3=abs(mean(PressureWork3(XLocation,:)));
-    DI1=abs(mean(Diffusion1(XLocation,:)));
-
-    FIG=figure;
-    BTFluxCategory=categorical({'BT Advection','BT Pressurework 1','BT Pressurework 2',...
-        'BT Pressurework 3','BT Diffusion 1'});
-    bar(BTFluxCategory,[AD1,PW1,PW2,PW3,DI1]);
-    ylabel('Wat/m');
-    title('Barotropic Depth-Integrated Time-averaged Energy Flux at X=1700 m');
-    saveas(FIG,[num2str(CaseNumber),'-Barotropic Energy Flux Contribution.png']);
-
-    ADP1=abs(mean(AdvectionPrime1(XLocation,:)));
-    ADP2=abs(mean(AdvectionPrime2(XLocation,:)));
-    ADP3=abs(mean(AdvectionPrime3(XLocation,:)));
-    PWP1=abs(mean(PressureWorkPrime1(XLocation,:)));
-    PWP2=abs(mean(PressureWorkPrime2(XLocation,:)));
-    DIP1=abs(mean(DiffusionPrime1(XLocation,:)));
-    DIP2=abs(mean(DiffusionPrime2(XLocation,:)));
-
-    FIG=figure;
-    BTFluxCategory=categorical({'BC Advection 1','BC Advection 2','BC Advection 3',...
-        'BC Pressurework 1','BC Pressurework 2','BC Diffusion 1','BC Diffusion 2'});
-    bar(BTFluxCategory,[ADP1,ADP2,ADP3,PWP1,PWP2,DIP1,DIP2]);
-    ylabel('Wat/m');
-    title('Baroclinic Depth-Integrated Time-averaged Energy Flux at X=1700 m');
-    saveas(FIG,[num2str(CaseNumber),'-Baroclinic Energy Flux Contribution.png']);
-
-    FIG=figure;
-    hold on;
-    plot(Time/3600,squeeze(BCDissipation(XLocation,:)),'red');
-    plot(Time/3600,squeeze(BTDissipation(XLocation,:)),'blue');
-    plot(Time/3600,squeeze(BTDissipation(XLocation,:)+BCDissipation(XLocation,:)));
-    grid minor;
-    xlabel('Time (hour)','FontWeight','bold');
-    ylabel('Dissipation (Wat/m^2)','FontWeight','bold');
-    title('Barotropic & Baroclinic & Total Dissipation','FontWeight','bold','fontsize',16);
-    legend('Baroclinic Dissipation','Barotropic Dissipation','Total Dissipation');
-    saveas(FIG,[num2str(CaseNumber),'-Dissipation.png']);
-end
-
 function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,SapeloFlag)
     
     if(SapeloFlag)
@@ -428,9 +241,6 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
         if isempty(gcp('nocreate'))
             parpool('local', 4);
         end
-        CreatedParallelPool = parallel.pool.DataQueue;
-        afterEach(CreatedParallelPool, @UpdateStatusDisp);
-        ProgressStatus=0;
     end
 
     Z=linspace(ZC(1),ZC(end),Accuracy*size(ZC,1));
@@ -483,14 +293,7 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
         end 
         if SapeloFlag
             sprintf('X=%f',i*100)
-        else
-            send(CreatedParallelPool,i);
         end
-    end
-    function UpdateStatusDisp(~)
-        ProgressString=num2str(ProgressStatus/size(X,1)*100,'%2.2f');
-        disp(strcat('Progress Percentage=',ProgressString))
-        ProgressStatus= ProgressStatus + 1;
     end
 end
 
