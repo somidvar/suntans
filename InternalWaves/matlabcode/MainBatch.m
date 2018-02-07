@@ -1,7 +1,7 @@
 %This code is plotting the SUNTANS results for several case scenarios with
 %similar names. This code is written by Sorush Omidvar in July 2016 at UGA.
 %This vesion is modified in Aug 2016.
-for CaseNumber=70001:1:70047
+for CaseNumber=70006:1:70047
     clearvars -except CaseNumber;
     close all;
     clc;

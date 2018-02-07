@@ -27,7 +27,7 @@ KnuH=1;
 KappaH=0;
 g=9.8;
 InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
-XEndIndex=250;% The data trim after this X point
+XEndIndex=2000;% The data trim after this X point
 TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
 TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
 

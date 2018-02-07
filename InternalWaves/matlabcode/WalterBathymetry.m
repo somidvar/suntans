@@ -28,8 +28,26 @@ for i=1:size(X,1)
         Bathymetry(i)=-75;
     end
 end
-plot(X(1:1000)/1000,Bathymetry(1:1000));
+figure('rend','painters','pos',[10 10 800 500])
+plot(X(1:1000)/1000,Bathymetry(1:1000),'LineWidth',6);
+set(gca,'fontsize',18);
+set(gca,'FontWeight','bold')
 xlabel('Offshore Distance (Km)')
 ylabel('Depth (m)');
-title('Bathymetry');
+title('Bathymetry','FontSize',23);
+grid;
+
+figure('rend','painters','pos',[10 10 800 500])
+DataPath='F:\7th\7th-Processed\70003EnergyFlux.nc';
+Z=ncread(DataPath,'Z');
+RhoB=ncread(DataPath,'Density',[1,1,1],[Inf,Inf,1]);
+plot(RhoB(end,:)-1000,Z,'LineWidth',6);
+set(gca,'fontsize',18);
+set(gca,'FontWeight','bold')
+xlabel('Depth (m)');
+title('Potential Density','FontSize',23);
+grid;
+
+
+
 

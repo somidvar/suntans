@@ -224,7 +224,7 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
     
     if(SapeloFlag)
         c = parcluster('local');
-        c.NumWorkers = 24;
+        c.NumWorkers = 12;
         parpool(c, c.NumWorkers);%Assigning the number of wrokers on SAPELO
     else
         if isempty(gcp('nocreate'))

@@ -20,4 +20,8 @@ iwaves/IW-10001.o*
 InternalWaves/IW-10001.e*
 InternalWaves/IW-10001.o*
 
+#The files made for SAPELO runs
+InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.m
+InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.sh
+
 

@@ -27,9 +27,9 @@ namespace ConsoleApp1
                 BodyFile += MATLABSUBReader.ReadToEnd()+"\n";
                 MATLABSUBReader.Close();
                 BodyFile += "matlab -nodisplay </lustre1/omidvar/work-directory_0801/MatlabFiles/MainSingle";
-                BodyFile += string.Format("{0}", counter + 10000);
+                BodyFile += string.Format("{0}", counter + 70000);
                 BodyFile+=@".m> matlab_${PBS_JOBID}.out";
-                string OutputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MATLABSub{0}.sh", counter+10000);
+                string OutputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MATLABSub{0}.sh", counter+70000);
                 StreamWriter MATLABSUBWriter = new StreamWriter(OutputAddress);
                 MATLABSUBWriter.Write(BodyFile);
                 MATLABSUBWriter.Close();
