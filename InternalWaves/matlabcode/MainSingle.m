@@ -5,7 +5,7 @@ close all;
 clear all;
 clc
 
-CaseNumber=70007;
+CaseNumber=70047;
 WindOmega=2*pi/(24*3600);
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
@@ -28,7 +28,7 @@ KnuH=1;
 KappaH=0;
 g=9.8;
 InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
-XEndIndex=500;% The data trim after this X point
+XEndIndex=1000;% The data trim after this X point
 TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
 TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
 

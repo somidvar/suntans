@@ -237,6 +237,24 @@ function WritingParameter(NETCDFID,ParameterName,ParameterNETCDFName,ParameterTy
     disp([ParameterNETCDFName,' is saved in the NETCDF'])
 end
 
+function EPPrimeCellNew=EPCalculatorNew(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,SapeloFlag)
+    
+    [ZZ,TT]=meshgrid(Time,ZC);
+    ZInterp=interp(ZC,Accuracy);
+    [ZZQ,TTQ]=meshgrid(Time,ZInterp);
+    
+    parfor i=1:size(X,1)
+        RhoBProfile=squeeze(RhoBCell{i}(:,:));
+        Densityprofile=squeeze(DensityCell{i}(:,:));
+        DensityReference=Densityprofile(:,1);
+        RhoBInterp=interp2(ZZ,TT,RhoBProfile,ZZQ,TTQ,'linear');
+        DensityInterp=interp2(ZZ,TT,Densityprofile,ZZQ,TTQ,'linear');
+        DensityReferenceInterp=interp1(ZC,DensityReference,ZInterp,'linear');
+        
+    end
+    
+end
+
 function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,SapeloFlag)
     
     if(SapeloFlag)
@@ -249,18 +267,35 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
         end
     end
 
-    Z=linspace(ZC(1),ZC(end),Accuracy*size(ZC,1));
+    Z=interp(ZC,Accuracy);
     ZStep=Z(1)-Z(2);
     EPPrimeCell=cell(size(X,1),1);
     DensityCell=cell(size(X,1),1);
-
+    RhoBCell=cell(size(X,1),1);
+    
     for i=1:size(X,1)
         EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
+        RhoBCell{i}=squeeze(RhoB(i,:,:));
     end
 
+    [ZZ,TT]=meshgrid(Time,ZC);
+    ZInterp=interp(ZC,Accuracy);
+    [ZZQ,TTQ]=meshgrid(Time,ZInterp);
+    
+    ZCounterpartIndex=nan(size(ZC,1));
+    for j=1:size(ZC,1)
+        [~,Temp]=min(abs(ZC(j)-ZInterp));
+        ZCounterpartIndex(j)=Temp(1);
+    end
+    
     parfor i=1:size(X,1)
-        Profile1=squeeze(DensityCell{i}(:,1));
+        DensityProfileReference=squeeze(DensityCell{i}(:,1));
+        DensityProfile=squeeze(DensityCell{i}(:,:));
+        RhoBProfile=squeeze(DensityCell{i}(:,:));
+        RhoBInterp=interp2(ZZ,TT,RhoBProfile,ZZQ,TTQ,'linear');
+        DensityProfileInterp=interp2(ZZ,TT,DensityProfile,ZZQ,TTQ,'linear');
+        
         NotNanDepthIndexZC=find(~isnan(RhoB(i,:)));
         NotNanDepthIndexZC=NotNanDepthIndexZC(end);%Finding the deepest not-nan cell in un-interpolated profile(profile1)
         [~,NotNanDepthIndexZ]=nanmin(abs(Z-ZC(NotNanDepthIndexZC)));%Finding the closest depth to the one found in the upper line, in the interpolated profile(profile2)
@@ -269,6 +304,16 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
             RhoBExact(end+1:size(Z,2))=nan;
         end
         for k=1:size(Time,1)
+            for j=1:size(ZC,1)
+                DensityReference=DensityCell{i}(j,1));
+                [~,TrackedDensityIndex]=nanmin(abs(DensityReference-DensityProfileInterp(:,k)));
+                TrackedDensityIndex=TrackedDensityIndex(1);
+                Dislocation=ZInterp(TrackedDensityIndex)-ZInterp(ZCounterpartIndex(j));
+                if Dislocation>0
+                    Max=ZInterp(ZCounterpartIndex(j));
+                end
+            end
+
             Profile2=squeeze(DensityCell{i}(:,k));
             ProfileExact2=squeeze(DensityCell{i}(:,k));
             ProfileExact2=interp1(ZC(1:NotNanDepthIndexZC),ProfileExact2(1:NotNanDepthIndexZC),Z(1:NotNanDepthIndexZ),'spline');%interpolating the profile2
@@ -276,8 +321,8 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
                 ProfileExact2(end+1:size(Z,2))=nan;
             end
             for j=1:size(ZC,1)
-                if ~isnan(Profile1(j))
-                    [~,TrackedDensityIndex]=nanmin(abs(ProfileExact2-Profile1(j)));
+                if ~isnan(DensityProfileReference(j))
+                    [~,TrackedDensityIndex]=nanmin(abs(ProfileExact2-DensityProfileReference(j)));
                     TrackedDensityIndex=TrackedDensityIndex(1);
                     Dislocation=ZC(j)-Z(TrackedDensityIndex);
                     Max=ZC(j);

@@ -119,7 +119,7 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     DHDX=medfilt1(DHDX,3,[],1);%Removing spikes from dH/dX due to step shape like the n=3 is default
     DHDX=movmean(DHDX,5,1);%Smoothing the dH/dX by taking average over 5 points
     WBottom=-UH.*DHDX;
-    WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical velocity at bottom','Zilberman 2','m/s');
+    WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,TimeDimID],'Vertical velocity at bottom','Zilberman 2','m/s');
     ConversionRate=WBottom.*PPrimeQBottom;
     WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated) based on Zilberman','Zilberman 1','Wat/m^2');
 
