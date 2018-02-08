@@ -59,18 +59,23 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
 
     %We shall reset RhoB to the value of Density(:,:,k) whenever UH(XSpecified,k)=0
     RhoB=Density(:,:,1)-Rho0;
+    RhoBCounter=0;
     for k=2:size(Time,1)
         UHOld=UH(50,k-1);%50 is set arbitrary because it is seen that UH(i,:)=UH(j,:) for any i,j
         UHNew=UH(50,k);
         if UHNew*UHOld<0
             RhoB(:,:,k)=Density(:,:,k)-Rho0;
+            RhoBCounter=RhoBCounter+1;
+            if RhoBCounter==1
+                RhoBInitial=squeeze(Density(:,:,k)-Rho0);%Setting this for EPPrime
+            end
         else
             RhoB(:,:,k)=RhoB(:,:,k-1);
         end
     end
 
     disp('EPPrime calculation is started')
-    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoB,InterpolationEnhancement,g,SapeloFlag);
+    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoBInitial,InterpolationEnhancement,g,SapeloFlag);
     EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
     EPPrime= cell2mat(EPPrimeConv);
     clear EPPrimeCell EPPrimeConv;
