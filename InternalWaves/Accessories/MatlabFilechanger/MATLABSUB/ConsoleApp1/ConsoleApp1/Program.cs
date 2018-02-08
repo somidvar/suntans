@@ -122,7 +122,7 @@ namespace ConsoleApp1
         static void MATLABEnergyFluxWriter()
         {
             StreamReader EnergyFluxCalculatorStreamReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\EnergyFluxCalculatorMother.m");
-            for (int counterSkipper = 0; counterSkipper < 12; counterSkipper++)
+            for (int counterSkipper = 0; counterSkipper < 17; counterSkipper++)
                 EnergyFluxCalculatorStreamReader.ReadLine();
             string EnergyFluxBody = EnergyFluxCalculatorStreamReader.ReadToEnd();
             EnergyFluxCalculatorStreamReader.Close();

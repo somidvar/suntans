@@ -6,11 +6,16 @@
 %Notation which is used in this program is based on the article
 %"Energetics of Barotropic and Baroclinic Tides in the Monterey Bay Area"
 %in 2011
+%----Attention---- the conversionrate formulation is updated to "Model
+%Estimates of M2 Internal Tide Generation over Mid-Atlantic Ridge
+%Topography" by Zilbermann 2008
+
 function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
     PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag)
 
+    Rho0=1025;%Setting the reference density    
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
     disp('Reading the NETCDF')
     X=ncread(DataPath,'xv',1,XEndIndex);
@@ -22,9 +27,6 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     Density=1000*ncread(DataPath,'rho',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex])+1000;
     [Density,~]=DataXTruncator(Density,X);
     disp('Density is done')
-    Rho0=1025;%Setting the reference density
-    RhoB=1000*ncread(DataPath,'rho',[1,1,1],[XEndIndex,Inf,1])+1000-Rho0;
-    [RhoB,~]=DataXTruncator(RhoB,X);
     Q=ncread(DataPath,'q',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]).*Rho0;%Scaling the non-hydrostatic pressure
     [Q,~]=DataXTruncator(Q,X);
     disp('Q is done')
@@ -65,9 +67,9 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
-    WBarotropic=-diff(DPlusZ.*permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]),1,1);
-    WBarotropic(end+1,:,:)=WBarotropic(end,:,:);
-    WBarotropic=WBarotropic./XXZTDiff;
+%     WBarotropic=-diff(DPlusZ.*permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]),1,1);
+%     WBarotropic(end+1,:,:)=WBarotropic(end,:,:);
+%     WBarotropic=WBarotropic./XXZTDiff;
 
     %We shall reset RhoB to the value of Density(:,:,k) whenever UH(XSpecified,k)=0
     RhoB=Density(:,:,1)-Rho0;
@@ -110,12 +112,19 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
     WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
-    WritingParameter(NETCDFID,WBarotropic,'WBT','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Barotropic Vertical velocity','7','m/s');
-
+    
     PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
-    ConversionRate=DiffCustom(Q,2)./(-Z3DDiff).*WBarotropic ...
-        +g*RhoPrime.*WBarotropic;%I used -Z3DDiff because it is (Qbottom-Qtop)/(ZBottom-Ztop) and the denumertor is negative and Z3dDiff is all positive (it is just dz)
-    WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated)','17','Wat/m^2');
+    PPrimeQBottom=squeeze(nansum((g*RhoPrime+Q).*Z3DDiff,2));
+    %ConversionRate=DiffCustom(Q,2)./(-Z3DDiff).*WBarotropic+g*RhoPrime.*WBarotropic;%I used -Z3DDiff because it is (Qbottom-Qtop)/(ZBottom-Ztop) and the denumertor is negative and Z3dDiff is all positive (it is just dz)
+    %WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated)','17','Wat/m^2');
+    DHDX=diff(HTotal,1,1)./diff(repmat(X,1,size(Time,1)),1,1);
+    DHDX(end+1,:)=DHDX(end,:);
+    DHDX=medfilt1(DHDX,3,[],1);%Removing spikes from dH/dX due to step shape like the n=3 is default
+    DHDX=movmean(DHDX,5,1);%Smoothing the dH/dX by taking average over 5 points
+    WBottom=-UH.*DHDX;
+    WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical velocity at bottom','Zilberman 2','m/s');
+    ConversionRate=WBottom.*PPrimeQBottom;
+    WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated) based on Zilberman','Zilberman 1','Wat/m^2');
 
     EK0=0.5*Rho0*UH.^2;
     EKPrime=0.5*Rho0*(UPrime.^2+W.^2);
@@ -302,9 +311,9 @@ function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
     %The high resolution was inforced by stability in SUNTANS.
     DataIndex=[];
     for i=1:size(X,1)
-        if X(i)<5000
+        if X(i)<7500
             continue;
-        elseif (X(i)>5000 && X(i)<10000)
+        elseif (X(i)>7500 && X(i)<10000)
             if mod(X(i)-5000,100)~=10%make it each 100 meter
                 DataIndex(end+1)=i;
             end
