@@ -51,25 +51,11 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     Z3D=Z3D+Temp(:,1,:);
     Z3DDiff=-diff(Z3D,1,2);%dz should always be positive, the negative sign is to make it positive!
     Z3DDiff(:,end+1,:)=Z3DDiff(:,end,:);     
-
-    disp('EPPrime calculation is started')
-    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoB,InterpolationEnhancement,g,SapeloFlag);
-    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
-    EPPrime= cell2mat(EPPrimeConv);
-    clear EPPrimeCell EPPrimeConv;
-    disp('EPPrime calculation is done')
         
     Temp=UC*0+Z3D;%To enforce the nan values
     HTotal=squeeze(nanmax(Temp,[],2)-nanmin(Temp,[],2));
-    DPlusZ=Temp-nanmin(Temp,[],2);    
-    clear Temp;
-
     UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
-
-%     WBarotropic=-diff(DPlusZ.*permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]),1,1);
-%     WBarotropic(end+1,:,:)=WBarotropic(end,:,:);
-%     WBarotropic=WBarotropic./XXZTDiff;
 
     %We shall reset RhoB to the value of Density(:,:,k) whenever UH(XSpecified,k)=0
     RhoB=Density(:,:,1)-Rho0;
@@ -82,8 +68,14 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
             RhoB(:,:,k)=RhoB(:,:,k-1);
         end
     end
-    RhoPrime=Density-RhoB-Rho0;
-    
+
+    disp('EPPrime calculation is started')
+    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,RhoB,InterpolationEnhancement,g,SapeloFlag);
+    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
+    EPPrime= cell2mat(EPPrimeConv);
+    clear EPPrimeCell EPPrimeConv;
+    disp('EPPrime calculation is done')
+
     %Creating the output NETCDF
     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
     mode = netcdf.getConstant('CLOBBER');
@@ -113,10 +105,10 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
+    RhoPrime=Density-RhoB-Rho0;
     PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
     PPrimeQBottom=squeeze(nansum((g*RhoPrime+Q).*Z3DDiff,2));
-    %ConversionRate=DiffCustom(Q,2)./(-Z3DDiff).*WBarotropic+g*RhoPrime.*WBarotropic;%I used -Z3DDiff because it is (Qbottom-Qtop)/(ZBottom-Ztop) and the denumertor is negative and Z3dDiff is all positive (it is just dz)
-    %WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated)','17','Wat/m^2');
+    
     DHDX=diff(HTotal,1,1)./diff(repmat(X,1,size(Time,1)),1,1);
     DHDX(end+1,:)=DHDX(end,:);
     DHDX=medfilt1(DHDX,3,[],1);%Removing spikes from dH/dX due to step shape like the n=3 is default
