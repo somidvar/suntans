@@ -11,10 +11,10 @@ disp(strcat('Case Number= ',num2str(CaseNumber)))
 
 SapeloFlag=1;
 if SapeloFlag
-    DataPath=strcat('/lustre1/omidvar/work-directory_0801/7th/suntans-7th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
-    OutputAddress='/lustre1/omidvar/work-directory_0801/7th-New/'
+    DataPath=strcat('/lustre1/omidvar/work-directory_0801/8th/suntans-8th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
+    OutputAddress='/lustre1/omidvar/work-directory_0801/8th-New/'
 else
-    DataPath=strcat('F:\7th\suntans-7th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
+    DataPath=strcat('F:\8th\suntans-8th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
     OutputAddress='F:\';
 end
 

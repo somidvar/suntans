@@ -16,14 +16,14 @@ namespace FileChanger
     {
         const int TauCases = 4;
         const int PycnoclineCases = 3;
-        const int WaveAmplitudeCases = 4;
+        const int WaveAmplitudeCases = 1;
         int FileNumber;
         string MotherDirectory;
         public Form1()
         {
             FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases;
             InitializeComponent();
-            MotherDirectory = @"D:\suntans-7th";
+            MotherDirectory = @"D:\suntans-8th";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
@@ -41,7 +41,7 @@ namespace FileChanger
             {
                 Address[FileCounter] = MotherDirectory;
                 ExtensionNumber[FileCounter] = string.Empty;
-                ExtensionNumber[FileCounter] = "-"+ (FileCounter + 70000).ToString();
+                ExtensionNumber[FileCounter] = "-"+ (FileCounter + 80000).ToString();
                 Address[FileCounter] += ExtensionNumber[FileCounter];
                 DirectoryMaker(MotherDirectory,Address[FileCounter]);
             }
@@ -96,20 +96,8 @@ namespace FileChanger
                         switch (WaveAmplitudeCounter % WaveAmplitudeCases)
                         {
                             case 0:
-                                DiurnalAmplitude = 0;
-                                SemiDiurnalAmplitude = 0;
-                                break;
-                            case 1:
-                                DiurnalAmplitude = -0.1027;
-                                SemiDiurnalAmplitude = 0;
-                                break;
-                            case 2:
-                                DiurnalAmplitude = 0;
-                                SemiDiurnalAmplitude = -0.1454;
-                                break;
-                            case 3:
-                                DiurnalAmplitude = -0.1027;
-                                SemiDiurnalAmplitude = -0.1454;
+                                DiurnalAmplitude = -0.0175;
+                                SemiDiurnalAmplitude = -0.0454;
                                 break;
                             default:
                                 break;

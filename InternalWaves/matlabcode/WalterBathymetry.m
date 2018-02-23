@@ -1,4 +1,4 @@
-%clear all;
+clear all;
 close all
 clc
 
@@ -28,26 +28,44 @@ for i=1:size(X,1)
         Bathymetry(i)=-75;
     end
 end
-figure('rend','painters','pos',[10 10 800 500])
+bathy=figure('rend','painters','pos',[10 10 800 500])
 plot(X(1:1000)/1000,Bathymetry(1:1000),'LineWidth',6);
 set(gca,'fontsize',18);
 set(gca,'FontWeight','bold')
 xlabel('Offshore Distance (Km)')
 ylabel('Depth (m)');
 title('Bathymetry','FontSize',23);
+saveas(bathy,'Bathymetry.png');
 grid;
+       
 
-figure('rend','painters','pos',[10 10 800 500])
-DataPath='F:\7th\7th-Processed\70003EnergyFlux.nc';
-Z=ncread(DataPath,'Z');
-RhoB=ncread(DataPath,'Density',[1,1,1],[Inf,Inf,1]);
-plot(RhoB(end,:)-1000,Z,'LineWidth',6);
+profile=figure('rend','painters','pos',[10 10 800 800]);
+subplot('position',[.1 .20 .8 .65]);
 set(gca,'fontsize',18);
-set(gca,'FontWeight','bold')
-xlabel('Depth (m)');
-title('Potential Density','FontSize',23);
+set(gca,'FontWeight','bold');
+DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
+Z=-ncread(DataPath,'z_r');
+RhoB=1000+1000*ncread(DataPath,'rho',[1,1,1],[Inf,Inf,1]);
+RhoB=squeeze(RhoB(end,:));
+RhoB=RhoB';
+x1 = Z;
+y1 = RhoB;
+line(y1,x1,'Color','blue','LineWidth',6);
+ax1 = gca; % current axes
+ax1.XColor = 'blue';
+ax1.YColor = 'none';
+ax1_pos = ax1.Position; % position of first axes
+xlabel('Density (kg/m^3)');
+ax2 = axes('Position',ax1_pos,'XAxisLocation','top','YAxisLocation','left','Color','none');
+
+BruntVaisala=(-diff(RhoB,1,1)./diff(Z)*9.8/1025).^0.5;
+BruntVaisala(end+1)=BruntVaisala(end);
+x2 = Z;
+y2 = BruntVaisala;
+line(y2,x2,'Parent',ax2,'Color','black','LineWidth',6);
 grid;
-
-
-
-
+ylabel('Depth (m)');
+xlabel('Brunt Vaisala Frequency (Rad/s)');
+set(gca,'fontsize',18);
+set(gca,'FontWeight','bold');
+saveas(profile,'DensityBrunt.png');
