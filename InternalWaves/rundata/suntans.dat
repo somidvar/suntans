@@ -35,7 +35,7 @@ tau_T							0				# Wind shear stress divided by Rho0
 turbmodel						0				# Turbulence model (0 for none, 1 for MY25)
 dt 								10				# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							3e2   			# Number of steps 6e5
+nsteps 							1e4   			# Number of steps 6e5
 ntout   						30	  			# How often to output data 60
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
