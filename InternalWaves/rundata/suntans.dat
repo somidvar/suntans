@@ -32,14 +32,14 @@ CdT	                			0.0 			# Drag coefficient at surface
 CdB	                			1e-3			# Drag coefficient at bottom
 CdW								0				# Drag coefficient at sidewalls
 tau_T							0				# Wind shear stress divided by Rho0
-turbmodel						0				# Turbulence model (0 for none, 1 for MY25)
+turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								10				# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
 nsteps 							1e4   			# Number of steps 6e5
 ntout   						30	  			# How often to output data 60
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
-nonhydrostatic					0				# 0 = hydrostatic, 1 = nonhydrostatic
+nonhydrostatic					1				# 0 = hydrostatic, 1 = nonhydrostatic
 cgsolver						1				# 0 = GS, 1 = CG
 maxiters						1e3				# Maximum number of CG iterations
 qmaxiters						2e3				# Maximum number of CG iterations for nonhydrostatic pressure
@@ -53,7 +53,7 @@ omega 							0				# frequency
 flux 							0				# flux
 timescale						0				# timescale for open boundary condition
 volcheck						0				# Check for volume conservation
-masscheck						0				# Check for mass conservation
+masscheck						2				# Check for mass conservation
 nonlinear						0				# No momentum advection: 0, first-order upwind: 1, Central-differencing: 2
 laxWendroff    				 	0       		# No Lax Wendroff diffusion coefficients
 laxWendroff_Vertical    		0      			# No Lax Wendroff diffusion coefficients
