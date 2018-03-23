@@ -475,8 +475,11 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 		{
 			j = grid->edgep[jptr];
 			//phys->tau_T[j] = grid->n2[j] * prop->tau_T;//Suntans default
-			phys->tau_B[j] = 0;			
-			phys->tau_T[j]=-1.0*grid->n1[j]*prop->tau_T*(1+sin(2*PI/prop->DiurnalWindPeriod*(prop->rtime+prop->WindTimeLag)))/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from time lag
+			phys->tau_B[j] = 0;		
+			REAL WindTemp=-1.0*grid->n1[j]*prop->tau_T*(1+sin(2*PI/prop->DiurnalWindPeriod*(prop->rtime+prop->WindTimeLag)))/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from time lag
+			if (prop->rtime<=48*3600)
+				WindTemp*=prop->rtime/(48*3600);// Increasing the wind stress gradually
+			phys->tau_T[j]=WindTemp;
 		}	
 	}
 }
