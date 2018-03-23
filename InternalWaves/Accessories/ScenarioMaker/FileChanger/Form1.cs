@@ -14,7 +14,8 @@ namespace FileChanger
 {
     public partial class Form1 : Form
     {
-        const int TauCases = 6;
+        const int TauCases = 4;
+        const int LagCases = 4;
         const int PycnoclineCases = 7;
         const int WaveAmplitudeCases = 4;
         int FileNumber;
@@ -30,119 +31,133 @@ namespace FileChanger
         {
             string[] Address = new string[FileNumber];
             string[] ExtensionNumber = new string[FileNumber];
-            double Tau_T=-1000;
-            double NSteps=3e5;
-            double DiurnalAmplitude=-1000;
-            double SemiDiurnalAmplitude=-1000;
-            double Pycnocline=-1000;
-            int FileCounter=0;
+            double Tau_T = -1000;
+            double NSteps = 3e5;
+            double DiurnalAmplitude = -1000;
+            double SemiDiurnalAmplitude = -1000;
+            double Pycnocline = -1000;
+            double LagWind = 1000;
+            int FileCounter = 0;
             //Creating file address array
             for (FileCounter = 0; FileCounter < FileNumber; FileCounter++)
             {
                 Address[FileCounter] = MotherDirectory;
                 ExtensionNumber[FileCounter] = string.Empty;
-                ExtensionNumber[FileCounter] = "-"+ (FileCounter + 90000).ToString();
+                ExtensionNumber[FileCounter] = "-" + (FileCounter + 90000).ToString();
                 Address[FileCounter] += ExtensionNumber[FileCounter];
-                DirectoryMaker(MotherDirectory,Address[FileCounter]);
+                DirectoryMaker(MotherDirectory, Address[FileCounter]);
             }
             //Reading suntans.dat for each case
             FileCounter = 0;
-            for (int TauCounter = 0; TauCounter < TauCases; TauCounter++)
+            for (int LagCounter = 0; LagCounter < LagCases; LagCounter++)
             {
-                Tau_T = 0;
-                switch (TauCounter % TauCases)
+                switch (LagCounter %LagCases)
                 {
                     case 0:
-                        Tau_T = 0;
+                        LagWind = 0;
                         break;
                     case 1:
-                        Tau_T = 2e-5;
+                        LagWind = 6 * 3600;
                         break;
                     case 2:
-                        Tau_T = 4e-5;
+                        LagWind = 12 * 3600;
                         break;
                     case 3:
-                        Tau_T = 6e-5;
-                        break;
-                    case 4:
-                        Tau_T = 8e-5;
-                        break;
-                    case 5:
-                        Tau_T = 10e-5;
+                        LagWind = 18 * 3600;
                         break;
                     default:
                         break;
                 }
-                for (int PycnoclineCounter = 0; PycnoclineCounter < PycnoclineCases; PycnoclineCounter++)
+                for (int TauCounter = 0; TauCounter < TauCases; TauCounter++)
                 {
-                    switch (PycnoclineCounter % PycnoclineCases)
+                    switch (TauCounter % TauCases)
                     {
                         case 0:
-                            Pycnocline = 5;
+                            Tau_T = 0;
                             break;
                         case 1:
-                            Pycnocline = 7.5;
+                            Tau_T = 5.7e-6;
                             break;
                         case 2:
-                            Pycnocline = 10;
+                            Tau_T = 2.28e-5;
                             break;
                         case 3:
-                            Pycnocline = 12.5;
-                            break;
-                        case 4:
-                            Pycnocline = 15;
-                            break;
-                        case 5:
-                            Pycnocline = 17.5;
-                            break;
-                        case 6:
-                            Pycnocline = 20;
+                            Tau_T = 5.14e-5;
                             break;
                         default:
                             break;
                     }
-                    for (int WaveAmplitudeCounter = 0; WaveAmplitudeCounter < WaveAmplitudeCases; WaveAmplitudeCounter++)
+                    for (int PycnoclineCounter = 0; PycnoclineCounter < PycnoclineCases; PycnoclineCounter++)
                     {
-                        DiurnalAmplitude = 0;
-                        SemiDiurnalAmplitude = 0;
-                        switch (WaveAmplitudeCounter % WaveAmplitudeCases)
+                        switch (PycnoclineCounter % PycnoclineCases)
                         {
                             case 0:
-                                DiurnalAmplitude = 0;
-                                SemiDiurnalAmplitude = 0;
+                                Pycnocline = 5;
                                 break;
                             case 1:
-                                DiurnalAmplitude = -0.0175;
-                                SemiDiurnalAmplitude = 0;
+                                Pycnocline = 7.5;
                                 break;
                             case 2:
-                                DiurnalAmplitude = 0;
-                                SemiDiurnalAmplitude = -0.0454;
+                                Pycnocline = 10;
                                 break;
                             case 3:
-                                DiurnalAmplitude = -0.0175;
-                                SemiDiurnalAmplitude = -0.0454;
+                                Pycnocline = 12.5;
+                                break;
+                            case 4:
+                                Pycnocline = 15;
+                                break;
+                            case 5:
+                                Pycnocline = 17.5;
+                                break;
+                            case 6:
+                                Pycnocline = 20;
                                 break;
                             default:
                                 break;
                         }
-                        try
+                        for (int WaveAmplitudeCounter = 0; WaveAmplitudeCounter < WaveAmplitudeCases; WaveAmplitudeCounter++)
                         {
-                            SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline);
-                            IWavesModifier(Address[FileCounter]);
+                            DiurnalAmplitude = 0;
+                            SemiDiurnalAmplitude = 0;
+                            switch (WaveAmplitudeCounter % WaveAmplitudeCases)
+                            {
+                                case 0:
+                                    DiurnalAmplitude = 0;
+                                    SemiDiurnalAmplitude = 0;
+                                    break;
+                                case 1:
+                                    DiurnalAmplitude = -0.0175;
+                                    SemiDiurnalAmplitude = 0;
+                                    break;
+                                case 2:
+                                    DiurnalAmplitude = 0;
+                                    SemiDiurnalAmplitude = -0.0454;
+                                    break;
+                                case 3:
+                                    DiurnalAmplitude = -0.0175;
+                                    SemiDiurnalAmplitude = -0.0454;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            try
+                            {
+                                SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline,LagWind);
+                                IWavesModifier(Address[FileCounter]);
+                            }
+                            catch (Exception Exp1)
+                            {
+                                MessageBox.Show(string.Format("The operation was unsuccessfull. {0}", Exp1.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            FileCounter++;
                         }
-                        catch (Exception Exp1)
-                        {
-                            MessageBox.Show(string.Format("The operation was unsuccessfull. {0}", Exp1.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                        FileCounter++;
                     }
                 }
             }
             MessageBox.Show("The operation was successfull.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
-        public void SUNTANSDATModifier(string Address, double Tau_T, double NSteps, double DiurnalAmplitude, double SemiDiurnalAmplitude, double Pycnocline)
+        public void SUNTANSDATModifier(string Address, double Tau_T, double NSteps, double DiurnalAmplitude, double SemiDiurnalAmplitude, double Pycnocline,double Lagwind)
         {
             Address += "\\InternalWaves\\rundata\\suntans.dat";
             string Context = string.Empty;
@@ -152,6 +167,7 @@ namespace FileChanger
             int DiurnalLine = 106;
             int SemiDiurnalLine = 107;
             int PycnoclineLine = 110;
+            int LagLine = 115;
             StreamReader Reader;
             Reader = new StreamReader(Address);
             while (!Reader.EndOfStream)
@@ -179,6 +195,11 @@ namespace FileChanger
                 else if (LineCounter == PycnoclineLine)
                 {
                     Context += string.Format("CSal\t\t\t\t\t\t\t{0}\t\t\t# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal", Pycnocline);
+                    Reader.ReadLine();
+                }
+                else if (LineCounter == LagLine)
+                {
+                    Context += string.Format("WindTimeLag\t\t\t\t\t\t{0}\t\t\t# The lag time between wind and tide in sec used by Omidvar and Woodson", Lagwind);
                     Reader.ReadLine();
                 }
                 else
