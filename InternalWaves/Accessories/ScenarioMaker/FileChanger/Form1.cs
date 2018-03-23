@@ -16,7 +16,7 @@ namespace FileChanger
     {
         const int TauCases = 4;
         const int LagCases = 4;
-        const int PycnoclineCases = 7;
+        const int PycnoclineCases = 4;
         const int WaveAmplitudeCases = 4;
         int FileNumber;
         string MotherDirectory;
@@ -95,21 +95,12 @@ namespace FileChanger
                                 Pycnocline = 5;
                                 break;
                             case 1:
-                                Pycnocline = 7.5;
-                                break;
-                            case 2:
                                 Pycnocline = 10;
                                 break;
-                            case 3:
-                                Pycnocline = 12.5;
-                                break;
-                            case 4:
+                            case 2:
                                 Pycnocline = 15;
                                 break;
-                            case 5:
-                                Pycnocline = 17.5;
-                                break;
-                            case 6:
+                            case 3:
                                 Pycnocline = 20;
                                 break;
                             default:
@@ -126,16 +117,16 @@ namespace FileChanger
                                     SemiDiurnalAmplitude = 0;
                                     break;
                                 case 1:
-                                    DiurnalAmplitude = -0.0175;
+                                    DiurnalAmplitude = -0.1027;
                                     SemiDiurnalAmplitude = 0;
                                     break;
                                 case 2:
                                     DiurnalAmplitude = 0;
-                                    SemiDiurnalAmplitude = -0.0454;
+                                    SemiDiurnalAmplitude = -0.1454;
                                     break;
                                 case 3:
-                                    DiurnalAmplitude = -0.0175;
-                                    SemiDiurnalAmplitude = -0.0454;
+                                    DiurnalAmplitude = -0.1027;
+                                    SemiDiurnalAmplitude = -0.1454;
                                     break;
                                 default:
                                     break;
