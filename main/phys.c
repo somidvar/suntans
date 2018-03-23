@@ -4118,6 +4118,8 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->SpongeEdgeLocationX = MPI_GetValue(DATAFILE,"SpongeEdgeLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->SpongeEdgeLocationY = MPI_GetValue(DATAFILE,"SpongeEdgeLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
   
+  (*prop)->WindTimeLag = MPI_GetValue(DATAFILE,"WindTimeLag","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  
   if((*prop)->ntoutStore==0)
     (*prop)->ntoutStore=(*prop)->nsteps;
 

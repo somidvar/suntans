@@ -356,6 +356,10 @@ double GetDefaultValue(char *str, int *status) {
   else if(!strcmp(str,"SpongeEdgeLocationY")) {
     return SpongeEdgeLocationY_DEFAULT;
   }        
+   //Added by ----Sorush Omidvar----
+  else if(!strcmp(str,"WindTimeLag")) {
+    return WindTimeLag_DEFAULT;
+  }        
   else if(!strcmp(str,"linearFS")){
     return linearFS_DEFAULT;
   }

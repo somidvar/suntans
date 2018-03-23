@@ -113,6 +113,7 @@ DSal							33.6			# Background Salinity used by Omidvar and Woodson salinity=ASa
 SalinityAdjustmentFlag			1				# Wheather or not adjusting the salinity profile with SalinityRange
 SalinitySpecifiedRange			1.20			# Maximum Salinity range used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 SalinitySpecifiedMax			34.4			# The maximum of salinity profile	
+WindTimeLag						10800			# The lag time between wind and tide in sec used by Omidvar and Woodson
 ########################################################################
 #
 # NetCDF / Meteorological / Boundary parameters

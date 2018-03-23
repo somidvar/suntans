@@ -36,6 +36,11 @@ const REAL SalinitySpecifiedRange_DEFAULT=0;
 const REAL SalinitySpecifiedMax_DEFAULT=0;
 
 /*Added by ----Sorush Omidvar----
+	default value is 0 means there is no lag between tides and wind
+*/
+const REAL WindTimeLag_DEFAULT=0;
+
+/*Added by ----Sorush Omidvar----
 	default value is not a radiation boundary condition
 */
 const int RadiationBoundary_DEFAULT=0;
