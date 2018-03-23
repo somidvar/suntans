@@ -97,8 +97,8 @@ smoothbot						0 				# Treatment in SetFluxHeight and ComputeVelocityVector for 
 RadiationBoundary   			1   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
 SpongeMean						0e4 	    	# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
 SpongeSTD						2e3		   		# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
-SpongeCellLocationX				49950			# X Location of Sponge Layer
-SpongeEdgeLocationX				50000			# X Location of Sponge Layer
+SpongeCellLocationX				69995			# X Location of Sponge Layer
+SpongeEdgeLocationX				70000			# X Location of Sponge Layer
 SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod

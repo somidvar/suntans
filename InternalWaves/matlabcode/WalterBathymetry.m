@@ -2,7 +2,7 @@ clear all;
 close all
 clc
 
-X=0:10:50000;
+X=0:10:10000;
 X=X';
 Bathymetry=nan(size(X,1),1);
 %Real values from Walter Paper for Monterey Bay
@@ -28,44 +28,81 @@ for i=1:size(X,1)
         Bathymetry(i)=-75;
     end
 end
-bathy=figure('rend','painters','pos',[10 10 800 500])
-plot(X(1:1000)/1000,Bathymetry(1:1000),'LineWidth',6);
+Front=10*tanh(0.0005*(X-4000));
+Front(Front>0)=0;
+
+
+Brown=[153,76,0]/255;
+LightBlue=[51, 153, 255]/255;
+LightRed=[255,51,51]/255;
+LightOrange=[255,153,51]/255;
+LightYellow=[255,255,51]/255;
+BathymetryBaseline=-80*ones(size(Bathymetry,1),1);
+bathy=figure('rend','painters','pos',[10 10 800 500]);
+
+fill([X'/1000 flip(X'/1000)], [Bathymetry',(BathymetryBaseline+80)'],LightBlue,'LineStyle','none');
+hold on;
+fill([X'/1000 flip(X'/1000)], [Front',(BathymetryBaseline+80)'],LightYellow,'LineStyle','none');
+fill([flip(X'/1000) X'/1000], [BathymetryBaseline',Bathymetry'],Brown,'LineStyle','none');
 set(gca,'fontsize',18);
-set(gca,'FontWeight','bold')
-xlabel('Offshore Distance (Km)')
+set(gca,'FontWeight','bold');
+xlabel('Offshore Distance (Km)');
 ylabel('Depth (m)');
 title('Bathymetry','FontSize',23);
+annotation('arrow',[0.15,0.23],[0.85,0.85],'LineWidth',3);
+annotation('arrow',[0.15,0.23],[0.65,0.65],'LineWidth',3);
+annotation('arrow',[0.15,0.23],[0.45,0.45],'LineWidth',3);
+annotation('arrow',[0.15,0.23],[0.25,0.25],'LineWidth',3);
+
+annotation('arrow',[0.55,0.63],[0.30,0.33],'LineWidth',4);
+annotation('arrow',[0.55,0.63],[0.45,0.47],'LineWidth',4);
+annotation('arrow',[0.55,0.63],[0.6,0.6],'LineWidth',4);
+annotation('arrow',[0.55,0.63],[0.75,0.74],'LineWidth',4);
+annotation('arrow',[0.55,0.63],[0.88,0.85],'LineWidth',4);
+set(gca,'xdir','reverse')
+grid;
+
+
+
 saveas(bathy,'Bathymetry.png');
-grid;
-       
 
-profile=figure('rend','painters','pos',[10 10 800 800]);
-subplot('position',[.1 .20 .8 .65]);
-set(gca,'fontsize',18);
-set(gca,'FontWeight','bold');
-DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
-Z=-ncread(DataPath,'z_r');
-RhoB=1000+1000*ncread(DataPath,'rho',[1,1,1],[Inf,Inf,1]);
-RhoB=squeeze(RhoB(end,:));
-RhoB=RhoB';
-x1 = Z;
-y1 = RhoB;
-line(y1,x1,'Color','blue','LineWidth',6);
-ax1 = gca; % current axes
-ax1.XColor = 'blue';
-ax1.YColor = 'none';
-ax1_pos = ax1.Position; % position of first axes
-xlabel('Density (kg/m^3)');
-ax2 = axes('Position',ax1_pos,'XAxisLocation','top','YAxisLocation','left','Color','none');
 
-BruntVaisala=(-diff(RhoB,1,1)./diff(Z)*9.8/1025).^0.5;
-BruntVaisala(end+1)=BruntVaisala(end);
-x2 = Z;
-y2 = BruntVaisala;
-line(y2,x2,'Parent',ax2,'Color','black','LineWidth',6);
-grid;
-ylabel('Depth (m)');
-xlabel('Brunt Vaisala Frequency (Rad/s)');
-set(gca,'fontsize',18);
-set(gca,'FontWeight','bold');
-saveas(profile,'DensityBrunt.png');
+
+
+
+
+
+
+
+
+% 
+% profile=figure('rend','painters','pos',[10 10 800 800]);
+% subplot('position',[.1 .20 .8 .65]);
+% set(gca,'fontsize',18);
+% set(gca,'FontWeight','bold');
+% DataPath='F:\7th\suntans-7th-70001\InternalWaves\data\Result_0000.nc';
+% Z=-ncread(DataPath,'z_r');
+% RhoB=1000+1000*ncread(DataPath,'rho',[1,1,1],[Inf,Inf,1]);
+% RhoB=squeeze(RhoB(end,:));
+% RhoB=RhoB';
+% x1 = Z;
+% y1 = RhoB;
+% line(y1,x1,'Color','blue','LineWidth',6);
+% ax1 = gca; % current axes
+% ax1.XColor = 'blue';
+% ax1.YColor = 'none';
+% ax1_pos = ax1.Position; % position of first axes
+% xlabel('Density (kg/m^3)');
+% ax2 = axes('Position',ax1_pos,'XAxisLocation','top','YAxisLocation','left','Color','none');
+% 
+% BruntVaisala=(-diff(RhoB,1,1)./diff(Z)*9.8/1025).^0.5;
+% BruntVaisala(end+1)=BruntVaisala(end);
+% x2 = Z;
+% y2 = BruntVaisala;
+% line(y2,x2,'Parent',ax2,'Color','black','LineWidth',6);
+% grid;
+% ylabel('Depth (m)');
+% xlabel('Brunt Vaisala Frequency (Rad/s)');
+% set(gca,'fontsize',18);
+% set(gca,'FontWeight','bold');
+% saveas(profile,'DensityBrunt.png');

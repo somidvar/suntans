@@ -14,16 +14,16 @@ namespace FileChanger
 {
     public partial class Form1 : Form
     {
-        const int TauCases = 4;
-        const int PycnoclineCases = 3;
-        const int WaveAmplitudeCases = 1;
+        const int TauCases = 6;
+        const int PycnoclineCases = 7;
+        const int WaveAmplitudeCases = 4;
         int FileNumber;
         string MotherDirectory;
         public Form1()
         {
             FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases;
             InitializeComponent();
-            MotherDirectory = @"D:\suntans-8th";
+            MotherDirectory = @"D:\suntans-9th";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
@@ -41,7 +41,7 @@ namespace FileChanger
             {
                 Address[FileCounter] = MotherDirectory;
                 ExtensionNumber[FileCounter] = string.Empty;
-                ExtensionNumber[FileCounter] = "-"+ (FileCounter + 80000).ToString();
+                ExtensionNumber[FileCounter] = "-"+ (FileCounter + 90000).ToString();
                 Address[FileCounter] += ExtensionNumber[FileCounter];
                 DirectoryMaker(MotherDirectory,Address[FileCounter]);
             }
@@ -56,13 +56,19 @@ namespace FileChanger
                         Tau_T = 0;
                         break;
                     case 1:
-                        Tau_T = 2.5e-5;
+                        Tau_T = 2e-5;
                         break;
                     case 2:
-                        Tau_T = 5e-5;
+                        Tau_T = 4e-5;
                         break;
                     case 3:
-                        Tau_T = 7.5e-5;
+                        Tau_T = 6e-5;
+                        break;
+                    case 4:
+                        Tau_T = 8e-5;
+                        break;
+                    case 5:
+                        Tau_T = 10e-5;
                         break;
                     default:
                         break;
@@ -72,19 +78,25 @@ namespace FileChanger
                     switch (PycnoclineCounter % PycnoclineCases)
                     {
                         case 0:
-                            Pycnocline = 10;
-                            //BruntVaisalaMax = 0.0212;// This is the value for 21 meters Pycnocline. 
-                            //BruntVaisalaMax = 0.0235;
+                            Pycnocline = 5;
                             break;
                         case 1:
-                            Pycnocline = 15;
-                            //BruntVaisalaMax = 0.0212;// This is the value for 21 meters Pycnocline. 
-                            //BruntVaisalaMax = 0.0227;
+                            Pycnocline = 7.5;
                             break;
                         case 2:
+                            Pycnocline = 10;
+                            break;
+                        case 3:
+                            Pycnocline = 12.5;
+                            break;
+                        case 4:
+                            Pycnocline = 15;
+                            break;
+                        case 5:
+                            Pycnocline = 17.5;
+                            break;
+                        case 6:
                             Pycnocline = 20;
-                            //BruntVaisalaMax = 0.0212;// This is the value for 21 meters Pycnocline. 
-                            //BruntVaisalaMax = 0.0222;
                             break;
                         default:
                             break;
@@ -96,6 +108,18 @@ namespace FileChanger
                         switch (WaveAmplitudeCounter % WaveAmplitudeCases)
                         {
                             case 0:
+                                DiurnalAmplitude = 0;
+                                SemiDiurnalAmplitude = 0;
+                                break;
+                            case 1:
+                                DiurnalAmplitude = -0.0175;
+                                SemiDiurnalAmplitude = 0;
+                                break;
+                            case 2:
+                                DiurnalAmplitude = 0;
+                                SemiDiurnalAmplitude = -0.0454;
+                                break;
+                            case 3:
                                 DiurnalAmplitude = -0.0175;
                                 SemiDiurnalAmplitude = -0.0454;
                                 break;
