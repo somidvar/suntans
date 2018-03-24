@@ -32,7 +32,7 @@ namespace FileChanger
             string[] Address = new string[FileNumber];
             string[] ExtensionNumber = new string[FileNumber];
             double Tau_T = -1000;
-            double NSteps = 3e5;
+            double NSteps = 3.63e5;
             double DiurnalAmplitude = -1000;
             double SemiDiurnalAmplitude = -1000;
             double Pycnocline = -1000;
