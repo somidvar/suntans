@@ -1,8 +1,8 @@
 #PBS -S /bin/bash
 #PBS -q batch
 #PBS -N IW-10001
-#PBS -l nodes=1:ppn=48:aquarinode
-#PBS -l walltime=15:00:00
+#PBS -l nodes=1:ppn=24:aquarinode
+#PBS -l walltime=05:00:00:00
 #PBS -l mem=50gb
 #PBS -M omidvar@uga.edu 
 #PBS -m ae
