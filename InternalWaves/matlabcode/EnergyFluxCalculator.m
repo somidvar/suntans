@@ -303,14 +303,10 @@ function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
     %The high resolution was inforced by stability in SUNTANS.
     DataIndex=[];
     for i=1:size(X,1)
-        if X(i)<7500
+        if X(i)<8000
             continue;
-        elseif (X(i)>7500 && X(i)<10000)
-            if mod(X(i)-5000,100)~=10%make it each 100 meter
-                DataIndex(end+1)=i;
-            end
         else
-            if mod(X(i)-10000,500)~=10%make it each 100 meter
+            if mod(i,3)~=0
                 DataIndex(end+1)=i;
             end            
         end
