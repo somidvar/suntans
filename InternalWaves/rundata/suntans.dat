@@ -53,8 +53,8 @@ omega 							0				# frequency
 flux 							0				# flux
 timescale						0				# timescale for open boundary condition
 volcheck						0				# Check for volume conservation
-masscheck						2				# Check for mass conservation
-nonlinear						0				# No momentum advection: 0, first-order upwind: 1, Central-differencing: 2
+masscheck						0				# Check for mass conservation
+nonlinear						2				# No momentum advection: 0, first-order upwind: 1, Central-differencing: 2
 laxWendroff    				 	0       		# No Lax Wendroff diffusion coefficients
 laxWendroff_Vertical    		0      			# No Lax Wendroff diffusion coefficients
 newcells						0				# 1 if adjust momentum in surface cells as the volume changes, 0 otherwise
