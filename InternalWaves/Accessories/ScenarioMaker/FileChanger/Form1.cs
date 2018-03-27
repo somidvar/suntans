@@ -14,17 +14,17 @@ namespace FileChanger
 {
     public partial class Form1 : Form
     {
-        const int TauCases = 4;
-        const int LagCases = 4;
-        const int PycnoclineCases = 4;
+        const int TauCases = 7;
+        const int LagCases = 8;
+        const int PycnoclineCases = 7;
         const int WaveAmplitudeCases = 4;
         int FileNumber;
         string MotherDirectory;
         public Form1()
         {
-            FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases;
+            FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases*LagCases;
             InitializeComponent();
-            MotherDirectory = @"D:\suntans-9th";
+            MotherDirectory = @"D:\Test\suntans-9th";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
@@ -57,13 +57,25 @@ namespace FileChanger
                         LagWind = 0;
                         break;
                     case 1:
-                        LagWind = 6 * 3600;
+                        LagWind = 3 * 3600;
                         break;
                     case 2:
-                        LagWind = 12 * 3600;
+                        LagWind = 6 * 3600;
                         break;
                     case 3:
+                        LagWind = 9 * 3600;
+                        break;
+                    case 4:
+                        LagWind = 12 * 3600;
+                        break;
+                    case 5:
+                        LagWind = 15 * 3600;
+                        break;
+                    case 6:
                         LagWind = 18 * 3600;
+                        break;
+                    case 7:
+                        LagWind = 21 * 3600;
                         break;
                     default:
                         break;
@@ -76,13 +88,22 @@ namespace FileChanger
                             Tau_T = 0;
                             break;
                         case 1:
-                            Tau_T = 5.7e-6;
+                            Tau_T = 0.143e-5;
                             break;
                         case 2:
-                            Tau_T = 2.28e-5;
+                            Tau_T = 0.571e-5;
                             break;
                         case 3:
-                            Tau_T = 5.14e-5;
+                            Tau_T = 1.285e-5;
+                            break;
+                        case 4:
+                            Tau_T = 2.285e-5;
+                            break;
+                        case 5:
+                            Tau_T = 3.570e-5;
+                            break;
+                        case 6:
+                            Tau_T = 5.142e-5;
                             break;
                         default:
                             break;
@@ -95,12 +116,21 @@ namespace FileChanger
                                 Pycnocline = 5;
                                 break;
                             case 1:
-                                Pycnocline = 10;
+                                Pycnocline = 7.5;
                                 break;
                             case 2:
-                                Pycnocline = 15;
+                                Pycnocline = 10;
                                 break;
                             case 3:
+                                Pycnocline = 12.5;
+                                break;
+                            case 4:
+                                Pycnocline = 15;
+                                break;
+                            case 5:
+                                Pycnocline = 17.5;
+                                break;
+                            case 6:
                                 Pycnocline = 20;
                                 break;
                             default:
