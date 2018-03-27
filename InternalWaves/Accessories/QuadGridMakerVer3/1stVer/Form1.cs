@@ -32,7 +32,7 @@ namespace _1stVer
         {
             XStartingLocationTextbox.Text = "0";
             XEndingLocationTextbox.Text = "70000";
-            XSteppingMethodCombo.SelectedIndex = 1;
+            XSteppingMethodCombo.SelectedIndex = 0;
             XCellNumberTextbox.Text = "700";
             YStartingLocationTextbox.Text = "0";
             YEndingLocationTextbox.Text = "100";
@@ -50,15 +50,21 @@ namespace _1stVer
             //0 is Linear and 1 is constant
             if (XSteppingMethodCombo.SelectedIndex == 0)
             {
+                XStepRatioTextbox.Enabled = false;
+                XInitialStepTextbox.Enabled = false;
+                XCellNumberTextbox.Enabled = true;
+            }
+            if (XSteppingMethodCombo.SelectedIndex == 1)
+            {
                 XStepRatioTextbox.Enabled = true;
                 XInitialStepTextbox.Enabled = true;
                 XCellNumberTextbox.Enabled = false;
             }
-            if (XSteppingMethodCombo.SelectedIndex == 1)
+            if (XSteppingMethodCombo.SelectedIndex == 2)
             {
-                XStepRatioTextbox.Enabled = false;
-                XInitialStepTextbox.Enabled = false;
-                XCellNumberTextbox.Enabled = true;
+                XStepRatioTextbox.Enabled = true;
+                XInitialStepTextbox.Enabled = true;
+                XCellNumberTextbox.Enabled = false;
             }
         }
         private void YSteppingMethodCombo_SelectionChangeCommitted(object sender, EventArgs e)
@@ -88,12 +94,18 @@ namespace _1stVer
                 XStartingLocationDouble = Convert.ToDouble(XStartingLocationTextbox.Text);
                 XEndingLocationDouble = Convert.ToDouble(XEndingLocationTextbox.Text);
                 if (XSteppingMethodCombo.SelectedIndex == 0)
+                    XCellNUmberInt = Convert.ToInt32(XCellNumberTextbox.Text);
+                if (XSteppingMethodCombo.SelectedIndex == 1)
                 {
                     XStepRatioDouble = Convert.ToDouble(XStepRatioTextbox.Text);
                     XInitialStepDouble = Convert.ToDouble(XInitialStepTextbox.Text);
                 }
-                if (XSteppingMethodCombo.SelectedIndex == 1)
-                    XCellNUmberInt = Convert.ToInt32(XCellNumberTextbox.Text);
+                if (XSteppingMethodCombo.SelectedIndex == 2)
+                {
+                    XStepRatioDouble = Convert.ToDouble(XStepRatioTextbox.Text);
+                    XInitialStepDouble = Convert.ToDouble(XInitialStepTextbox.Text);
+                }
+
             }
             catch (Exception Exp2)
             {
@@ -101,7 +113,7 @@ namespace _1stVer
 
             }
             // Making X Grid
-            if (XSteppingMethodCombo.SelectedIndex == 1)
+            if (XSteppingMethodCombo.SelectedIndex == 0)
             {
                 for (int counter = 0; counter <= XCellNUmberInt; counter++)
                 {
@@ -109,7 +121,23 @@ namespace _1stVer
                     XDataTemporary.Add(Math.Round(Temporary, 1));
                 }
             }
-            if (XSteppingMethodCombo.SelectedIndex == 0)
+            else if (XSteppingMethodCombo.SelectedIndex == 1)
+            {
+                double Temporary = 0;
+                XDataTemporary.Add(XStartingLocationDouble);
+                int counter = 0;
+                while (true)
+                {
+                    double CurrentStep = XInitialStepDouble +counter* XStepRatioDouble;
+                    Temporary = XDataTemporary.Last() + CurrentStep;
+                    if (Temporary < XEndingLocationDouble)
+                        XDataTemporary.Add(Temporary);
+                    else
+                        break;
+                    counter++;
+                }
+            }
+            else if (XSteppingMethodCombo.SelectedIndex == 2)
             {
                 double counter = 0;
                 XDataTemporary.Add(XStartingLocationDouble);
@@ -126,7 +154,7 @@ namespace _1stVer
                     counter++;
                 }
             }
-            XMeshControl = true;
+                XMeshControl = true;
         }
 
         private void YAddButton_Click(object sender, EventArgs e)

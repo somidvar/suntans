@@ -163,8 +163,9 @@
             // 
             this.XSteppingMethodCombo.FormattingEnabled = true;
             this.XSteppingMethodCombo.Items.AddRange(new object[] {
-            "Linear",
-            "Constant"});
+            "Constant",
+            "Linear (D+X)",
+            "Quad (D*X)"});
             this.XSteppingMethodCombo.Location = new System.Drawing.Point(100, 65);
             this.XSteppingMethodCombo.Name = "XSteppingMethodCombo";
             this.XSteppingMethodCombo.Size = new System.Drawing.Size(80, 21);
