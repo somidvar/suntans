@@ -76,8 +76,11 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
     FigureSize=[1900,850];
     f=figure('Position',[1 1 FigureSize(1) FigureSize(2)],'units','pixels','Resize','off');
     movegui(f,'center');
-    MovieData(1:ceil(size(Time,1)/AnalysisSpeed)) = struct('cdata', [],'colormap', []);
-    CounterMovie=0;
+    %Creating movie using the MPEG-4 to conserve quality and make it smaller 
+    ResultVideoWriter=VideoWriter(strcat(OutputAddress,MovieName),'MPEG-4');
+    ResultVideoWriter.FrameRate=FPSMovie;
+    open(ResultVideoWriter);
+    
     tau=nan(size(Time,1),3);
     tau(:,1)= sin(DiurnalTideOmega*Time);
     tau(:,2)= sin(SemiDiurnalTideOmega*Time);
@@ -152,8 +155,8 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             Title=strcat(DiagramTitle,str2);
             title(Title);
             ylim([ResultsMin ResultsMax]);
-            CounterMovie=CounterMovie+1;
-            MovieData(CounterMovie)=getframe(gcf);
+            MovieTemporary=getframe(gcf);
+            writeVideo(ResultVideoWriter,MovieTemporary.cdata);
         end    
     else
         for counter=1:AnalysisSpeed:size(Time,1)
@@ -209,16 +212,9 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             str2=sprintf(' at time %.2f hour',Time(counter)/3600);
             Title=strcat(DiagramTitle,str2);
             title(Title);
-            CounterMovie=CounterMovie+1;
-            MovieData(CounterMovie)=getframe(gcf);
+            MovieTemporary=getframe(gcf);
+            writeVideo(ResultVideoWriter,MovieTemporary.cdata);
         end        
-    end
-    %Creating movie using the MPEG-4 to conserve quality and make it smaller 
-    ResultVideoWriter=VideoWriter(strcat(OutputAddress,MovieName),'MPEG-4');
-    ResultVideoWriter.FrameRate=FPSMovie;
-    open(ResultVideoWriter);
-    for counter=1:size(MovieData,2)
-        writeVideo(ResultVideoWriter,MovieData(counter).cdata);
     end
     close(ResultVideoWriter);
 end
