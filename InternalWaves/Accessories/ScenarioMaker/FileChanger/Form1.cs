@@ -243,6 +243,7 @@ namespace FileChanger
             {
                 StreamReader IWavesReader = new StreamReader(Address);
                 string IWaves = string.Empty;
+                string[] Node = new string[] { "n504", "n506","n510", "n515","n517", "n524","n527","n540","n542"};
                 int IWavesCounter = 0;
                 while (!IWavesReader.EndOfStream)
                 {
@@ -251,6 +252,14 @@ namespace FileChanger
                         IWaves += @"#PBS -N ";
                         IWaves += "IW-";
                         IWaves += CaseNumber;
+                        IWaves += "\n";
+                        IWavesReader.ReadLine();
+                    }
+                    else if (IWavesCounter == 3)
+                    {
+                        IWaves += @"#PBS -l nodes=1:ppn=48:";
+                        int NodeTemoprary = Convert.ToInt32(CaseNumber) - 90000;
+                        IWaves += Node[NodeTemoprary % 9];
                         IWaves += "\n";
                         IWavesReader.ReadLine();
                     }
