@@ -255,7 +255,7 @@ namespace FileChanger
                         IWaves += "\n";
                         IWavesReader.ReadLine();
                     }
-                    else if (IWavesCounter == 3)
+                    /*else if (IWavesCounter == 3)
                     {
                         IWaves += @"#PBS -l nodes=1:ppn=48:";
                         int NodeTemoprary = Convert.ToInt32(CaseNumber) - 90000;
@@ -263,6 +263,7 @@ namespace FileChanger
                         IWaves += "\n";
                         IWavesReader.ReadLine();
                     }
+                    */
                     else
                     {
                         IWaves += IWavesReader.ReadLine();
