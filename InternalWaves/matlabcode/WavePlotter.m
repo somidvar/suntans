@@ -227,7 +227,7 @@ function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
         if X(i)<8000
             continue;
         else
-            if mod(i,3)~=0
+            if mod(i,10)~=0
                 DataIndex(end+1)=i;
             end            
         end

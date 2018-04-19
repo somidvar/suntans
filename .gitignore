@@ -24,4 +24,5 @@ InternalWaves/IW-10001.o*
 InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.m
 InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.sh
 
-
+#The plots made for the presentations
+InternalWaves/matlabcode/*.png
