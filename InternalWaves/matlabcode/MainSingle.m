@@ -6,16 +6,22 @@ clear all;
 clc
 
 CaseNumber=70047;
-WindOmega=2*pi/(24*3600);
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
 
-SapeloFlag=0;
-if SapeloFlag
-    DataPath=strcat('/lustre1/omidvar/work-directory_0801/7th/suntans-7th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
-    OutputAddress='/lustre1/omidvar/work-directory_0801/7th-New/'
+CurrentLocation=pwd;
+if contains(CurrentLocation,'lustre1')
+    SapeloFlag=1;
 else
-    DataPath=strcat('F:\7th\suntans-7th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
+    SapeloFlag=0;
+end
+clear CurrentLocation;
+
+if SapeloFlag
+    DataPath=strcat('/lustre1/omidvar/work-directory_0801/9th/suntans-9th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
+    OutputAddress='/lustre1/omidvar/work-directory_0801/9th-New/';
+else
+    DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
     OutputAddress='F:\';
 end
 
@@ -28,22 +34,20 @@ KnuH=1;
 KappaH=0;
 g=9.8;
 InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
-XEndIndex=1000;% The data trim after this X point
-TimeStartIndex=5888/2;%This is 27 cycles of M2 and 14 cycles of K1 and wind
-TimeEndIndex=floor(9917/2);%This is 27 cycles of M2 and 14 cycles of K1 and wind
+XEndIndex=Inf;% The data trim after this X point
+TimeStartIndex=1009;%This is 27 cycles of M2 and 14 cycles of K1 and wind
+TimeEndIndex=3025;%This is 27 cycles of M2 and 14 cycles of K1 and wind
 
 AnalysisSpeed=1;
 FPSMovie=15;
 
 WindTauMax=0;
+WindOmega=2*pi/(24*3600);
 DiurnalTideOmega=2*pi()/23.93/3600;
 SemiDiurnalTideOmega=2*pi()/12.4/3600;
-PycnoclineDepthIndex=20;BathymetryXLocationAtPycnoclineIndex=14;%for Pycno=10
-%PycnoclineDepthIndex=30;BathymetryXLocationAtPycnoclineIndex=20;%for Pycno=10
-%PycnoclineDepthIndex=40;BathymetryXLocationAtPycnoclineIndex=24;%for Pycno=10
 
 %WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
 EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
     KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
     DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
-    TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
+    TimeEndIndex,SapeloFlag);

@@ -9,16 +9,22 @@ for CaseNumber=70006:1:70047
     format compact;
     disp(strcat('Case Number= ',num2str(CaseNumber)))
     
-    SapeloFlag=0;
+    CurrentLocation=pwd;
+    if contains(CurrentLocation,'lustre1')
+        SapeloFlag=1;
+    else
+        SapeloFlag=0;
+    end
+    clear CurrentLocation;
     if SapeloFlag
-        Prefix='/lustre1/omidvar/work-directory_0801/7th/suntans-7th-';
-        OutputAddress='/lustre1/omidvar/work-directory_0801/7th-New';
+        Prefix='/lustre1/omidvar/work-directory_0801/9th/suntans-9th-';
+        OutputAddress='/lustre1/omidvar/work-directory_0801/9th-New';
         CaseName=num2str(CaseNumber);
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'/InternalWaves/data/Result_0000.nc');
     else
-        Prefix='F:\7th\suntans-7th-';
-        OutputAddress='D:\7th\';
+        Prefix='F:\9th\suntans-9th-';
+        OutputAddress='D:\9th\';
         CaseName=num2str(CaseNumber);
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'\InternalWaves\data\Result_0000.nc');
@@ -53,18 +59,7 @@ for CaseNumber=70006:1:70047
         WindTauMax=5e-5;
     elseif floor((CaseNumber-70000)/12)==3
         WindTauMax=7.5e-5;
-    end    
-    %Setting the pycnocline depth based on the cases
-    if mod(CaseNumber-70000,12)<4
-        PycnoclineDepthIndex=20;%-10 meter
-        BathymetryXLocationAtPycnoclineIndex=14;
-    elseif mod(CaseNumber-70000,20)<8
-        PycnoclineDepthIndex=30;%-15 meter
-        BathymetryXLocationAtPycnoclineIndex=20;
-    elseif mod(CaseNumber-70000,20)<12
-        PycnoclineDepthIndex=40;%-20 meter
-        BathymetryXLocationAtPycnoclineIndex=24;
-    end    
+    end       
     %Setting the dirunal and semi-dirunal tide frequency based on the cases
     if mod(CaseNumber,4)==0
         DiurnalTideOmega=0;
@@ -83,5 +78,5 @@ for CaseNumber=70006:1:70047
 %     EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
 %         KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
 %         DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
-%         TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);
+%         TimeEndIndex,SapeloFlag);
 end

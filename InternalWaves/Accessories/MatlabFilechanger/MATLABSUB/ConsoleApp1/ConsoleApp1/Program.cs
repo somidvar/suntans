@@ -9,12 +9,14 @@ namespace ConsoleApp1
 {
     class Program
     {
-        static int TidalScenario, WindScenario, PycnoclineScenario;
+        static int TidalScenario, WindScenario, PycnoclineScenario,LagScenario,VersionSeries;
         static void Main(string[] args)
         {
-            TidalScenario = 1;
-            WindScenario = 4;
-            PycnoclineScenario = 3;
+            TidalScenario = 4;
+            WindScenario = 7;
+            PycnoclineScenario = 7;
+            LagScenario = 8;
+            VersionSeries = 90000;
                 
             MATLABSubWriter();
             MATLABMainSingleWriter();
@@ -24,37 +26,46 @@ namespace ConsoleApp1
         {
             for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario; counter++)
             {
-                StreamReader MATLABSUBReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MATLABSUBMother.sh");
-                string BodyFile = MATLABSUBReader.ReadLine() + "\n";
-                BodyFile += MATLABSUBReader.ReadLine()+"\n";
-                MATLABSUBReader.ReadLine();
-                BodyFile += string.Format("#PBS -N MATLABJob{0}\n",counter+80000);
-                BodyFile += MATLABSUBReader.ReadToEnd()+"\n";
-                MATLABSUBReader.Close();
-                BodyFile += "matlab -nodisplay </lustre1/omidvar/work-directory_0801/MatlabFiles/MainSingle";
-                BodyFile += string.Format("{0}", counter + 80000);
-                BodyFile+=@".m> matlab_${PBS_JOBID}.out";
-                string OutputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MATLABSub{0}.sh", counter+80000);
+                string MatlabSub = string.Empty;
+                MatlabSub += "#PBS -S /bin/bash\n";
+                MatlabSub += "#PBS -q batch\n";
+                MatlabSub += string.Format("#PBS -N MATLABJOB{0}", counter + VersionSeries)+"\n";
+                MatlabSub += "#PBS -l nodes=1:ppn=24:AMD\n";
+                MatlabSub += "#PBS -l walltime=2:00:00\n";
+                MatlabSub += "#PBS -l mem=60gb\n";
+                MatlabSub += "# PBS -M omidvar@uga.edu\n";
+                MatlabSub += "#PBS -m e\n"+"\n";
+                MatlabSub += "cd $PBS_O_WORKDIR\n";
+                MatlabSub += @"ml matlab/R2017b"+"\n";
+                MatlabSub += "echo\n";
+                MatlabSub += @"echo ""Job ID: $PBS_JOBID"""+"\n";
+                MatlabSub += @"echo ""Queue:  $PBS_QUEUE""" + "\n";
+                MatlabSub += @"echo ""Cores:  $PBS_NP""" + "\n";
+                MatlabSub += @"echo ""Nodes:  $(cat $PBS_NODEFILE | sort - u | tr '\n' ' ')""" + "\n";
+                MatlabSub += @"echo ""mpirun: $(which mpirun)""" + "\n";
+                MatlabSub +="echo\n";
+                MatlabSub += @"matlab - nodisplay </ lustre1 / omidvar / work - directory_0801 / MatlabFiles /MainSingle"+(counter+VersionSeries).ToString()+ @".m> matlab_${PBS_JOBID}.out";
+                string OutputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MATLABSub{0}.sh", counter+VersionSeries);
                 StreamWriter MATLABSUBWriter = new StreamWriter(OutputAddress);
-                MATLABSUBWriter.Write(BodyFile);
+                MATLABSUBWriter.Write(MatlabSub);
                 MATLABSUBWriter.Close();
             }
         }
         static void MATLABMainSingleWriter()
         {
-            StreamReader MainSingleStreamReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MainSingleMother.m");
+            StreamReader MainSingleStreamReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\matlabcode\\MainSingle.m");
             for (int counterSkipper = 0; counterSkipper < 8; counterSkipper++)
                 MainSingleStreamReader.ReadLine();
             string MainSingleBody = MainSingleStreamReader.ReadToEnd();
             MainSingleStreamReader.Close();
 
-            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario; counter++)
+            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario*LagScenario; counter++)
             {
-                double DiurnalTideOmega, SemiDiurnalTideOmega, WindTauMax, PycnoclineDepthIndex, BathymetryXLocationAtPycnoclineIndex;
-                DiurnalTideOmega = SemiDiurnalTideOmega = WindTauMax = PycnoclineDepthIndex = BathymetryXLocationAtPycnoclineIndex = -9999;
+                double DiurnalTideOmega, SemiDiurnalTideOmega, WindTauMax,WindOmega;
+                DiurnalTideOmega = SemiDiurnalTideOmega = WindTauMax =WindOmega= -9999;
+                WindOmega= 2 * Math.PI / (24 * 3600);
                 DiurnalTideOmega = 2 * Math.PI / (23.93 * 3600);
                 SemiDiurnalTideOmega = 2 * Math.PI / (12.42 * 3600);
-                /*
                 switch (counter % TidalScenario)
                 {
                     case 0:
@@ -73,57 +84,45 @@ namespace ConsoleApp1
                         DiurnalTideOmega = 2 * Math.PI / (23.93 * 3600);
                         SemiDiurnalTideOmega = 2 * Math.PI / (12.42 * 3600);
                         break;
-                    default:
-                        break;
                 }
-                */
-                switch (Convert.ToInt16(counter/(PycnoclineScenario*TidalScenario)))
+                int a = counter % (PycnoclineScenario * TidalScenario);
+                switch (Convert.ToInt32((counter% (PycnoclineScenario * TidalScenario*WindScenario)) /(PycnoclineScenario * TidalScenario)))
                 {
                     case 0:
                         WindTauMax = 0;
                         break;
                     case 1:
-                        WindTauMax = 2.5e-5;
+                        WindTauMax = 0.14e-5;
                         break;
                     case 2:
-                        WindTauMax = 5e-5;
+                        WindTauMax = 0.57e-5;
                         break;
                     case 3:
-                        WindTauMax = 7.5e-5;
+                        WindTauMax = 1.29e-5;
                         break;
-                    default:
+                    case 4:
+                        WindTauMax = 2.29e-5;
                         break;
-                }
-                if ((counter % (TidalScenario * PycnoclineScenario)) < 1 * TidalScenario)
-                {
-                    PycnoclineDepthIndex = 20;
-                    BathymetryXLocationAtPycnoclineIndex = 14;
-                }
-                else if ((counter % (TidalScenario * PycnoclineScenario)) < 2 * TidalScenario)
-                {
-                    PycnoclineDepthIndex = 30;
-                    BathymetryXLocationAtPycnoclineIndex = 20;
-                }
-                else if ((counter % (TidalScenario * PycnoclineScenario)) < 3 * TidalScenario)
-                {
-                    PycnoclineDepthIndex = 40;
-                    BathymetryXLocationAtPycnoclineIndex = 24;
+                    case 5:
+                        WindTauMax = 3.57e-5;
+                        break;
+                    case 6:
+                        WindTauMax = 5.14e-5;
+                        break;
                 }
                 string MainSingleString = "close all;\r\nclear all;\r\nclc\r\n\r\n";
-                MainSingleString += string.Format("CaseNumber={0};\r\n", counter + 80000);
+                MainSingleString += string.Format("CaseNumber={0};\r\n", counter + VersionSeries);
                 MainSingleString += string.Format("DiurnalTideOmega={0};\r\n", DiurnalTideOmega.ToString("e4"));
                 MainSingleString += string.Format("SemiDiurnalTideOmega={0};\r\n", SemiDiurnalTideOmega.ToString("e4"));
+                MainSingleString += string.Format("WindOmega={0};\r\n", WindOmega.ToString("e4"));
                 MainSingleString += string.Format("WindTauMax={0};\r\n", WindTauMax);
-                MainSingleString += string.Format("PycnoclineDepthIndex={0};\r\n", PycnoclineDepthIndex);
-                MainSingleString += string.Format("BathymetryXLocationAtPycnoclineIndex={0};\r\n", BathymetryXLocationAtPycnoclineIndex);
                 MainSingleString += MainSingleBody;
-                MainSingleString=MainSingleString.Remove(MainSingleString.LastIndexOf('\n'));
-                MainSingleString = MainSingleString.Remove(MainSingleString.LastIndexOf('\n'));
-                MainSingleString = MainSingleString.Remove(MainSingleString.LastIndexOf('\n'));
-                MainSingleString = MainSingleString.Remove(MainSingleString.LastIndexOf('\n'));
-                MainSingleString += string.Format("EnergyFluxCalculator{0}", counter + 80000);
-                MainSingleString += "(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag);\r\n";
-                string outputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MainSingle{0}.m", counter + 80000);
+                for (int EndLineCounter = 0; EndLineCounter < 10; EndLineCounter++)
+                    MainSingleString = MainSingleString.Remove(MainSingleString.LastIndexOf('\n'));
+
+                MainSingleString += string.Format("EnergyFluxCalculator{0}", counter + VersionSeries);
+                MainSingleString += "(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,SapeloFlag);\r\n";
+                string outputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\MainSingle{0}.m", counter + VersionSeries);
                 StreamWriter MainSingleStreamWriter = new StreamWriter(outputAddress);
                 MainSingleStreamWriter.Write(MainSingleString);
                 MainSingleStreamWriter.Close();
@@ -131,17 +130,17 @@ namespace ConsoleApp1
         }
         static void MATLABEnergyFluxWriter()
         {
-            StreamReader EnergyFluxCalculatorStreamReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\EnergyFluxCalculatorMother.m");
+            StreamReader EnergyFluxCalculatorStreamReader = new StreamReader("D:\\github\\suntans\\InternalWaves\\matlabcode\\EnergyFluxCalculator.m");
             for (int counterSkipper = 0; counterSkipper < 17; counterSkipper++)
                 EnergyFluxCalculatorStreamReader.ReadLine();
             string EnergyFluxBody = EnergyFluxCalculatorStreamReader.ReadToEnd();
             EnergyFluxCalculatorStreamReader.Close();
-            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario; counter++)
+            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario*LagScenario; counter++)
             {
-                string EnergyFluxString = string.Format("function EnergyFluxCalculator{0}", counter + 80000);
-                EnergyFluxString += "(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag)\r\n";
+                string EnergyFluxString = string.Format("function EnergyFluxCalculator{0}", counter + VersionSeries);
+                EnergyFluxString += "(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,SapeloFlag)\r\n";
                 EnergyFluxString += EnergyFluxBody;
-                string outputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\EnergyFluxCalculator{0}.m", counter + 80000);
+                string outputAddress = string.Format("D:\\github\\suntans\\InternalWaves\\Accessories\\MatlabFilechanger\\MATLABSUB\\EnergyFluxCalculator{0}.m", counter + VersionSeries);
                 StreamWriter EnergyFluxCalculatorWriter = new StreamWriter(outputAddress);
                 EnergyFluxCalculatorWriter.Write(EnergyFluxString);
                 EnergyFluxCalculatorWriter.Close();

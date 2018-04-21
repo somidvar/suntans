@@ -13,7 +13,7 @@
 function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
     InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
-    PycnoclineDepthIndex,BathymetryXLocationAtPycnoclineIndex,SapeloFlag)
+    SapeloFlag)
 
     Rho0=1025;%Setting the reference density    
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
@@ -92,8 +92,6 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,DiurnalTideOmega,'Diurnal','NC_FLOAT',SingleID,'Diurnal Tide Omega','-','Radian/Sec');
     WritingParameter(NETCDFID,SemiDiurnalTideOmega,'SemiDiurnal','NC_FLOAT',SingleID,'Semi-Diurnal Tide Omega','-','Radian/Sec');
     WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
-    WritingParameter(NETCDFID,PycnoclineDepthIndex,'PycnoclineIndex','NC_FLOAT',SingleID,'Index of Z at which Pycnocline is located','-','Index');
-    WritingParameter(NETCDFID,BathymetryXLocationAtPycnoclineIndex,'BathymetryXPycnoclineIndex','NC_FLOAT',SingleID,'Index of X at which bathymetry confront with pycnocline (offshore distance)','-','index');
     WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');

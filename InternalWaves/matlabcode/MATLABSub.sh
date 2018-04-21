@@ -1,6 +1,6 @@
 #PBS -S /bin/bash
 #PBS -q batch
-#PBS -N MATLABJob10000
+#PBS -N MATLABJob80001
 #PBS -l nodes=1:ppn=24:aquarinode
 #PBS -l walltime=20:00:00
 #PBS -l mem=120gb
@@ -18,3 +18,5 @@ echo "Cores:  $PBS_NP"
 echo "Nodes:  $(cat $PBS_NODEFILE | sort -u | tr '\n' ' ')"
 echo "mpirun: $(which mpirun)"
 echo
+
+matlab -nodisplay </lustre1/omidvar/work-directory_0801/MatlabFiles/MainSingle80001.m> matlab_${PBS_JOBID}.out
