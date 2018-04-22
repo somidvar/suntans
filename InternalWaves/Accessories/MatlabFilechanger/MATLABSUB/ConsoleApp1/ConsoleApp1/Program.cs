@@ -24,7 +24,7 @@ namespace ConsoleApp1
         }
         static void MATLABSubWriter()
         {
-            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario; counter++)
+            for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario*LagScenario; counter++)
             {
                 string MatlabSub = string.Empty;
                 MatlabSub += "#PBS -S /bin/bash\n";
@@ -85,7 +85,6 @@ namespace ConsoleApp1
                         SemiDiurnalTideOmega = 2 * Math.PI / (12.42 * 3600);
                         break;
                 }
-                int a = counter % (PycnoclineScenario * TidalScenario);
                 switch (Convert.ToInt32((counter% (PycnoclineScenario * TidalScenario*WindScenario)) /(PycnoclineScenario * TidalScenario)))
                 {
                     case 0:
