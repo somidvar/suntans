@@ -30,7 +30,7 @@ namespace ConsoleApp1
                 MatlabSub += "#PBS -S /bin/bash\n";
                 MatlabSub += "#PBS -q batch\n";
                 MatlabSub += string.Format("#PBS -N MATLABJOB{0}", counter + VersionSeries)+"\n";
-                MatlabSub += "#PBS -l nodes=1:ppn=24:AMD\n";
+                MatlabSub += "#PBS -l nodes=1:ppn=12:AMD\n";
                 MatlabSub += "#PBS -l walltime=2:00:00\n";
                 MatlabSub += "#PBS -l mem=60gb\n";
                 MatlabSub += "# PBS -M omidvar@uga.edu\n";
