@@ -18,6 +18,7 @@ namespace FileChanger
         const int LagCases = 8;
         const int PycnoclineCases = 7;
         const int WaveAmplitudeCases = 4;
+        const int VersionSeries = 90000;
         int FileNumber;
         string MotherDirectory;
         public Form1()
@@ -43,7 +44,7 @@ namespace FileChanger
             {
                 Address[FileCounter] = MotherDirectory;
                 ExtensionNumber[FileCounter] = string.Empty;
-                ExtensionNumber[FileCounter] = "-" + (FileCounter + 90000).ToString();
+                ExtensionNumber[FileCounter] = "-" + (FileCounter + VersionSeries).ToString();
                 Address[FileCounter] += ExtensionNumber[FileCounter];
                 DirectoryMaker(MotherDirectory, Address[FileCounter]);
             }
@@ -243,7 +244,6 @@ namespace FileChanger
             {
                 StreamReader IWavesReader = new StreamReader(Address);
                 string IWaves = string.Empty;
-                string[] Node = new string[] { "n504", "n506","n510", "n515","n517", "n524","n527","n540","n542"};
                 int IWavesCounter = 0;
                 while (!IWavesReader.EndOfStream)
                 {
@@ -255,15 +255,6 @@ namespace FileChanger
                         IWaves += "\n";
                         IWavesReader.ReadLine();
                     }
-                    /*else if (IWavesCounter == 3)
-                    {
-                        IWaves += @"#PBS -l nodes=1:ppn=48:";
-                        int NodeTemoprary = Convert.ToInt32(CaseNumber) - 90000;
-                        IWaves += Node[NodeTemoprary % 9];
-                        IWaves += "\n";
-                        IWavesReader.ReadLine();
-                    }
-                    */
                     else
                     {
                         IWaves += IWavesReader.ReadLine();
