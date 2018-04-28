@@ -19,12 +19,12 @@ end
 WestCoastBathymetryPlotter(ContourDepth,ContourColor);
 
 annotation(fig,'line',[0.31421 0.33473],[0.23011 0.34888],'Color',[0,0,0.7],'LineWidth',5);
-annotation(fig,'line',[0.31526 0.50157],[0.23122 0.60222],'Color',[0,0,0.7],'LineWidth',2,'LineStyle','--');
-annotation(fig,'line',[0.33526 0.50052],[0.34455 0.90000],'Color',[0,0,0.7],'LineWidth',2,'LineStyle','--');
 
 subplot('position',[0.50,0.60,0.40,0.30]);
 %Plotting Walter Bathymetry
 WalterBathymetry();
+annotation(fig,'textbox',[0.05,0.84,0.02,0.05],'String','a)','fontsize',18,'EdgeColor','none');
+annotation(fig,'textbox',[0.88,0.84,0.02,0.05],'String','b)','fontsize',18,'EdgeColor','none');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 saveas(fig,'Bathymetry.png');
@@ -81,7 +81,7 @@ function WestCoastBathymetryPlotter(ContourDepth,ContourColor)
     load WestCoastBathymetryData.mat;
     for i=1:size(ContourDepth,1)
         [C,H]=contour(lon,lat,depth,[ContourDepth(i),ContourDepth(i)],'linecolor',ContourColor{i},'linestyle','--');
-        clabel(C,H,'manual','FontSize',20);
+        %clabel(C,H,'manual','FontSize',20);
     end
     set(gca,'fontsize',18);
     set(gca,'FontWeight','bold');
@@ -120,16 +120,16 @@ function WalterBathymetry()
 
     [BathymertyFigureAxis,BathymetryCurve,BathymetrySlopeCurve] =...
         plotyy(XBathymetry/1000,Bathymetry,XBathymetry/1000,-Slope,'plot');
-    set(BathymertyFigureAxis(1),'YColor',[0,0,0],'FontWeight','bold','fontsize',16);
-    set(BathymertyFigureAxis(2),'YColor',[0,0,0.7],'FontWeight','bold','fontsize',16);
+    set(BathymertyFigureAxis(1),'YColor',[0,0,0.7],'FontWeight','bold','fontsize',16);
+    set(BathymertyFigureAxis(2),'YColor',[0.7,0,0],'FontWeight','bold','fontsize',16);
 
     xlabel('Offshore Distance (km)');
     ylabel(BathymertyFigureAxis(1),'Bathymetry Depth (m)');
     ylabel(BathymertyFigureAxis(2),'Bathymetry Slope (m/m)');
 
-    BathymetryCurve.Color=[0,0,0];
+    BathymetryCurve.Color=[0,0,0.7];
     BathymetryCurve.LineWidth=4;
 
-    BathymetrySlopeCurve.Color=[0,0,0.7];
+    BathymetrySlopeCurve.Color=[0.7,0,0];
     BathymetrySlopeCurve.LineWidth=3;
 end

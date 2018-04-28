@@ -11,10 +11,11 @@
 %Topography" by Zilbermann 2008
 
 function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
-    InterpolationEnhancement,XEndIndex,DiurnalTideOmega,...
+    InterpRes,XEndIndex,DiurnalTideOmega,...
     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
     SapeloFlag)
 
+    
     Rho0=1025;%Setting the reference density    
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
     disp('Reading the NETCDF')
@@ -70,10 +71,8 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     end
 
     disp('EPPrime calculation is started')
-    EPPrimeCell=EPCalculator(X,ZC,Time,Density,Rho0,squeeze(nanmean(RhoB,3)),InterpolationEnhancement,g,SapeloFlag);
-    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
-    EPPrime= cell2mat(EPPrimeConv);
-    clear EPPrimeCell EPPrimeConv;
+    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,squeeze(nanmean(Density-Rho0,3)),InterpRes,g,SapeloFlag);
+    
     disp('EPPrime calculation is done')
 
     %Creating the output NETCDF
@@ -96,10 +95,12 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
     WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
+    WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
     WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
+    WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
     WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
@@ -230,8 +231,12 @@ function WritingParameter(NETCDFID,ParameterName,ParameterNETCDFName,ParameterTy
     disp([ParameterNETCDFName,' is saved in the NETCDF'])
 end
 
-function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,SapeloFlag)
-    
+function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,InterpRes,g,SapeloFlag)   
+    %To better calculate the APE, teh whole density profile is interpolated
+    %at each time step for each X. The  the displacement of isopycanls was
+    %calculated. After that, the resolution was reduced to the normal. This
+    %process has been done to capture the small displacment of isopycanls
+    %and also not to interfere with the original vertical resolution.
     if(SapeloFlag)
         c = parcluster('local');
         c.NumWorkers = 12;
@@ -242,58 +247,93 @@ function EPPrimeCell=EPCalculator(X,ZC,Time,Density,RhoKnot,RhoB,Accuracy,g,Sape
         end
     end
 
-    Z=linspace(ZC(1),ZC(end),Accuracy*size(ZC,1));
-    ZStep=Z(1)-Z(2);
+    ZInterp=linspace(ZC(1),ZC(end),InterpRes*size(ZC,1));
+    ZInterp=ZInterp';
     EPPrimeCell=cell(size(X,1),1);
     DensityCell=cell(size(X,1),1);
+    RhoBCell=cell(size(X,1),1);
+    ZCCell=cell(size(X,1),1);
+    IsopycnalDislocationCell=cell(size(X,1),1);
 
     for i=1:size(X,1)
-        EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
+        EPPrimeCell{i}=nan(size(ZInterp,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
+        RhoBCell{i}=squeeze(RhoB(i,:));
+        ZCCell{i}=ZC;
+        IsopycnalDislocationCell{i}=nan(size(ZInterp,1),size(Time,1));
     end
+    CreatedParallelPool = parallel.pool.DataQueue;	
+    afterEach(CreatedParallelPool, @UpdateStatusDisp);	
+    ProgressStatus=0;
 
     parfor i=1:size(X,1)
-        Profile1=squeeze(DensityCell{i}(:,1));
-        NotNanDepthIndexZC=find(~isnan(RhoB(i,:)));
-        NotNanDepthIndexZC=NotNanDepthIndexZC(end);%Finding the deepest not-nan cell in un-interpolated profile(profile1)
-        [~,NotNanDepthIndexZ]=nanmin(abs(Z-ZC(NotNanDepthIndexZC)));%Finding the closest depth to the one found in the upper line, in the interpolated profile(profile2)
-        RhoBExact=interp1(ZC(1:NotNanDepthIndexZC),squeeze(RhoB(i,1:NotNanDepthIndexZC)),Z(1:NotNanDepthIndexZ),'spline');%Removing the nan part from RhoB and its interpolation
-        if size(RhoBExact,2)~=size(Z,2)%making the interpolated profile2 the same size of as it should be
-            RhoBExact(end+1:size(Z,2))=nan;
+        RhoBWorker=RhoBCell{i};
+        ZCWorker=ZCCell{i};
+        NotNanDepthIndexZC=find(~isnan(RhoBWorker));
+        NotNanDepthIndexZC=NotNanDepthIndexZC(end);
+        [~,NotNanDepthIndexZ]=nanmin(abs(ZInterp-ZCWorker(NotNanDepthIndexZC)));
+        RhoBInterp=interp1(ZCWorker(1:NotNanDepthIndexZC),...
+            squeeze(RhoBWorker(1:NotNanDepthIndexZC)),...
+            ZInterp(1:NotNanDepthIndexZ),'linear');%Linear interpolation gives better results in campirson to spline, because spline can cause numerical oscillation as it makes the profile smoother
+        
+        if size(RhoBInterp,1)~=size(ZInterp,1)
+            RhoBInterp(end+1:size(ZInterp,1))=nan;
         end
         for k=1:size(Time,1)
-            Profile2=squeeze(DensityCell{i}(:,k));
-            ProfileExact2=squeeze(DensityCell{i}(:,k));
-            ProfileExact2=interp1(ZC(1:NotNanDepthIndexZC),ProfileExact2(1:NotNanDepthIndexZC),Z(1:NotNanDepthIndexZ),'spline');%interpolating the profile2
-            if size(ProfileExact2,1)~=size(Z,2)%making the rest of the elements nan close to the shore
-                ProfileExact2(end+1:size(Z,2))=nan;
+            RhoProfile=squeeze(DensityCell{i}(:,k));
+            RhoProfileInterp=interp1(ZCWorker(1:NotNanDepthIndexZC),...
+                squeeze(RhoProfile(1:NotNanDepthIndexZC)),...
+                ZInterp(1:NotNanDepthIndexZ),'linear');%%Linear interpolation gives better results in campirson to spline, because spline can cause numerical oscillation as it makes the profile smoother
+            if size(RhoProfileInterp,1)~=size(ZInterp,1)
+                RhoProfileInterp(end+1:size(ZInterp,1))=nan;
             end
-            for j=1:size(ZC,1)
-                if ~isnan(Profile1(j))
-                    [~,TrackedDensityIndex]=nanmin(abs(ProfileExact2-Profile1(j)));
+            for j=1:size(ZInterp,1)
+                if ~isnan(RhoBInterp(j))
+                    [~,TrackedDensityIndex]=nanmin(abs(RhoProfileInterp(j)-RhoBInterp));
                     TrackedDensityIndex=TrackedDensityIndex(1);
-                    Dislocation=ZC(j)-Z(TrackedDensityIndex);
-                    Max=ZC(j);
-                    Min=ZC(j)-Dislocation;
-                    [~,MaxIndex]=nanmin(abs(Z-Max));
-                    [~,MinIndex]=nanmin(abs(Z-Min));
-                    if MaxIndex>MinIndex
-                        EPPrimeCell{i}(j,k)=-g*sum(RhoBExact(MinIndex:MaxIndex))*ZStep;
-                    elseif MaxIndex<MinIndex
-                        EPPrimeCell{i}(j,k)=g*sum(RhoBExact(MaxIndex:MinIndex))*ZStep;%Changing the sign since the dislocation is negative!
+                    Dislocation=ZInterp(j)-ZInterp(TrackedDensityIndex);%if Dislocation<0 downwelling and if dislocation>0 upwelling
+                    Max=ZInterp(j);
+                    Min=ZInterp(j)-Dislocation;
+                    [~,MaxIndex]=nanmin(abs(ZInterp-Max));
+                    [~,MinIndex]=nanmin(abs(ZInterp-Min));
+                    if MinIndex>MaxIndex%upwelling
+                        EPPrimeCell{i}(j,k)=RhoProfileInterp(j)*Dislocation*g...
+                        +g*trapz(ZInterp(MaxIndex:MinIndex),RhoBInterp(MaxIndex:MinIndex));
+                        
+                    elseif MinIndex<MaxIndex%downwelling
+                        EPPrimeCell{i}(j,k)=RhoProfileInterp(j)*Dislocation*g...
+                        -g*trapz(ZInterp(MinIndex:MaxIndex),RhoBInterp(MinIndex:MaxIndex));
                     elseif MaxIndex==MinIndex
                         EPPrimeCell{i}(j,k)=0;
                     end
-                    RhoPrime=DensityCell{i}(j,k)-RhoB(j)-RhoKnot;
-                    EPPrimeCell{i}(j,k)=EPPrimeCell{i}(j,k)+g*Dislocation*...
-                        (Profile2(j)+RhoPrime);%eq 12
+                    IsopycnalDislocationCell{i}(j,k)=Dislocation;
                 end
             end
         end 
-        if SapeloFlag
-            sprintf('X=%f',i*100)
-        end
+        send(CreatedParallelPool,i);
     end
+    function UpdateStatusDisp(~)	
+        ProgressString=num2str(ProgressStatus/size(X,1)*100,'%2.1f');	
+        disp(strcat('Progress Percentage=',ProgressString))	
+        ProgressStatus= ProgressStatus + 1;	
+    end
+
+    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZInterp,1),size(Time,1)),EPPrimeCell,'un',0);
+    EPPrime= cell2mat(EPPrimeConv);
+    EPPrimeTemp=nan(size(X,1),size(ZC,1),size(Time,1));
+ 
+    WaveAmplitudeConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZInterp,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
+    IsopycnalDislocation= cell2mat(WaveAmplitudeConv);
+    IsopycanlDislocationTemp=nan(size(X,1),size(ZC,1),size(Time,1));
+    
+    for j=1:size(ZC,1)
+        [~,ZInterptoZCIndex]=nanmin(abs(ZC(j)-ZInterp));
+        ZInterptoZCIndex=ZInterptoZCIndex(1);
+        EPPrimeTemp(:,j,:)=EPPrime(:,ZInterptoZCIndex,:);
+        IsopycanlDislocationTemp(:,j,:)=IsopycnalDislocation(:,ZInterptoZCIndex,:);
+    end
+    EPPrime=EPPrimeTemp;
+    IsopycnalDislocation=IsopycanlDislocationTemp;
 end
 
 function [DataTruncated,XTruncated]=DataXTruncator(Data,X)

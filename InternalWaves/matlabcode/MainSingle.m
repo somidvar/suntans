@@ -5,7 +5,7 @@ close all;
 clear all;
 clc
 
-CaseNumber=70047;
+CaseNumber=90001;
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
 
@@ -33,10 +33,10 @@ end
 KnuH=1;
 KappaH=0;
 g=9.8;
-InterpolationEnhancement=10;%Resolution of interpolation in energy flux calculation 
+InterpRes=5;%Resolution of interpolation in energy flux calculation 
 XEndIndex=Inf;% The data trim after this X point
 TimeStartIndex=1009;%This is 27 cycles of M2 and 14 cycles of K1 and wind
-TimeEndIndex=3025;%This is 27 cycles of M2 and 14 cycles of K1 and wind
+TimeEndIndex=144+1009;%This is 27 cycles of M2 and 14 cycles of K1 and wind
 
 AnalysisSpeed=1;
 FPSMovie=15;
@@ -48,6 +48,6 @@ SemiDiurnalTideOmega=2*pi()/12.4/3600;
 
 %WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
 EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
-    KnuH,KappaH,g,InterpolationEnhancement,XEndIndex,...
+    KnuH,KappaH,g,InterpRes,XEndIndex,...
     DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
     TimeEndIndex,SapeloFlag);
