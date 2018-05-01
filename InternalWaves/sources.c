@@ -49,10 +49,8 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 
 	if (prop->RadiationBoundary==1)
 	{
-		REAL CurrentDepth,RampFactor,SalinityTemporary, ThresholdVelocity,ThresholdSalinity;
-		//It is suggested that ThresholdSalinity<ThresholdVelocity. In that way the salinity contour remain horizontal after propagation shoreward; otherwise vertical velocity can mess them since W and U should compensate
+		REAL ColumnDepth,CurrentDepth,RampFactor,SalinityTemporary,ThresholdSalinity;
 		ThresholdSalinity=0.01;
-		ThresholdVelocity=0.01;
 		int CellCounter, EdgeCounter;
 		
 		//Salinity relaxation at each cell
@@ -61,60 +59,20 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			RampFactor=exp((-SpongeCellDistance[CellCounter]+prop->SpongeMean)/(prop->SpongeSTD));
 			if (RampFactor>=1-ThresholdSalinity)//Making the ramp factor 1 after a certain point
 				RampFactor=1;
+			ColumnDepth=ReturnDepth(grid->xv[CellCounter],grid->yv[CellCounter]);
 			CurrentDepth=0;
 			for(k=0;k<grid->Nk[CellCounter];k++)
 			{			  
 				CurrentDepth+=grid->dz[k]/2;
-				SalinityTemporary=ReturnSalinity(grid->xv[CellCounter],grid->yv[CellCounter],CurrentDepth,prop);
+				REAL TempDepth=CurrentDepth+(1-CurrentDepth/ColumnDepth)*phys->h[CellCounter];
+				if (TempDepth<0)
+					TempDepth=0;
+				SalinityTemporary=ReturnSalinity(grid->xv[CellCounter],grid->yv[CellCounter],TempDepth,prop);
 				REAL SalinityDifference=SalinityTemporary-phys->s[CellCounter][k];
 				phys->s[CellCounter][k]+=SalinityDifference*RampFactor;
 				CurrentDepth+=grid->dz[k]/2;
 			}
 		}
-		
-		//Velocity relaxation at each edge
-		/*
-		for(EdgeCounter=0;EdgeCounter<grid->Ne;EdgeCounter++)
-		{
-			if(grid->n1[EdgeCounter]!=0)
-			{			
-				REAL HeightCell1,HeightCell2,ElevationCell1,ElevationCell2,ElevationAverage,Cell1Depth,DepthCell1,DepthCell2,DepthAverage,EdgeElevation,ElevationCorrectionFactor;	
-				int NeighbourCell1,NeighbourCell2;
-				
-				NeighbourCell1=grid->grad[2*EdgeCounter];
-				NeighbourCell2=grid->grad[2*EdgeCounter+1];				
-				if (NeighbourCell1==-1)
-					NeighbourCell1=NeighbourCell2;
-				if (NeighbourCell2==-1)
-					NeighbourCell2=NeighbourCell1;
-				if (NeighbourCell1==-1 && NeighbourCell2==-1)
-					printf("\n\n\nWarning. There is someting wrong with the grid. Take a look at the sources.c\n\n\n");
-				
-				ElevationCell1=phys->h[NeighbourCell1];
-				ElevationCell2=phys->h[NeighbourCell2];
-				ElevationAverage=(ElevationCell1+ElevationCell2)/2;
-				DepthCell1=ReturnDepth(grid->xv[NeighbourCell1],grid->yv[NeighbourCell1]);
-				DepthCell2=ReturnDepth(grid->xv[NeighbourCell2],grid->yv[NeighbourCell2]);
-				DepthAverage=(DepthCell1+DepthCell2)/2;
-				EdgeElevation=(DepthAverage+ElevationAverage);
-				ElevationCorrectionFactor=DepthAverage/EdgeElevation;//Correction factor for velocity to take into account that the sea level changes at the boundary so the velocity should be corrected to keep the discharge constant		
-				
-				RampFactor=exp((-SpongeEdgeDistance[EdgeCounter]+prop->SpongeMean)/prop->SpongeSTD);
-				if(RampFactor>=1-ThresholdVelocity)//Making the ramp factor 1 after a certain point
-					RampFactor=1;
-				for(k=0;k<grid->Nkc[EdgeCounter];k++)
-				{
-					REAL HorizontalDifference=0;
-						
-					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
-					HorizontalDifference+=ElevationCorrectionFactor*grid->n1[EdgeCounter]*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
-
-					HorizontalDifference-=usource[EdgeCounter][k];
-					usource[EdgeCounter][k]+=HorizontalDifference*RampFactor;
-				}
-			}
-		}
-		*/
 	}
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.end
 	

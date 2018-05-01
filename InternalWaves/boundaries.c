@@ -114,7 +114,6 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ib = grid->grad[2 * j];
-			
 			//suntans default
 			/*
 			for(k=grid->ctop[ib];k<grid->Nk[ib];k++)
@@ -126,14 +125,19 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
 			REAL CurrentDepth=0;
 			REAL OceanDepth=ReturnDepth(grid->xe[jptr],grid->ye[jptr]);
-
+			if (ib==-1)
+			{
+				printf("\n\n\nWarning. There is something wrong with the grid. Take a look at the boundaries.c\n\n\n");
+				return;
+			}
 			for(k=0;k<grid->Nkc[jptr];k++)
 			{
 				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
-				
-				phys->boundary_T[jind][k]=ReturnTemperature(grid->xe[jptr],grid->ye[jptr],CurrentDepth,OceanDepth);
-				phys->boundary_s[jind][k]=ReturnSalinity(grid->xe[jptr],grid->ye[jptr],CurrentDepth,prop);
-				
+				REAL TempDepth=CurrentDepth+(1-CurrentDepth/ColumnDepth)*phys->h[ib];
+				if (TempDepth<0)
+					TempDepth=0;
+				phys->boundary_T[jind][k]=ReturnTemperature(grid->xe[jptr],grid->ye[jptr],TempDepth,OceanDepth);
+				phys->boundary_s[jind][k]=ReturnSalinity(grid->xe[jptr],grid->ye[jptr],TempDepth,prop);
 				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 			}
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. End

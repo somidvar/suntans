@@ -31,11 +31,11 @@ z0B	                			0.0				# Bottom roughness
 CdT	                			0.0 			# Drag coefficient at surface
 CdB	                			1e-3			# Drag coefficient at bottom
 CdW								0				# Drag coefficient at sidewalls
-tau_T							6e-5			# Wind shear stress divided by Rho0
+tau_T							0			# Wind shear stress divided by Rho0
 turbmodel						1				# Turbulence model (0 for none, 1 for MY25)
 dt 								5				# Time step 
 Cmax 							0.5				# Maximum permissible Courant number
-nsteps 							3.63e5 			# Number of steps 3e5
+nsteps 							3e5 			# Number of steps 3e5
 ntout   						120  			# How often to output data 30
 ntprog   						1 				# How often to report progress (in %)
 ntconserve 						1				# How often to output conserved data
@@ -97,7 +97,7 @@ smoothbot						0 				# Treatment in SetFluxHeight and ComputeVelocityVector for 
 RadiationBoundary   			1   			# Whether you want to use Omidvar-Woodson implementation method for damping salinity and velocity near the boundary, 1: True, 0: False
 SpongeMean						0e4 	    	# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
 SpongeSTD						1.5e3	   		# The formula used by Omidvar-Woodson method is exp(-Distance/RadiationBoundaryCoefficient) in which Distance is calculated for each cell from the boundary
-SpongeCellLocationX				49878.5			# X Location of Sponge Layer
+SpongeCellLocationX				49877.5			# X Location of Sponge Layer
 SpongeEdgeLocationX				49927.5			# X Location of Sponge Layer
 SpongeCellLocationY				50				# Y Location of Sponge Layer
 SpongeEdgeLocationY				50				# Y Location of Sponge Layer
