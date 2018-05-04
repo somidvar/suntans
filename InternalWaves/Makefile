@@ -61,10 +61,10 @@ valgrind: data
 	$(MPIHOME)/bin/mpirun -np $(NUMPROCS) valgrind --tool=memcheck --leak-check=yes ./$(SUN) -s -vvv --datadir=$(datadir)
 
 clean:
-	rm *.o
-	rm log_*.pbs.scm
-	rm IW-*.e*
-	rm IW-*.o*
+	rm -f *.o
+	rm -f log*.pbs.scm.out
+	rm -f IW-*.e*
+	rm -f IW-*.o*
 
 clobber: clean
 	rm -rf *~ \#*\# PI* $(EXEC) gmon.out data rundata/*~
