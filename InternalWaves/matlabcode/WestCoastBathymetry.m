@@ -5,10 +5,14 @@ clc
 FigureSize=[1900,900];
 fig=figure('Position',[1 1 FigureSize(1) FigureSize(2)]);
 movegui('center');
-subplot('position',[0.05,0.10,0.40,0.80]);
 
-AX=[-122.30,-121.70,36.55,37.00];
+
+subplot('position',[0.05,0.06,0.26,0.90]);
+AX=[-122.00,-121.75,36.59,37.00];
 WestCoastGeometryPlotter(AX);
+daspect([1 1 1]);
+annotation(fig,'textbox',[0.262 0.895 0.045 0.0277777777777777],'String','10 cm/s','fontsize',14,'EdgeColor','none','Color',[0,0,0]);
+
 hold on;
 ContourColor={[0.8,0.8,0.8];[0.6,0.6,0.6];[0.4,0.4,0.4];[0.2,0.2,0.2]};
 ContourDepth=[-25;-50;-75;-200];
@@ -17,14 +21,15 @@ if size(ContourDepth,1)~=size(ContourColor,1)
     return;
 end
 WestCoastBathymetryPlotter(ContourDepth,ContourColor);
+line([-121.9031,-121.8794],[36.6235,36.6923],'Color',[0,0,0.65],'LineWidth',5);
+hold on;
+TidalEllipsePlotter();
 
-annotation(fig,'line',[0.31421 0.33473],[0.23011 0.34888],'Color',[0,0,0.7],'LineWidth',5);
-
-subplot('position',[0.50,0.60,0.40,0.30]);
+subplot('position',[0.40,0.60,0.50,0.36]);
 %Plotting Walter Bathymetry
 WalterBathymetry();
-annotation(fig,'textbox',[0.05,0.84,0.02,0.05],'String','a)','fontsize',18,'EdgeColor','none');
-annotation(fig,'textbox',[0.88,0.84,0.02,0.05],'String','b)','fontsize',18,'EdgeColor','none');
+annotation(fig,'textbox',[0.05,0.92,0.02,0.05],'String','a)','fontsize',20,'FontWeight','bold','EdgeColor','none');
+annotation(fig,'textbox',[0.87,0.92,0.02,0.05],'String','b)','fontsize',20,'FontWeight','bold','EdgeColor','none');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 saveas(fig,'Bathymetry.png');
@@ -71,7 +76,9 @@ function WestCoastGeometryPlotter(AX)
     set(gca,'FontWeight','bold');
     yticks([36.6;36.7;36.8;36.9;37.0]);
     yticklabels({'36.6';'36.7';'36.8';'36.9';'37.0'});   
-    xticks([-122.3,-122.1,-121.9,-121.7]);
+    
+    xticks([-122.0,-121.9,-121.8]);
+    xticklabels({'-122.0';'-121.9';'-121.8'});   
 end
 
 function WestCoastBathymetryPlotter(ContourDepth,ContourColor)
@@ -120,16 +127,47 @@ function WalterBathymetry()
 
     [BathymertyFigureAxis,BathymetryCurve,BathymetrySlopeCurve] =...
         plotyy(XBathymetry/1000,Bathymetry,XBathymetry/1000,-Slope,'plot');
-    set(BathymertyFigureAxis(1),'YColor',[0,0,0.7],'FontWeight','bold','fontsize',16);
-    set(BathymertyFigureAxis(2),'YColor',[0.7,0,0],'FontWeight','bold','fontsize',16);
+    set(BathymertyFigureAxis(1),'YColor',[0,0,0.65],'FontWeight','bold','fontsize',16);
+    set(BathymertyFigureAxis(2),'YColor',[0.65,0,0],'FontWeight','bold','fontsize',16);
 
     xlabel('Offshore Distance (km)');
     ylabel(BathymertyFigureAxis(1),'Bathymetry Depth (m)');
     ylabel(BathymertyFigureAxis(2),'Bathymetry Slope (m/m)');
 
-    BathymetryCurve.Color=[0,0,0.7];
+    BathymetryCurve.Color=[0,0,0.65];
     BathymetryCurve.LineWidth=4;
 
-    BathymetrySlopeCurve.Color=[0.7,0,0];
+    BathymetrySlopeCurve.Color=[0.65,0,0];
     BathymetrySlopeCurve.LineWidth=3;
+end
+
+function TidalEllipsePlotter()
+    xCenter = -121.775;
+    yCenter = 36.975;
+    Radius = 0.02;
+    theta = 0 : 0.01 : 2*pi;
+    x = Radius * cos(theta) + xCenter;
+    y = Radius * sin(theta) + yCenter;
+	plot(x, y, '-', 'Color', [0,0,0], 'LineWidth', 2);
+        
+    xCenter = -121.885;
+    yCenter = 36.692;
+    xRadius = 3.77*0.04/10;
+    yRadius = 0.50*0.04/10;
+    theta = 0 : 0.01 : 2*pi;
+    x = xRadius * cos(theta) + xCenter;
+    y = yRadius * sin(theta) + yCenter;
+    Ellipse1=plot(x, y, '-', 'Color', [0,0,0], 'LineWidth', 2);
+    rotate(Ellipse1,[1,1,1],36,[xCenter,yCenter,0]);
+        
+    xCenter = -121.9195;
+    yCenter = 36.642;
+    xRadius = 3.91*0.04/10;
+    yRadius = 1.22*0.04/10;
+    theta = 0 : 0.01 : 2*pi;
+    x = xRadius * cos(theta) + xCenter;
+    y = yRadius * sin(theta) + yCenter;
+    Ellipse2=plot(x, y, '-', 'Color', [0,0,0], 'LineWidth', 2);
+    rotate(Ellipse2,[1,1,1],-45,[xCenter,yCenter,0]);
+       
 end

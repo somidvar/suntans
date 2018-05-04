@@ -21,8 +21,9 @@ if SapeloFlag
     DataPath=strcat('/lustre1/omidvar/work-directory_0801/9th/suntans-9th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
     OutputAddress='/lustre1/omidvar/work-directory_0801/9th-New/';
 else
-    DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
-    OutputAddress='F:\';
+    %DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
+    DataPath=strcat('D:\Result_0000.nc');
+    OutputAddress='D:\';
 end
 
 if exist(DataPath,'file')==0
@@ -46,8 +47,8 @@ WindOmega=2*pi/(24*3600);
 DiurnalTideOmega=2*pi()/23.93/3600;
 SemiDiurnalTideOmega=2*pi()/12.4/3600;
 
-%WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
-EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
-    KnuH,KappaH,g,InterpRes,XEndIndex,...
-    DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
-    TimeEndIndex,SapeloFlag);
+WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
+%EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
+%     KnuH,KappaH,g,InterpRes,XEndIndex,...
+%     DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
+%     TimeEndIndex,SapeloFlag);

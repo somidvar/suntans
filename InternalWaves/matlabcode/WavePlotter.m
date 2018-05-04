@@ -50,15 +50,15 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
         
     %Reading Vertical Velocity
-%     Results=ncread(DataPath,'w');
-%     [Results,XTruncated]=DataXTruncator(Results,X);
-%     Z=ncread(DataPath,'z_w');
-%     Z=-Z;
-%     [XX,ZZ]=meshgrid(Z,XTruncated); 
-%     DiagramTitle=sprintf('Vertical Velocity (m/s)');
-%     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
-%     YLabel='Depth (m)';    
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    Results=ncread(DataPath,'w');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    Z=ncread(DataPath,'z_w');
+    Z=-Z;
+    [XX,ZZ]=meshgrid(Z,XTruncated); 
+    DiagramTitle=sprintf('Vertical Velocity (m/s)');
+    MovieName=strcat(CaseNumber,'-Vertical Velocity');   
+    YLabel='Depth (m)';    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
@@ -84,7 +84,7 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
     tau=nan(size(Time,1),3);
     tau(:,1)= sin(DiurnalTideOmega*Time);
     tau(:,2)= sin(SemiDiurnalTideOmega*Time);
-    tau(:,3)= TauMax*(sin(3*pi/2+WindOmega*Time)+1)/2;
+    tau(:,3)= TauMax*(sin(WindOmega*Time)+1)/2;
 
     %Changing the color map for pcolor function to make the negative and
     %positive values clearer by putting zero in the middle of the scale.

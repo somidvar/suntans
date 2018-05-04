@@ -1,39 +1,25 @@
-close all
+close all;
+clear all;
 clc
 
-FigureSize=[1500,600];
-f=figure('Position',[1 1 FigureSize(1) FigureSize(2)],'units','pixels','Resize','off');
-movegui(f,'center');
+Address='D:\OneDrive - University of Georgia\Documents\UGA Courses\Wind and Tide Study\2017 NOAA Tides.xlsx';
+WaterLevel='A2:A44161';
+Time='H2:H44161';
 
-plot(Day(DOY>=153 & DOY<182),Level(DOY>=153 & DOY<182),'LineWidth',3);
-grid minor
-xlabel('Day of the month');
-ylabel('Tidal Gauge (m)');
-set(gca,'fontsize',18);
-set(gca,'FontWeight','bold');
-title('NOAA 9413450 Tidal Gauge')
-xlabel('June 2017');
-xlim([1 31]);
-saveas(f,'NOAA June.png');
-
-plot(Day(DOY>=183&DOY<213),Level(DOY>=183&DOY<213),'LineWidth',3);
-grid minor
-xlabel('Day of the month');
-ylabel('Tidal Gauge (m)');
-set(gca,'fontsize',18);
-set(gca,'FontWeight','bold');
-title('NOAA 9413450 Tidal Gauge')
-xlabel('July 2017');
-xlim([1 31]);
-saveas(f,'NOAA July.png');
-
-plot(Day(DOY>=214&DOY<244),Level(DOY>=214&DOY<244),'LineWidth',3);
-grid minor
-xlabel('Day of the month');
-ylabel('Tidal Gauge (m)');
-set(gca,'fontsize',18);
-set(gca,'FontWeight','bold');
-title('NOAA 9413450 Tidal Gauge')
-xlabel('August 2017');
-xlim([1 31]);
-saveas(f,'NOAA Aug.png');
+WaterLevel=xlsread(Address,1,WaterLevel);
+Time=xlsread(Address,1,Time);
+Latitude=36.62;
+if Time(1)==60
+    StartTime=[2017,3,1,0,0,0];
+else
+    sprintf('Please correct the Start Time for T_Tide package')
+    return;
+end
+Results=t_tide(WaterLevel,'interval',1/10,'start time',StartTime,'latitude',Latitude);
+Components=Results.name;
+Period=Results.freq;
+Period=1./Period;
+Amplitude=Results.tidecon(:,1);
+Phase=Results.tidecon(:,3);
+Tides=table(Components,Period,Amplitude,Phase);
+Tides=sortrows(Tides,3,'descend');
