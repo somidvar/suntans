@@ -2,10 +2,10 @@
 #PBS -q batch
 #PBS -N IW-10001
 #PBS -l nodes=1:ppn=48:aquarinode
-#PBS -l walltime=15:00:00
+#PBS -l walltime=24:00:00
 #PBS -l mem=100gb
 #PBS -M omidvar@uga.edu 
-#PBS -m ae
+#PBS -m e
 
 cd $PBS_O_WORKDIR
 module load mvapich2/2.1/gcc/4.4.7
@@ -24,12 +24,15 @@ SUNTANSHOME=$(echo ${SUNTANSHOME%/*}/main)
 SUN=$SUNTANSHOME/sun
 SUNPLOT=$SUNTANSHOME/sunplot
 
+make clobber
+make data
+
 . $SUNTANSHOME/Makefile.in
 
 maindatadir=rundata
 datadir=data
 
-EXEC="$(which mpirun) -np 15 $SUN"
+EXEC="$(which mpirun) -np 24 $SUN"
 
 if [ ! -d $datadir ] ; then
     cp -r $maindatadir $datadir

@@ -32,7 +32,7 @@ VelocityProfiles;
 %Figure 6
 %Plotting the energy budget terms for one of the cases
 
-%figure 7 
+%figure 7
 %finding pattern of the wind effect on conversion
 
 

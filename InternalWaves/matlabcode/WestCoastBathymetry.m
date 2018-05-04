@@ -32,7 +32,7 @@ annotation(fig,'textbox',[0.05,0.92,0.02,0.05],'String','a)','fontsize',20,'Font
 annotation(fig,'textbox',[0.87,0.92,0.02,0.05],'String','b)','fontsize',20,'FontWeight','bold','EdgeColor','none');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-saveas(fig,'Bathymetry.png');
+saveas(fig,'D:\github\suntans\InternalWaves\matlabcode\1.png');
 
 
 function WestCoastGeometryPlotter(AX)

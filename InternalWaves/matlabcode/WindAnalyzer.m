@@ -39,12 +39,12 @@ annotation(f,'textbox',[0.66 0.95 0.04 0.04],'String','c)','fontsize',20,'EdgeCo
 annotation(f,'textbox',[0.09 0.47 0.04 0.04],'String','d)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 annotation(f,'textbox',[0.37 0.47 0.04 0.04],'String','e)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 annotation(f,'textbox',[0.66 0.47 0.04 0.04],'String','f)','fontsize',20,'EdgeColor','none','FontWeight','bold');
-saveas(f,'D:\github\suntans\InternalWaves\matlabcode\ProccessedWind.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\4-a.png');
 
 f=figure('units','normalized','outerposition',[0 0 1 1]);
 C=princaxes(East,North,1);
 
-saveas(f,'D:\github\suntans\InternalWaves\matlabcode\PCA.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\4-b.png');
 
 %Now I want to rotate the wind to get the alongshore and cross-shore
 %components, to do so, I rotate it 120 degrees.
@@ -61,11 +61,10 @@ end
 line([Time(1),Time(end)],[0,0],'Color','black','LineWidth',3);
 xlabel('Day of Year');
 ylabel('Wind Speed (m/s)');
-title('Alongshore(SE) Wind Speed');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 grid minor;
-saveas(f,'D:\github\suntans\InternalWaves\matlabcode\AlongshoreWind.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\4-c.png');
 
 f=figure('units','normalized','outerposition',[0 0 1 1]);
 Fs = 1/0.16*24*365;
@@ -74,8 +73,8 @@ for MonthCounter=3:8
     subplot(2,3,MonthCounter-2);
 
     [Pxx,F]=pmtm(NorthRotated,5/2,[],1/600);
-    semilogx(1./(F.*86400)*24,sqrt(Pxx.*F))
-    xlim([1,100]);
+    semilogx(F.*86400,sqrt(Pxx.*F));
+    xlim([0.01,10]);
     grid;
     set(gca,'fontsize',18);
     set(gca,'FontWeight','bold');
@@ -86,4 +85,4 @@ annotation(f,'textbox',[0.69 0.88 0.04 0.04],'String','c)','fontsize',20,'EdgeCo
 annotation(f,'textbox',[0.13 0.41 0.04 0.04],'String','d)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 annotation(f,'textbox',[0.41 0.41 0.04 0.04],'String','e)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 annotation(f,'textbox',[0.69 0.41 0.04 0.04],'String','f)','fontsize',20,'EdgeColor','none','FontWeight','bold');
-saveas(f,'D:\github\suntans\InternalWaves\matlabcode\WindFFT.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\4-d.png');

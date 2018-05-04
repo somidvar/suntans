@@ -33,7 +33,7 @@ SUN = $(SUNTANSHOME)/sun
 datadir = data
 INCLUDES = -I$(SUNTANSHOME) $(MPIINC) $(PARMETISINC) $(NETCDFINC)
 DEFS = $(MPIDEF)
-NUMPROCS = 1
+NUMPROCS = 24
 
 all:	data
 
@@ -61,10 +61,10 @@ valgrind: data
 	$(MPIHOME)/bin/mpirun -np $(NUMPROCS) valgrind --tool=memcheck --leak-check=yes ./$(SUN) -s -vvv --datadir=$(datadir)
 
 clean:
-	rm -f *.o
-	rm -f IW-10001.e*
-	rm -f IW-10001.o*
-	rm -f *.pbs*
+	rm *.o
+	rm log_*.pbs.scm
+	rm IW-*.e*
+	rm IW-*.o*
 
 clobber: clean
 	rm -rf *~ \#*\# PI* $(EXEC) gmon.out data rundata/*~

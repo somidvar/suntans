@@ -78,7 +78,6 @@ annotation(fig,'textbox',[0.01 0.92 0.04 0.04],'String','a)','fontsize',20,'Edge
 annotation(fig,'textbox',[0.60 0.92 0.04 0.04],'String','b)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 annotation(fig,'textbox',[0.01 0.52 0.04 0.04],'String','c)','fontsize',20,'EdgeColor','none','FontWeight','bold');
 
-
-saveas(fig,'Model.png');
+saveas(fig,'D:\github\suntans\InternalWaves\matlabcode\3.png');
 
 

@@ -38,7 +38,7 @@ annotation('arrow',[0.33,0.29],[0.70,0.76],'LineWidth',8,'HeadStyle','vback1','H
 set(gca,'fontsize',18);
 set(gca,'FontWeight','bold');
 annotation(f,'textbox',[0.08,0.84,0.1,0.1],'String','a)','fontsize',20,'FontWeight','bold','EdgeColor','none');
-saveas(f,'FloodTide.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\2-a.png');
 
 FigureSize=[1600,800];
 f=figure('Position',[1 1 FigureSize(1) FigureSize(2)],'units','pixels','Resize','off');
@@ -75,4 +75,4 @@ annotation('arrow',[0.29,0.33],[0.76,0.70],'LineWidth',8,'HeadStyle','vback1','H
 set(gca,'fontsize',18);
 set(gca,'FontWeight','bold');
 annotation(f,'textbox',[0.08,0.84,0.1,0.1],'String','b)','fontsize',20,'FontWeight','bold','EdgeColor','none');
-saveas(f,'EbbTide.png');
+saveas(f,'D:\github\suntans\InternalWaves\matlabcode\2-b.png');
