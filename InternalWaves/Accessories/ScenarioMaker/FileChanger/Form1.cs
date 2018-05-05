@@ -15,7 +15,7 @@ namespace FileChanger
     public partial class Form1 : Form
     {
         const int TauCases = 7;
-        const int LagCases = 8;
+        const int LagCases = 5;
         const int PycnoclineCases = 7;
         const int WaveAmplitudeCases = 4;
         const int VersionSeries = 90000;
@@ -55,28 +55,19 @@ namespace FileChanger
                 switch (LagCounter %LagCases)
                 {
                     case 0:
-                        LagWind = 0;
-                        break;
-                    case 1:
-                        LagWind = 3 * 3600;
-                        break;
-                    case 2:
-                        LagWind = 6 * 3600;
-                        break;
-                    case 3:
-                        LagWind = 9 * 3600;
-                        break;
-                    case 4:
-                        LagWind = 12 * 3600;
-                        break;
-                    case 5:
                         LagWind = 15 * 3600;
                         break;
-                    case 6:
+                    case 1:
                         LagWind = 18 * 3600;
                         break;
-                    case 7:
+                    case 2:
                         LagWind = 21 * 3600;
+                        break;
+                    case 3:
+                        LagWind = 24 * 3600;
+                        break;
+                    case 4:
+                        LagWind = 27 * 3600;
                         break;
                     default:
                         break;
@@ -164,8 +155,13 @@ namespace FileChanger
                             }
                             try
                             {
-                                SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline,LagWind);
-                                IWavesModifier(Address[FileCounter]);
+                                if (Tau_T == 0 && DiurnalAmplitude == 0 && SemiDiurnalAmplitude == 0)//Removing cases without tide nor wind
+                                        Directory.Delete(Address[FileCounter], true);
+                                else
+                                {
+                                    SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline, LagWind);
+                                    IWavesModifier(Address[FileCounter]);
+                                }
                             }
                             catch (Exception Exp1)
                             {
