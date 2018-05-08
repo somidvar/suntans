@@ -15,7 +15,7 @@ namespace ConsoleApp1
             TidalScenario = 4;
             WindScenario = 7;
             PycnoclineScenario = 7;
-            LagScenario = 8;
+            LagScenario = 5;
             VersionSeries = 90000;
                 
             MATLABSubWriter();
@@ -54,8 +54,8 @@ namespace ConsoleApp1
 
             for (int counter = 0; counter < TidalScenario*WindScenario*PycnoclineScenario*LagScenario; counter++)
             {
-                double DiurnalTideOmega, SemiDiurnalTideOmega, WindTauMax,WindOmega;
-                DiurnalTideOmega = SemiDiurnalTideOmega = WindTauMax =WindOmega= -9999;
+                double DiurnalTideOmega, SemiDiurnalTideOmega, WindTauMax,WindOmega,ModelTimeOffset,WindLag;
+                DiurnalTideOmega = SemiDiurnalTideOmega = WindTauMax =WindOmega= ModelTimeOffset = WindLag= -9999;
                 WindOmega= 2 * Math.PI / (24 * 3600);
                 DiurnalTideOmega = 2 * Math.PI / (23.93 * 3600);
                 SemiDiurnalTideOmega = 2 * Math.PI / (12.42 * 3600);
@@ -78,7 +78,7 @@ namespace ConsoleApp1
                         SemiDiurnalTideOmega = 2 * Math.PI / (12.42 * 3600);
                         break;
                 }
-                switch (Convert.ToInt32((counter% (PycnoclineScenario * TidalScenario*WindScenario)) /(PycnoclineScenario * TidalScenario)))
+                switch (Convert.ToInt32((counter % (PycnoclineScenario * TidalScenario * WindScenario)) / (PycnoclineScenario * TidalScenario)))
                 {
                     case 0:
                         WindTauMax = 0;
@@ -100,6 +100,29 @@ namespace ConsoleApp1
                         break;
                     case 6:
                         WindTauMax = 5.14e-5;
+                        break;
+                }
+                switch (Convert.ToInt32(counter / (PycnoclineScenario * TidalScenario * WindScenario)))
+                {
+                    case 0:
+                        ModelTimeOffset = -1;
+                        WindLag = 15;
+                        break;
+                    case 1:
+                        ModelTimeOffset = 2;
+                        WindLag = 18;
+                        break;
+                    case 2:
+                        ModelTimeOffset = +5;
+                        WindLag = 21;
+                        break;
+                    case 3:
+                        ModelTimeOffset = 8;
+                        WindLag = 24;
+                        break;
+                    case 4:
+                        ModelTimeOffset = 12;
+                        WindLag = 27;
                         break;
                 }
                 string MainSingleString = "close all;\r\nclear all;\r\nclc\r\n\r\n";
