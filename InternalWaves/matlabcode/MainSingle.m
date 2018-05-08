@@ -5,7 +5,7 @@ close all;
 clear all;
 clc
 
-CaseNumber=90001;
+CaseNumber=90402;
 format compact;
 disp(strcat('Case Number= ',num2str(CaseNumber)))
 
@@ -21,8 +21,7 @@ if SapeloFlag
     DataPath=strcat('/lustre1/omidvar/work-directory_0801/9th/suntans-9th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
     OutputAddress='/lustre1/omidvar/work-directory_0801/9th-New/';
 else
-    %DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
-    DataPath=strcat('D:\Result_0000.nc');
+    DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
     OutputAddress='D:\';
 end
 
@@ -34,20 +33,23 @@ end
 KnuH=1;
 KappaH=0;
 g=9.8;
-InterpRes=5;%Resolution of interpolation in energy flux calculation 
-XEndIndex=Inf;% The data trim after this X point
-TimeStartIndex=1009;%This is 27 cycles of M2 and 14 cycles of K1 and wind
-TimeEndIndex=144+1009;%This is 27 cycles of M2 and 14 cycles of K1 and wind
+InterpRes=5;
+XEndIndex=Inf;
+TimeStartIndex=1009;
+TimeEndIndex=Inf;
 
-AnalysisSpeed=1;
-FPSMovie=15;
+AnalysisSpeed=20;
+FPSMovie=30;
+
+ModelTimeOffset=0;
+WindLag=21;
 
 WindTauMax=0;
 WindOmega=2*pi/(24*3600);
 DiurnalTideOmega=2*pi()/23.93/3600;
 SemiDiurnalTideOmega=2*pi()/12.4/3600;
 
-WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber);
+WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber,ModelTimeOffset,WindLag);
 %EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...
 %     KnuH,KappaH,g,InterpRes,XEndIndex,...
 %     DiurnalTideOmega,SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,...
