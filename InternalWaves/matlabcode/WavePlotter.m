@@ -1,6 +1,6 @@
 %This code is plotting the SUNTANS results for several case scenarios with similar names
 %Code written by Sorush Omidvar in July 2016 at UGA
-function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,OutputAddress,CaseNumber)
+function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,DataPath,OutputAddress,CaseNumber,ModelTimeOffset,WindLag)
     Time=ncread(DataPath,'time');
     X=ncread(DataPath,'xv');   
     Z=ncread(DataPath,'z_r');
@@ -12,14 +12,14 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     DiagramTitle=sprintf('Density (Kg/m^3)');
     MovieName=strcat(CaseNumber,'-Density');
     YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Density (Kg/m^3) Anamoly');
 %     MovieName=strcat(CaseName,'-Density Anamoly');
 %     %Removing the background Density
 %     BenchMark=Results(:,:,1);
 %     Results=Results-repmat(BenchMark,1,1,size(Results,3));
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
     
 %     %Reading Salinity
 %     Results=ncread(DataPath,'salt');
@@ -28,7 +28,7 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
 %     DiagramTitle=sprintf('Salinity (PSU)');
 %     MovieName=strcat(CaseNumber,'-Salinity');
 %     YLabel='Depth (m)';
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     %Reading Pressure
 %     Results=ncread(DataPath,'q');
@@ -37,7 +37,7 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
 %     DiagramTitle=sprintf('Non-Hydrostatic Pressure (Pa)');
 %     MovieName=strcat(CaseName,'-Non Hydrostatic Pressure');
 %     YLabel='Depth (m)';
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
 %     clear Results;
 
     %Reading Horizontal Velocity
@@ -47,7 +47,7 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     DiagramTitle=sprintf('Horizontal Velocity (m/s)');
     MovieName=strcat(CaseNumber,'-Horizontal Velocity');
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
         
     %Reading Vertical Velocity
     Results=ncread(DataPath,'w');
@@ -58,7 +58,7 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     DiagramTitle=sprintf('Vertical Velocity (m/s)');
     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
     YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
@@ -67,10 +67,10 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     DiagramTitle=sprintf('Water Level (m)');
     MovieName=strcat(CaseNumber,'-Water Level');
     YLabel='Elevation (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 end
 
-function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress)
+function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,X,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress)
     close all;
     %Making the figure as big as possible based on the monitor resolution
     FigureSize=[1900,850];
@@ -84,7 +84,7 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
     tau=nan(size(Time,1),3);
     tau(:,1)= sin(DiurnalTideOmega*Time);
     tau(:,2)= sin(SemiDiurnalTideOmega*Time);
-    tau(:,3)= TauMax*(sin(WindOmega*Time)+1)/2;
+    tau(:,3)= TauMax*(sin(WindOmega*Time+WindLag/24*2*pi)+1)/2;
 
     %Changing the color map for pcolor function to make the negative and
     %positive values clearer by putting zero in the middle of the scale.
@@ -130,19 +130,19 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
         for counter=1:AnalysisSpeed:size(Time,1)
             subplot('position',[.06 .85 .90 .1]);
             hold on;
-            rectangle('position',[0 -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');
-            plot(Time/3600,tau(:,1),'--blue','LineWidth',1.5);
-            plot(Time/3600,tau(:,2),'-.green','LineWidth',1.5);
-            plot(Time/3600,tau(:,3),':black','LineWidth',1.5);
+            rectangle('position',[ModelTimeOffset -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');
+            plot(Time/3600+ModelTimeOffset,tau(:,1),'--blue','LineWidth',1.5);
+            plot(Time/3600+ModelTimeOffset,tau(:,2),'-.green','LineWidth',1.5);
+            plot(Time/3600+ModelTimeOffset,tau(:,3),':black','LineWidth',1.5);
             legend('Diurnal Tide','Semi-Dirunal Tide','Dirunal Wind','Location','eastoutside','Orientation','vertical');
             grid on;
             set(gca,'layer','top');
-            set(gca,'XTick',0:12:Time(end)/3600);
+            set(gca,'XTick',12:12:Time(end)/3600+ModelTimeOffset);
             grid minor;
             hold off;
             xlabel('Time (Hour)');
             ylim([-1 1]);
-            xlim([min(Time)/3600 max(Time)/3600]);
+            xlim([min(Time)/3600+ModelTimeOffset,max(Time)/3600+ModelTimeOffset]);
             
             subplot('position',[.06 .10 .9 .65]);
             plot(X/1000,Results(:,counter));
@@ -151,7 +151,11 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             set(gca,'layer','top');
             xlabel('Distance off-shore (Km)');
             ylabel(YLabel);
-            str2=sprintf(' at time %.2f hour',Time(counter)/3600);
+            if ModelTimeOffset>0
+                str2=sprintf('at %2.0f day and %2.1f hour (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+            else
+                str2=sprintf('at %2.0f day and %2.1f hour (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+            end
             Title=strcat(DiagramTitle,str2);
             title(Title);
             ylim([ResultsMin ResultsMax]);
@@ -162,19 +166,19 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
         for counter=1:AnalysisSpeed:size(Time,1)
             subplot('position',[.06 .85 .91 .1]);
             hold on;
-            rectangle('position',[0 -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');
-            plot(Time/3600,tau(:,1),'--blue','LineWidth',1.5);
-            plot(Time/3600,tau(:,2),'-.green','LineWidth',1.5);
-            plot(Time/3600,tau(:,3),':black','LineWidth',1.5);
+            rectangle('position',[ModelTimeOffset -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');
+            plot(Time/3600+ModelTimeOffset,tau(:,1),'--blue','LineWidth',1.5);
+            plot(Time/3600+ModelTimeOffset,tau(:,2),'-.green','LineWidth',1.5);
+            plot(Time/3600+ModelTimeOffset,tau(:,3),':black','LineWidth',1.5);
             legend('K1 Tide','M2 Tide','Dirunal Wind','Location','eastoutside','Orientation','vertical');
             
             grid on;
             set(gca,'layer','top');
-            set(gca,'XTick',0:12:Time(end)/3600);
+            set(gca,'XTick',12:12:Time(end)/3600+ModelTimeOffset);
             grid minor;
             hold off;
             ylim([-1 1]);
-            xlim([min(Time)/3600 max(Time)/3600]);
+            xlim([min(Time)/3600+ModelTimeOffset,max(Time)/3600+ModelTimeOffset]);
             
             subplot('position',[.06 .1 .9 .65]);
             Temporary=Results(:,:,counter);
@@ -209,7 +213,11 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             shading flat;
             xlabel('Distance off-shore (Km)');
             ylabel(YLabel);
-            str2=sprintf(' at time %.2f hour',Time(counter)/3600);
+            if ModelTimeOffset>0
+                str2=sprintf('at %2.0f day and %2.1f hours (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+            else
+                str2=sprintf('at %2.0f day and %2.1f hours (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+            end
             Title=strcat(DiagramTitle,str2);
             title(Title);
             MovieTemporary=getframe(gcf);
