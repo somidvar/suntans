@@ -6,13 +6,13 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     Z=ncread(DataPath,'z_r');
     Z=-Z;
     
-    Results=1000*ncread(DataPath,'rho')+1000;
-    [Results,XTruncated]=DataXTruncator(Results,X);
-    [XX,ZZ]=meshgrid(Z,XTruncated);  
-    DiagramTitle=sprintf('Density (Kg/m^3)');
-    MovieName=strcat(CaseNumber,'-Density');
-    YLabel='Depth (m)';
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+%     Results=1000*ncread(DataPath,'rho')+1000;
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     [XX,ZZ]=meshgrid(Z,XTruncated);  
+%     DiagramTitle=sprintf('Density (Kg/m^3)');
+%     MovieName=strcat(CaseNumber,'-Density');
+%     YLabel='Depth (m)';
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Density (Kg/m^3) Anamoly');
 %     MovieName=strcat(CaseName,'-Density Anamoly');
@@ -40,30 +40,30 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
 %     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
 %     clear Results;
 
-    %Reading Horizontal Velocity
-    Results=ncread(DataPath,'uc');
-    [Results,XTruncated]=DataXTruncator(Results,X);
-    [XX,ZZ]=meshgrid(Z,XTruncated); 
-    DiagramTitle=sprintf('Horizontal Velocity (m/s)');
-    MovieName=strcat(CaseNumber,'-Horizontal Velocity');
-    YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
-        
-    %Reading Vertical Velocity
-    Results=ncread(DataPath,'w');
-    [Results,XTruncated]=DataXTruncator(Results,X);
-    Z=ncread(DataPath,'z_w');
-    Z=-Z;
-    [XX,ZZ]=meshgrid(Z,XTruncated); 
-    DiagramTitle=sprintf('Vertical Velocity (m/s)');
-    MovieName=strcat(CaseNumber,'-Vertical Velocity');   
-    YLabel='Depth (m)';    
-    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+%     %Reading Horizontal Velocity
+%     Results=ncread(DataPath,'uc');
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     [XX,ZZ]=meshgrid(Z,XTruncated); 
+%     DiagramTitle=sprintf('Horizontal Velocity (m/s)');
+%     MovieName=strcat(CaseNumber,'-Horizontal Velocity');
+%     YLabel='Depth (m)';    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+%         
+%     %Reading Vertical Velocity
+%     Results=ncread(DataPath,'w');
+%     [Results,XTruncated]=DataXTruncator(Results,X);
+%     Z=ncread(DataPath,'z_w');
+%     Z=-Z;
+%     [XX,ZZ]=meshgrid(Z,XTruncated); 
+%     DiagramTitle=sprintf('Vertical Velocity (m/s)');
+%     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
+%     YLabel='Depth (m)';    
+%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
-    X=ncread(DataPath,'xv');
     [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated);
     DiagramTitle=sprintf('Water Level (m)');
     MovieName=strcat(CaseNumber,'-Water Level');
     YLabel='Elevation (m)';    
@@ -137,12 +137,13 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             legend('Diurnal Tide','Semi-Dirunal Tide','Dirunal Wind','Location','eastoutside','Orientation','vertical');
             grid on;
             set(gca,'layer','top');
-            set(gca,'XTick',12:12:Time(end)/3600+ModelTimeOffset);
+            set(gca,'XTick',24:24:Time(end)/3600+ModelTimeOffset);
             grid minor;
             hold off;
-            xlabel('Time (Hour)');
             ylim([-1 1]);
             xlim([min(Time)/3600+ModelTimeOffset,max(Time)/3600+ModelTimeOffset]);
+			set(gca,'fontsize',16);
+			set(gca,'FontWeight','bold');
             
             subplot('position',[.06 .10 .9 .65]);
             plot(X/1000,Results(:,counter));
@@ -152,18 +153,20 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             xlabel('Distance off-shore (Km)');
             ylabel(YLabel);
             if ModelTimeOffset>0
-                str2=sprintf('at %2.0f day and %2.1f hour (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+                str2=sprintf('at %2.0f day and %3.1f hour (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
             else
-                str2=sprintf('at %2.0f day and %2.1f hour (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+                str2=sprintf('at %2.0f day and %3.1f hour (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
             end
             Title=strcat(DiagramTitle,str2);
             title(Title);
             ylim([ResultsMin ResultsMax]);
+			set(gca,'fontsize',18);
+			set(gca,'FontWeight','bold');
             MovieTemporary=getframe(gcf);
             writeVideo(ResultVideoWriter,MovieTemporary.cdata);
         end    
     else
-        for counter=1:AnalysisSpeed:size(Time,1)
+        for counter=1:AnalysisSpeed:50
             subplot('position',[.06 .85 .91 .1]);
             hold on;
             rectangle('position',[ModelTimeOffset -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');
@@ -174,11 +177,13 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             
             grid on;
             set(gca,'layer','top');
-            set(gca,'XTick',12:12:Time(end)/3600+ModelTimeOffset);
+            set(gca,'XTick',24:24:Time(end)/3600+ModelTimeOffset);
             grid minor;
             hold off;
             ylim([-1 1]);
             xlim([min(Time)/3600+ModelTimeOffset,max(Time)/3600+ModelTimeOffset]);
+			set(gca,'fontsize',16);
+			set(gca,'FontWeight','bold');
             
             subplot('position',[.06 .1 .9 .65]);
             Temporary=Results(:,:,counter);
@@ -214,12 +219,14 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             xlabel('Distance off-shore (Km)');
             ylabel(YLabel);
             if ModelTimeOffset>0
-                str2=sprintf('at %2.0f day and %2.1f hours (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+                str2=sprintf('at %2.0f day and %3.1f hours (time offset=+%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
             else
-                str2=sprintf('at %2.0f day and %2.1f hours (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
+                str2=sprintf('at %2.0f day and %3.1f hours (time offset=%2.0f)',floor((Time(counter)/3600+ModelTimeOffset)/24),mod((Time(counter)/3600+ModelTimeOffset),24),ModelTimeOffset);
             end
             Title=strcat(DiagramTitle,str2);
             title(Title);
+			set(gca,'fontsize',18);
+			set(gca,'FontWeight','bold');
             MovieTemporary=getframe(gcf);
             writeVideo(ResultVideoWriter,MovieTemporary.cdata);
         end        

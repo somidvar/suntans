@@ -5,9 +5,9 @@ close all;
 clear all;
 clc
 
-CaseNumber=90402;
+CaseNumber='90402';
 format compact;
-disp(strcat('Case Number= ',num2str(CaseNumber)))
+disp(strcat('Case Number= ',CaseNumber))
 
 CurrentLocation=pwd;
 if contains(CurrentLocation,'lustre1')
@@ -18,10 +18,10 @@ end
 clear CurrentLocation;
 
 if SapeloFlag
-    DataPath=strcat('/lustre1/omidvar/work-directory_0801/9th/suntans-9th-',num2str(CaseNumber),'/InternalWaves/data/Result_0000.nc');
+    DataPath=strcat('/lustre1/omidvar/work-directory_0801/9th/suntans-9th-',CaseNumber,'/InternalWaves/data/Result_0000.nc');
     OutputAddress='/lustre1/omidvar/work-directory_0801/9th-New/';
 else
-    DataPath=strcat('F:\9th\suntans-9th-',num2str(CaseNumber),'\InternalWaves\data\Result_0000.nc');
+    DataPath=strcat('D:\suntans-9th-',CaseNumber,'\InternalWaves\data\Result_0000.nc');
     OutputAddress='D:\';
 end
 
@@ -38,7 +38,7 @@ XEndIndex=Inf;
 TimeStartIndex=1009;
 TimeEndIndex=Inf;
 
-AnalysisSpeed=20;
+AnalysisSpeed=1;
 FPSMovie=30;
 
 ModelTimeOffset=0;
