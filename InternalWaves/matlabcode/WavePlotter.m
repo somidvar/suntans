@@ -6,13 +6,13 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
     Z=ncread(DataPath,'z_r');
     Z=-Z;
     
-%     Results=1000*ncread(DataPath,'rho')+1000;
-%     [Results,XTruncated]=DataXTruncator(Results,X);
-%     [XX,ZZ]=meshgrid(Z,XTruncated);  
-%     DiagramTitle=sprintf('Density (Kg/m^3)');
-%     MovieName=strcat(CaseNumber,'-Density');
-%     YLabel='Depth (m)';
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
+    Results=1000*ncread(DataPath,'rho')+1000;
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated);  
+    DiagramTitle=sprintf('Density (Kg/m^3)');
+    MovieName=strcat(CaseNumber,'-Density');
+    YLabel='Depth (m)';
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
     
 %     DiagramTitle=sprintf('Density (Kg/m^3) Anamoly');
 %     MovieName=strcat(CaseName,'-Density Anamoly');
@@ -40,25 +40,25 @@ function WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmeg
 %     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);    
 %     clear Results;
 
-%     %Reading Horizontal Velocity
-%     Results=ncread(DataPath,'uc');
-%     [Results,XTruncated]=DataXTruncator(Results,X);
-%     [XX,ZZ]=meshgrid(Z,XTruncated); 
-%     DiagramTitle=sprintf('Horizontal Velocity (m/s)');
-%     MovieName=strcat(CaseNumber,'-Horizontal Velocity');
-%     YLabel='Depth (m)';    
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
-%         
-%     %Reading Vertical Velocity
-%     Results=ncread(DataPath,'w');
-%     [Results,XTruncated]=DataXTruncator(Results,X);
-%     Z=ncread(DataPath,'z_w');
-%     Z=-Z;
-%     [XX,ZZ]=meshgrid(Z,XTruncated); 
-%     DiagramTitle=sprintf('Vertical Velocity (m/s)');
-%     MovieName=strcat(CaseNumber,'-Vertical Velocity');   
-%     YLabel='Depth (m)';    
-%     WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+    %Reading Horizontal Velocity
+    Results=ncread(DataPath,'uc');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    [XX,ZZ]=meshgrid(Z,XTruncated); 
+    DiagramTitle=sprintf('Horizontal Velocity (m/s)');
+    MovieName=strcat(CaseNumber,'-Horizontal Velocity');
+    YLabel='Depth (m)';    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
+        
+    %Reading Vertical Velocity
+    Results=ncread(DataPath,'w');
+    [Results,XTruncated]=DataXTruncator(Results,X);
+    Z=ncread(DataPath,'z_w');
+    Z=-Z;
+    [XX,ZZ]=meshgrid(Z,XTruncated); 
+    DiagramTitle=sprintf('Vertical Velocity (m/s)');
+    MovieName=strcat(CaseNumber,'-Vertical Velocity');   
+    YLabel='Depth (m)';    
+    WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,TauMax,ModelTimeOffset,WindLag,XX,XTruncated,ZZ,YLabel,Results,DiagramTitle,MovieName,OutputAddress);
 
     %Reading Water Level
     Results=ncread(DataPath,'eta');
@@ -166,7 +166,7 @@ function WavePlotterExtension(FPSMovie,AnalysisSpeed,Time,DiurnalTideOmega,SemiD
             writeVideo(ResultVideoWriter,MovieTemporary.cdata);
         end    
     else
-        for counter=1:AnalysisSpeed:50
+        for counter=1:AnalysisSpeed:size(Time,1)
             subplot('position',[.06 .85 .91 .1]);
             hold on;
             rectangle('position',[ModelTimeOffset -1 Time(counter)/3600 2],'FaceColor','red', 'EdgeColor','red');

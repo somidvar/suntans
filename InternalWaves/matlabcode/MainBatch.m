@@ -1,11 +1,12 @@
 %This code is plotting the SUNTANS results for several case scenarios with
 %similar names. This code is written by Sorush Omidvar in July 2016 at UGA.
 %This vesion is modified in Aug 2016.
-for CaseNumber=90402:1:90587
-    clearvars -except CaseNumber;
+SerieVersion=90000;
+for CaseNumber=SerieVersion:1:SerieVersion+400
+    clearvars -except CaseNumber SerieVersion;
     close all;
     clc;
-    SerieVersion=90000;
+
     
     format compact;
     disp(strcat('Case Number= ',num2str(CaseNumber)))
@@ -24,8 +25,8 @@ for CaseNumber=90402:1:90587
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'/InternalWaves/data/Result_0000.nc');
     else
-        Prefix='D:\suntans-9th-';
-        OutputAddress='D:\';
+        Prefix='F:\9th\suntans-9th-';
+        OutputAddress='F:\Plots\';
         CaseName=num2str(CaseNumber);
         DataPath=strcat(Prefix,CaseName);
         DataPath=strcat(DataPath,'\InternalWaves\data\Result_0000.nc');
@@ -45,14 +46,14 @@ for CaseNumber=90402:1:90587
     TimeEndIndex=Inf;%This is 27 cycles of M2 and 14 cycles of K1 and wind
 
     AnalysisSpeed=1;
-    FPSMovie=15;
+    FPSMovie=30;
     
     %Setting the wind frequency based on the cases
     WindOmega=2*pi/(24*3600);
     
     %Setting the wind stress based on the cases
     if floor(mod((CaseNumber-SerieVersion),196)/28)==0
-        WindTauMax=0e-5;
+        WindTauMax=0;
     else
         WindTauMax=1;
     end       
