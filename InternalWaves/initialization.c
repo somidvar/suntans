@@ -153,30 +153,10 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	*/
 	
 	//Added by ----Sorush Omidvar----. Salinity stratification and front.Start
-	REAL SalinityDifference,SalinityTemporary,FreshWater,SalinityMin,SalinityMax,SalinityVariation,DepthMax,SalinityCorrectionFactor;
-	if(prop->SalinityAdjustmentFlag)
-	{
-		//Finding the maximum and minimum depth to find the asymptote
-		DepthMax=ReturnDepth(prop->SpongeCellLocationX,prop->SpongeCellLocationY);
-		SalinityMax=prop->ASal*(tanh(prop->BSal*(DepthMax -prop->CSal))) + prop->DSal;
-		SalinityMin=prop->ASal*(tanh(prop->BSal*(0 -prop->CSal))) + prop->DSal;
-		SalinityVariation=SalinityMax-SalinityMin;
-		//Scale up or down the salinity variation
-		SalinityCorrectionFactor=prop->SalinitySpecifiedRange/SalinityVariation;		
-		//keeping min and max of salinity profile constant
-		SalinityMax=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(DepthMax -prop->CSal))) + prop->DSal;
-		SalinityDifference=prop->SalinitySpecifiedMax-SalinityMax;
-	}
+	if(z<prop->CSal)
+		return prop->ASal*(tanh(prop->BSal*(0))) + prop->DSal;
 	else
-	{
-		//No modification to profile salinity is made
-		SalinityCorrectionFactor=1;
-		SalinityDifference=0;
-	}
-	SalinityTemporary=SalinityCorrectionFactor*prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
-	SalinityTemporary+=SalinityDifference;
-	return SalinityTemporary;
-
+		return prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
 	//Added by ----Sorush Omidvar----. Salinity stratification and front.End
 }
 

@@ -104,15 +104,12 @@ SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod
 SemiDiurnalTidePeriod			44712			# Semi-Diurnal tidal priod
 DiurnalWindPeriod				86400			# Diurnal Wind Period
-DiurnalTideAmplitude			-0.1027			# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -0.1027
+DiurnalTideAmplitude			0			# Diurnal Tidal amplitude at sea-side for 72 cm wave at shore-side -0.1027
 SemiDiurnalTideAmplitude		-0.1454			# Semi-Diurnal Tidal amplitude at sea-side for 98 cm wave at shore-side -0.1454
 ASal							0.821			# Salinity range variation Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 BSal							0.1				# Salinity gradient used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 CSal							10				# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 DSal							33.6			# Background Salinity used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
-SalinityAdjustmentFlag			1				# Wheather or not adjusting the salinity profile with SalinityRange
-SalinitySpecifiedRange			1.20			# Maximum Salinity range used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
-SalinitySpecifiedMax			34.4			# The maximum of salinity profile	
 WindTimeLag						10800			# The lag time between wind and tide in sec used by Omidvar and Woodson
 ########################################################################
 #

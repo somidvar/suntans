@@ -316,18 +316,6 @@ double GetDefaultValue(char *str, int *status) {
   else if(!strcmp(str,"DSal")) {
     return DSal_DEFAULT;
   }  
-   //Added by ----Sorush Omidvar----
-  else if(!strcmp(str,"SalinityAdjustmentFlag")) {
-    return SalinityAdjustmentFlag_DEFAULT;
-  }  
-   //Added by ----Sorush Omidvar----
-  else if(!strcmp(str,"SalinitySpecifiedRange")) {
-    return SalinitySpecifiedRange_DEFAULT;
-  }    
-   //Added by ----Sorush Omidvar----
-  else if(!strcmp(str,"SalinitySpecifiedMax")) {
-    return SalinitySpecifiedMax_DEFAULT;
-  }      
  //Added by ----Sorush Omidvar----
   else if(!strcmp(str,"RadiationBoundary")) {
     return RadiationBoundary_DEFAULT;
