@@ -31,9 +31,6 @@ const REAL ASal_DEFAULT=0;
 const REAL BSal_DEFAULT=0;
 const REAL CSal_DEFAULT=0;
 const REAL DSal_DEFAULT=0;
-const int SalinityAdjustmentFlag_DEFAULT=0;
-const REAL SalinitySpecifiedRange_DEFAULT=0;
-const REAL SalinitySpecifiedMax_DEFAULT=0;
 
 /*Added by ----Sorush Omidvar----
 	default value is 0 means there is no lag between tides and wind
