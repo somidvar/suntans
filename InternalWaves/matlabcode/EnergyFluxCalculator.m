@@ -10,10 +10,36 @@
 %Estimates of M2 Internal Tide Generation over Mid-Atlantic Ridge
 %Topography" by Zilbermann 2008
 
-function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
-    InterpRes,XEndIndex,DiurnalTideOmega,...
-    SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
-    SapeloFlag)
+% function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,...
+%     InterpRes,XEndIndex,DiurnalTideOmega,...
+%     SemiDiurnalTideOmega,WindTauMax,TimeStartIndex,TimeEndIndex,...
+%     SapeloFlag)
+clear all;
+close all;
+clc
+
+CaseNumber='90402';
+DataPath='D:\suntans-9th-90402\InternalWaves\data\Result_0000.nc';
+OutputAddress='D:\';
+KnuH=1;
+KappaH=0;
+g=9.8;
+InterpRes=5;
+XEndIndex=Inf;
+TimeStartIndex=1009;
+TimeEndIndex=Inf;
+
+AnalysisSpeed=1;
+FPSMovie=30;
+
+ModelTimeOffset=0;
+WindLag=21;
+
+WindTauMax=0;
+WindOmega=2*pi/(24*3600);
+DiurnalTideOmega=2*pi()/23.93/3600;
+SemiDiurnalTideOmega=2*pi()/12.4/3600;
+SapeloFlag=0;
 
     
     Rho0=1025;%Setting the reference density    
@@ -26,7 +52,12 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     [Eta,~]=DataXTruncator(Eta,X);
     disp('Eta is done')
     Density=1000*ncread(DataPath,'rho',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex])+1000;
+    RhoB=mean(Density(X>10000&X<30000,:,:),1)-Rho0;%This removes the effect of 
+    %internal wave in the system. This is better in comparison to setting
+    %to sponge layer values because Density profiles will start to vary a
+    %bit as mixing kicks in.
     [Density,~]=DataXTruncator(Density,X);
+    RhoB=repmat(RhoB,size(Density,1),1,1)+Density*0;
     disp('Density is done')
     Q=ncread(DataPath,'q',[1,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex]).*Rho0;%Scaling the non-hydrostatic pressure
     [Q,~]=DataXTruncator(Q,X);
@@ -39,6 +70,7 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
     [W,X]=DataXTruncator(W,X);
     disp('W is done')
+    RhoPrime=Density-RhoB-Rho0;
     
     disp('NETCDF reading is compeleted')
 
@@ -49,72 +81,60 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     
     Z3D=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3]);
     Temp=permute(repmat(Eta,1,1,size(ZC,1)),[1,3,2]);
-    Z3D=Z3D+Temp(:,1,:);
-    Z3DDiff=-diff(Z3D,1,2);%dz should always be positive, the negative sign is to make it positive!
-    Z3DDiff(:,end+1,:)=Z3DDiff(:,end,:);     
+    Z3D(:,1,:)=Z3D(:,1,:)+Temp(:,1,:);
+    Z3DDiff=-DiffCustom(Z3D,2);%dz should always be positive, the negative sign is to make it positive!
         
-    Temp=UC*0+Z3D;%To enforce the nan values
-    HTotal=squeeze(nanmax(Temp,[],2)-nanmin(Temp,[],2));
+    HTotal=UC*0+Z3D;%To enforce the nan values
+    HTotal=squeeze(nanmax(HTotal,[],2)-nanmin(HTotal,[],2));
     UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
-    %We shall reset RhoB to the value of Density(:,:,k) whenever UH(XSpecified,k)=0
-    RhoB=Density(:,:,1)-Rho0;
-    for k=2:size(Time,1)
-        UHOld=UH(50,k-1);%50 is set arbitrary because it is seen that UH(i,:)=UH(j,:) for any i,j
-        UHNew=UH(50,k);
-        if UHNew*UHOld<0
-            RhoB(:,:,k)=Density(:,:,k)-Rho0;
-        else
-            RhoB(:,:,k)=RhoB(:,:,k-1);
-        end
-    end
+    
 
-    disp('EPPrime calculation is started')
-    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,squeeze(nanmean(Density-Rho0,3)),InterpRes,g,SapeloFlag);
+%     disp('EPPrime calculation is started')
+%     [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
     
     disp('EPPrime calculation is done')
 
-    %Creating the output NETCDF
-    netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
-    mode = netcdf.getConstant('CLOBBER');
-    NETCDFID = netcdf.create(strcat(OutputAddress,num2str(CaseNumber),'EnergyFlux.nc'),mode);
-    disp('The NETCDF file for energy flux is created')
-
-    %Creating the dimensions for the NETCDF
-    TimeDimID= netcdf.defDim(NETCDFID,'Time',size(Time,1));
-    XDimID= netcdf.defDim(NETCDFID,'OffshoreDistance',size(X,1));
-    ZCDimID= netcdf.defDim(NETCDFID,'Depth',size(ZC,1));
-    SingleID=netcdf.defDim(NETCDFID,'Single',1);
-
-    %Writing DiurnalTideOmega in the output NETCDF
-    WritingParameter(NETCDFID,DiurnalTideOmega,'Diurnal','NC_FLOAT',SingleID,'Diurnal Tide Omega','-','Radian/Sec');
-    WritingParameter(NETCDFID,SemiDiurnalTideOmega,'SemiDiurnal','NC_FLOAT',SingleID,'Semi-Diurnal Tide Omega','-','Radian/Sec');
-    WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
-    WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
-    WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
-    WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
-    WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
-    WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
-    WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
-    WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
-    WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
-    WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
-    WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
-    WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
-    WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
+%     %Creating the output NETCDF
+%     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
+%     mode = netcdf.getConstant('CLOBBER');
+%     NETCDFID = netcdf.create(strcat(OutputAddress,num2str(CaseNumber),'EnergyFlux.nc'),mode);
+%     disp('The NETCDF file for energy flux is created')
+% 
+%     %Creating the dimensions for the NETCDF
+%     TimeDimID= netcdf.defDim(NETCDFID,'Time',size(Time,1));
+%     XDimID= netcdf.defDim(NETCDFID,'OffshoreDistance',size(X,1));
+%     ZCDimID= netcdf.defDim(NETCDFID,'Depth',size(ZC,1));
+%     SingleID=netcdf.defDim(NETCDFID,'Single',1);
+% 
+%     %Writing DiurnalTideOmega in the output NETCDF
+%     WritingParameter(NETCDFID,DiurnalTideOmega,'Diurnal','NC_FLOAT',SingleID,'Diurnal Tide Omega','-','Radian/Sec');
+%     WritingParameter(NETCDFID,SemiDiurnalTideOmega,'SemiDiurnal','NC_FLOAT',SingleID,'Semi-Diurnal Tide Omega','-','Radian/Sec');
+%     WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
+%     WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
+%     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
+%     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
+%     WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
+%     WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
+%     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
+%     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
+%     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
+%     WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
+%     WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
+%     WritingParameter(NETCDFID,RhoB,'RhoB','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Background Density minuse Rho0','-','kg/m^3');
+%     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
-    RhoPrime=Density-RhoB-Rho0;
-    PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
-    PPrimeQBottom=squeeze(nansum((g*RhoPrime+Q).*Z3DDiff,2));
     
-    DHDX=diff(HTotal,1,1)./diff(repmat(X,1,size(Time,1)),1,1);
-    DHDX(end+1,:)=DHDX(end,:);
-    DHDX=medfilt1(DHDX,3,[],1);%Removing spikes from dH/dX due to step shape like the n=3 is default
-    DHDX=movmean(DHDX,5,1);%Smoothing the dH/dX by taking average over 5 points
-    WBottom=-UH.*DHDX;
-    WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,TimeDimID],'Vertical velocity at bottom','Zilberman 2','m/s');
-    ConversionRate=WBottom.*PPrimeQBottom;
+    ZPlusD=Z3D-repmat(nanmin(Z3D,[],2),1,size(ZC,1),1);
+    WBottom=permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]);
+    WBottom=-ZPlusD.*DiffCustom(WBottom,1)./XXZTDiff;
+    
+    ConversionRateTemp1=RhoPrime.*WBottom*g;
+    ConversionRateTemp2=-DiffCustom(Q,2)./Z3DDiff.*WBottom;
+    ConversionRate=nansum((ConversionRateTemp1+ConversionRateTemp2).*Z3DDiff,2);
+    
+    WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,TimeDimID],'Barotropic Vertical Velocity','Zilberman 2','m/s');
     WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,TimeDimID],'Conversion rate of barotropic to baroclinic (Depth integrated) based on Zilberman','Zilberman 1','Wat/m^2');
 
     EK0=0.5*Rho0*UH.^2;
@@ -128,6 +148,7 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
     PressureWork1=UH.*HTotal.*Eta*Rho0*g;
     WritingParameter(NETCDFID,PressureWork1,'PressureWork1','NC_FLOAT',[XDimID,TimeDimID],'Pressure work of surface disturbance (Depth integrated)','15','Wat/m');
 
+    PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
     PressureWork2=UH.*squeeze(nansum(PPrime.*Z3DDiff,2));
     Temporary=nanmean(PressureWork2,2);
     WritingParameter(NETCDFID,Temporary,'PressureWork2','NC_FLOAT',XDimID,'Pressure work in the result of wave presence PPrime (Depth integrated and time averaged)','15','Wat/m');
@@ -193,7 +214,12 @@ function EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,KnuH,KappaH,g,..
 %         ,Advection1,PressureWork1,PressureWork2,PressureWork3,Diffusion1,BTDissipation...
 %         ,AdvectionPrime1,AdvectionPrime2,AdvectionPrime3,PressureWorkPrime1,PressureWorkPrime2,DiffusionPrime1,DiffusionPrime2,BCDissipation...
 %         ,ConversionRate);
-end
+
+
+% end
+
+
+
 function DIFF=DiffCustom(InputMatrix,DimensionDifferentiate)
     DIFF=diff(InputMatrix,1,DimensionDifferentiate);
     switch DimensionDifferentiate
