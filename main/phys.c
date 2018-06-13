@@ -4109,7 +4109,6 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->BSal = MPI_GetValue(DATAFILE,"BSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->CSal = MPI_GetValue(DATAFILE,"CSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->DSal = MPI_GetValue(DATAFILE,"DSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  
   (*prop)->SpongeCellLocationX = MPI_GetValue(DATAFILE,"SpongeCellLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->SpongeCellLocationY = MPI_GetValue(DATAFILE,"SpongeCellLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
   (*prop)->SpongeEdgeLocationX = MPI_GetValue(DATAFILE,"SpongeEdgeLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar

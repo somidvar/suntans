@@ -151,14 +151,13 @@ REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	else
 		return deltaS*pow(D_pycnocline, 0.0187);
 	*/
-	
 	//Added by ----Sorush Omidvar----. Salinity stratification and front.Start
 	if(z<prop->CSal)
 		return prop->ASal*(tanh(prop->BSal*(0))) + prop->DSal;
 	else
 		return prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
-	//Added by ----Sorush Omidvar----. Salinity stratification and front.End
-}
+ 	//Added by ----Sorush Omidvar----. Salinity stratification and front.End
+ }
 
 /*
  * Function: ReturnTemperature
