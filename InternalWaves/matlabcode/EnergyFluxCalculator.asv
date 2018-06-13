@@ -87,8 +87,8 @@ SapeloFlag=0;
 
     RhoB=mean(Density,3)-Rho0;
     RhoPrime=Density-RhoB-Rho0;
-    disp('EPPrime calculation is started')
-    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
+%     disp('EPPrime calculation is started')
+%     [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
     
     disp('EPPrime calculation is done')
 
@@ -112,12 +112,12 @@ SapeloFlag=0;
     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
     WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
-    WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
+    %WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
     WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
-    WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
+    %WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
     ZPlusD=Z3D+UC*0;
@@ -155,11 +155,11 @@ SapeloFlag=0;
     WritingParameter(NETCDFID,PressureWork1,'PressureWork1','NC_FLOAT',[XDimID,TimeDimID],'Pressure work of surface disturbance (Depth integrated)','15','Wat/m');
 
     PPrime=g*cumsum(RhoPrime.*Z3DDiff,2);
-    PressureWork2=UH.*squeeze(nansum(PPrime.*Z3DDiff,2));
+    PressureWork2=UH.*squeeze(sum(PPrime.*Z3DDiff,2));
     Temporary=mean(PressureWork2,2);
     WritingParameter(NETCDFID,Temporary,'PressureWork2','NC_FLOAT',XDimID,'Pressure work in the result of wave presence PPrime (Depth integrated and time averaged)','15','Wat/m');
 
-    PressureWork3=UH.*squeeze(nansum(Q.*Z3DDiff,2));
+    PressureWork3=UH.*squeeze(sum(Q.*Z3DDiff,2));
     Temporary=mean(PressureWork3,2);
     WritingParameter(NETCDFID,Temporary,'PressureWork3','NC_FLOAT',XDimID,'Pressure work of non-hydrostatic pressure Q (Depth integrated and time averaged)','15','Wat/m');
 
