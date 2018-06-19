@@ -5229,4 +5229,3 @@ int getTimeRecBnd(REAL nctime, REAL *time, int nt){
     }
     return nt;
 }
-
