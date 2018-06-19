@@ -177,13 +177,13 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
 			
 			REAL CurrentDepth=0;
-			REAL OceanDepth=ReturnDepth(grid->xv[i],grid->yv[i]);
+			REAL ColumnDepth=ReturnDepth(grid->xv[i],grid->yv[i]);
 			
 			for(k=grid->ctop[i];k<grid->Nk[i];k++)
 			{
 				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				
-				phys->T[i][k]=ReturnTemperature(grid->xv[jptr],grid->yv[jptr],CurrentDepth,OceanDepth);
+				phys->T[i][k]=ReturnTemperature(grid->xv[jptr],grid->yv[jptr],CurrentDepth,ColumnDepth);
 				phys->s[i][k]=ReturnSalinity(grid->xv[jptr],grid->yv[jptr],CurrentDepth,prop);
 				
 				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
