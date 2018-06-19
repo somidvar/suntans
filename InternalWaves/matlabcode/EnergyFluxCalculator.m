@@ -28,8 +28,8 @@ g=9.8;
 InterpRes=5;
 XEndIndex=Inf;
 %TimeStartIndex=1009;
-TimeStartIndex=1;
-TimeEndIndex=Inf;
+TimeStartIndex=1009;
+TimeEndIndex=2426;
 
 AnalysisSpeed=1;
 FPSMovie=30;
@@ -87,38 +87,38 @@ SapeloFlag=0;
 
     RhoB=mean(Density,3)-Rho0;
     RhoPrime=Density-RhoB-Rho0;
-    disp('EPPrime calculation is started')
-    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
+%     disp('EPPrime calculation is started')
+%     [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
     
     disp('EPPrime calculation is done')
 
-    %Creating the output NETCDF
-    netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
-    mode = netcdf.getConstant('CLOBBER');
-    NETCDFID = netcdf.create(strcat(OutputAddress,num2str(CaseNumber),'EnergyFlux.nc'),mode);
-    disp('The NETCDF file for energy flux is created')
-
-    %Creating the dimensions for the NETCDF
-    TimeDimID= netcdf.defDim(NETCDFID,'Time',size(Time,1));
-    XDimID= netcdf.defDim(NETCDFID,'OffshoreDistance',size(X,1));
-    ZCDimID= netcdf.defDim(NETCDFID,'Depth',size(ZC,1));
-    SingleID=netcdf.defDim(NETCDFID,'Single',1);
-
-    %Writing DiurnalTideOmega in the output NETCDF
-    WritingParameter(NETCDFID,DiurnalTideOmega,'Diurnal','NC_FLOAT',SingleID,'Diurnal Tide Omega','-','Radian/Sec');
-    WritingParameter(NETCDFID,SemiDiurnalTideOmega,'SemiDiurnal','NC_FLOAT',SingleID,'Semi-Diurnal Tide Omega','-','Radian/Sec');
-    WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
-    WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
-    WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
-    WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
-    WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
-    WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
-    WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
-    WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
-    WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
-    WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
-    WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
-    WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
+%     %Creating the output NETCDF
+%     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
+%     mode = netcdf.getConstant('CLOBBER');
+%     NETCDFID = netcdf.create(strcat(OutputAddress,num2str(CaseNumber),'EnergyFlux.nc'),mode);
+%     disp('The NETCDF file for energy flux is created')
+% 
+%     %Creating the dimensions for the NETCDF
+%     TimeDimID= netcdf.defDim(NETCDFID,'Time',size(Time,1));
+%     XDimID= netcdf.defDim(NETCDFID,'OffshoreDistance',size(X,1));
+%     ZCDimID= netcdf.defDim(NETCDFID,'Depth',size(ZC,1));
+%     SingleID=netcdf.defDim(NETCDFID,'Single',1);
+% 
+%     %Writing DiurnalTideOmega in the output NETCDF
+%     WritingParameter(NETCDFID,DiurnalTideOmega,'Diurnal','NC_FLOAT',SingleID,'Diurnal Tide Omega','-','Radian/Sec');
+%     WritingParameter(NETCDFID,SemiDiurnalTideOmega,'SemiDiurnal','NC_FLOAT',SingleID,'Semi-Diurnal Tide Omega','-','Radian/Sec');
+%     WritingParameter(NETCDFID,WindTauMax,'Wind','NC_FLOAT',SingleID,'Wind shear stress','-','N/m^2');
+%     WritingParameter(NETCDFID,Time,'Time','NC_FLOAT',TimeDimID,'Time','-','Second');
+%     WritingParameter(NETCDFID,X,'X','NC_FLOAT',XDimID,'Off-shore Location of Cell Center','-','meter');
+%     WritingParameter(NETCDFID,ZC,'Z','NC_FLOAT',ZCDimID,'Depth of Cell Center','-','meter');
+%     WritingParameter(NETCDFID,Density,'Density','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Density of Cell Center','-','kg/m^3');
+%     WritingParameter(NETCDFID,EPPrime,'APE','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Available Potential Energy(EPPrime)','12','J/m^3');
+%     WritingParameter(NETCDFID,UC,'U','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Cross-shore Velocity (u)','-','m/s');
+%     WritingParameter(NETCDFID,W,'W','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Vertical Velocity (w)','-','m/s');
+%     WritingParameter(NETCDFID,Q,'Q','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Non-hydrostatic Pressure','-','N/m^2');
+%     WritingParameter(NETCDFID,Eta,'Eta','NC_FLOAT',[XDimID,TimeDimID],'Sea surface elevation','-','m');
+%     WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
+%     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
     ZPlusD=Z3D+UC*0;
     ZPlusD=ZPlusD-repmat(nanmin(ZPlusD,[],2),1,size(ZC,1),1);

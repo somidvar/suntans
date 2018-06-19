@@ -14,11 +14,11 @@ namespace FileChanger
 {
     public partial class Form1 : Form
     {
-        const int TauCases = 7;
+        const int TauCases = 5;
         const int LagCases = 5;
-        const int PycnoclineCases = 7;
+        const int PycnoclineCases = 5;
         const int WaveAmplitudeCases = 4;
-        const int VersionSeries = 90000;
+        const int VersionSeries = 100000;
         int FileNumber;
         string MotherDirectory;
         public Form1()
@@ -33,7 +33,7 @@ namespace FileChanger
             string[] Address = new string[FileNumber];
             string[] ExtensionNumber = new string[FileNumber];
             double Tau_T = -1000;
-            double NSteps = 3.63e5;
+            double NSteps = 1.21e5;
             double DiurnalAmplitude = -1000;
             double SemiDiurnalAmplitude = -1000;
             double Pycnocline = -1000;
@@ -80,22 +80,16 @@ namespace FileChanger
                             Tau_T = 0;
                             break;
                         case 1:
-                            Tau_T = 0.143e-5;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(1.5, 2) / 1025;
                             break;
                         case 2:
-                            Tau_T = 0.571e-5;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(3, 2) / 1025;
                             break;
                         case 3:
-                            Tau_T = 1.285e-5;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(4.5, 2) / 1025;
                             break;
                         case 4:
-                            Tau_T = 2.285e-5;
-                            break;
-                        case 5:
-                            Tau_T = 3.570e-5;
-                            break;
-                        case 6:
-                            Tau_T = 5.142e-5;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(6, 2) / 1025;
                             break;
                         default:
                             break;
@@ -105,24 +99,18 @@ namespace FileChanger
                         switch (PycnoclineCounter % PycnoclineCases)
                         {
                             case 0:
-                                Pycnocline = 5;
-                                break;
-                            case 1:
-                                Pycnocline = 7.5;
-                                break;
-                            case 2:
                                 Pycnocline = 10;
                                 break;
-                            case 3:
+                            case 1:
                                 Pycnocline = 12.5;
                                 break;
-                            case 4:
+                            case 2:
                                 Pycnocline = 15;
                                 break;
-                            case 5:
+                            case 3:
                                 Pycnocline = 17.5;
                                 break;
-                            case 6:
+                            case 4:
                                 Pycnocline = 20;
                                 break;
                             default:
@@ -156,7 +144,9 @@ namespace FileChanger
                             try
                             {
                                 if (Tau_T == 0 && DiurnalAmplitude == 0 && SemiDiurnalAmplitude == 0)//Removing cases without tide nor wind
-                                        Directory.Delete(Address[FileCounter], true);
+                                    Directory.Delete(Address[FileCounter], true);
+                                else if (Tau_T==0 && LagWind!=15*3600)
+                                    Directory.Delete(Address[FileCounter], true);//If TauT is zero the it's meaningless to lag the wind!
                                 else
                                 {
                                     SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline, LagWind);
@@ -185,7 +175,7 @@ namespace FileChanger
             int DiurnalLine = 106;
             int SemiDiurnalLine = 107;
             int PycnoclineLine = 110;
-            int LagLine = 115;
+            int LagLine = 112;
             StreamReader Reader;
             Reader = new StreamReader(Address);
             while (!Reader.EndOfStream)
@@ -212,7 +202,7 @@ namespace FileChanger
                 }
                 else if (LineCounter == PycnoclineLine)
                 {
-                    Context += string.Format("CSal\t\t\t\t\t\t\t{0}\t\t\t# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal", Pycnocline);
+                    Context += string.Format("CSal\t\t\t\t\t\t\t{0}\t\t\t# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal", Pycnocline);
                     Reader.ReadLine();
                 }
                 else if (LineCounter == LagLine)

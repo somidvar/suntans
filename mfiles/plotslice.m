@@ -61,21 +61,21 @@ function [x,z,data] = plotslice(PLOT,datadir,n,proc)
   % Open up file descriptors for binary files
   switch(PLOT)
    case 'q'
-    file = [datadir,'/q.dat.',num2str(proc)];
+    file = [datadir,'\q.dat.',num2str(proc)];
    case 's'
-    file = [datadir,'/s.dat.',num2str(proc)];    
+    file = [datadir,'\s.dat.',num2str(proc)];    
    case 'T'
-    file = [datadir,'/T.dat.',num2str(proc)];    
+    file = [datadir,'\T.dat.',num2str(proc)];    
    case {'u','w'}
-    file = [datadir,'/u.dat.',num2str(proc)];    
+    file = [datadir,'\u.dat'];    
    case 's0'
-    file = [datadir,'/s0.dat.',num2str(proc)];    
+    file = [datadir,'\s0.dat.',num2str(proc)];    
    case 'h'
-    file = [datadir,'/fs.dat.',num2str(proc)];    
+    file = [datadir,'\fs.dat.',num2str(proc)];    
    case 'nut'
-    file = [datadir,'/nut.dat.',num2str(proc)];    
+    file = [datadir,'\nut.dat.',num2str(proc)];    
    case 'kappat'
-    file = [datadir,'/kappat.dat.',num2str(proc)];    
+    file = [datadir,'\kappat.dat.',num2str(proc)];    
    otherwise
     fprintf('Unrecognized plot variable.\n');
     fprintf('Use one of ''q'',''s'',''u'',''w'',''s0'',''h'',''nut'',''kappat''.\n');
@@ -93,7 +93,7 @@ function [x,z,data] = plotslice(PLOT,datadir,n,proc)
     else
       data = squeeze(data(:,3,:));      
     end
-    data = data(is,:)';
+    data = data(:,is)';
     data(find(data==EMPTY))=nan;
    case 'h'
     data = getcdata(fid,Nc,n,precision);
