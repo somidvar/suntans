@@ -24,7 +24,7 @@ else
   NETCDFINC = 
 endif
 LD = $(CC) 
-CFLAGS = 
+CFLAGS = -std=gnu89
 MATHLIB = -lm
 
 EXEC = iwaves
@@ -33,7 +33,7 @@ SUN = $(SUNTANSHOME)/sun
 datadir = data
 INCLUDES = -I$(SUNTANSHOME) $(MPIINC) $(PARMETISINC) $(NETCDFINC)
 DEFS = $(MPIDEF)
-NUMPROCS = 24
+NUMPROCS = 1
 
 all:	data
 
@@ -43,7 +43,7 @@ test:	data
 data:	$(SUN)
 
 .c.o:	
-	$(LD) -c $(INCLUDES) $(DEFS) $*.c
+	$(LD) $(CFLAGS) -c $(INCLUDES) $(DEFS) $*.c
 
 $(SUN):	initialization.o boundaries.o state.o sources.o
 	cp initialization.o boundaries.o state.o sources.o $(SUNTANSHOME)
