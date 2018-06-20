@@ -8,9 +8,13 @@
 #PBS -m e
 
 cd $PBS_O_WORKDIR
-module load mvapich2/2.1/gcc/4.4.7
-module load hdf5/1.8.6/gcc/4.4.7
-module load netcdf/4.1.3-v4/gcc/4.4.7
+
+ml MVAPICH2/2.2-GCC-5.4.0-2.26
+ml SUNTANS/20180305-foss-2016b
+ml HDF5/1.8.7-foss-2016b
+ml netCDF/4.1.3-foss-2016b-v4
+ml gmvolf/2016b
+
 echo
 echo "Job ID: $PBS_JOBID"
 echo "Queue:  $PBS_QUEUE"

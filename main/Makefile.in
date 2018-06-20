@@ -16,9 +16,9 @@
 # Copyright (C) 2005-2006 The Board of Trustees of the Leland Stanford Junior 
 # University. All Rights Reserved.
 #
-MPIHOME=/usr/local/apps/mvapich2/2.1/gcc447
-PARMETISHOME=/usr/local/apps/parmetis/3.2.0/mv2-2.1_gcc447
-TRIANGLEHOME=/usr/local/apps/triangle/1.6
-NETCDF4HOME=/usr/local/apps/netcdf/4.1.3-v4/gcc447
+MPIHOME=/usr/local/apps/eb/MVAPICH2/2.2-GCC-5.4.0-2.26
+PARMETISHOME=/usr/local/apps/eb/ParMETIS/3.2.0-gmvolf-2016b
+TRIANGLEHOME=/usr/local/apps/eb/Triangle/1.6-gmvolf-2016b
+NETCDF4HOME=/usr/local/apps/eb/netCDF/4.1.3-gmvolf-2016b-v4
 
 
