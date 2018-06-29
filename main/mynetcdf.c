@@ -474,7 +474,7 @@ void WriteOutputNCmerge(propT *prop, gridT *grid, physT *phys, metT *met, int bl
     // 3D cell-centered variables
     nc_write_3D_merge(ncid,prop->nctimectr,  phys->uc, prop, grid, "uc",0, numprocs, myproc, comm);
 	//Commented by ----Sorush Omidvar---- to reduce the NETCDF size
-    //nc_write_3D_merge(ncid,prop->nctimectr,  phys->vc, prop, grid, "vc",0, numprocs, myproc, comm);
+    nc_write_3D_merge(ncid,prop->nctimectr,  phys->vc, prop, grid, "vc",0, numprocs, myproc, comm);
     nc_write_3D_merge(ncid,prop->nctimectr,  phys->nu_tv, prop, grid, "nu_v",0, numprocs, myproc, comm);
 	//Added by ----Sorush Omidvar---- to implement non-hydrostatic pressure in the NETCDF file
 	nc_write_3D_merge(ncid,prop->nctimectr,  phys->q, prop, grid, "q",0, numprocs, myproc, comm);
@@ -565,9 +565,9 @@ void WriteOutputNC(propT *prop, gridT *grid, physT *phys, metT *met, int blowup,
 	ERR(retval);
     
     //Commented by ----Sorush Omidvar---- to reduce the NETCDF size
-	//if ((retval = nc_inq_varid(ncid, "vc", &varid)))
-	//ERR(retval);
-    //ravel(phys->vc, phys->tmpvar, grid);
+	if ((retval = nc_inq_varid(ncid, "vc", &varid)))
+	ERR(retval);
+    ravel(phys->vc, phys->tmpvar, grid);
     
 	if ((retval = nc_put_vara_double(ncid, varid, startthree, countthree, phys->tmpvar )))
 	ERR(retval);
@@ -1153,7 +1153,7 @@ static void InitialiseOutputNCugridMerge(propT *prop, physT *phys, gridT *grid, 
    nc_addattr(ncid, varid,"location","face");
    nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
 
-   /*
+   
    //Commented by ----Sorush Omidvar---- to reduce the NETCDF size
    //v
    if ((retval = nc_def_var(ncid,"vc",NC_DOUBLE,3,dimidthree,&varid)))
@@ -1167,7 +1167,7 @@ static void InitialiseOutputNCugridMerge(propT *prop, physT *phys, gridT *grid, 
    nc_addattr(ncid, varid,"mesh","suntans_mesh");
    nc_addattr(ncid, varid,"location","face");
    nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
-   */
+   
    
    //w
    dimidthree[1] = dimid_Nkw;
@@ -1987,7 +1987,7 @@ void InitialiseOutputNCugrid(propT *prop, gridT *grid, physT *phys, metT *met, i
    nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
 
    //Commented by ----Sorush Omidvar---- to reduce the NETCDF size
-   /*
+   
    //v
    if ((retval = nc_def_var(ncid,"vc",NC_DOUBLE,3,dimidthree,&varid)))
      ERR(retval);   
@@ -2000,7 +2000,7 @@ void InitialiseOutputNCugrid(propT *prop, gridT *grid, physT *phys, metT *met, i
    nc_addattr(ncid, varid,"mesh","suntans_mesh");
    nc_addattr(ncid, varid,"location","face");
    nc_addattr(ncid, varid,"coordinates","time z_r yv xv");
-   */
+   
    
    //w
    dimidthree[1] = dimid_Nkw;

@@ -5,7 +5,7 @@
 #PBS -l walltime=24:00:00
 #PBS -l mem=100gb
 #PBS -M omidvar@uga.edu 
-#PBS -m e
+#PBS -m f
 
 cd $PBS_O_WORKDIR
 

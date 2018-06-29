@@ -43,7 +43,7 @@ void OpenBoundaryFluxes(REAL **q, REAL **ub, REAL **ubn, gridT *grid, physT *phy
 	int j, jptr, ib, k, forced;
 	REAL **uc = phys->uc, **vc = phys->vc, **ucold = phys->uold, **vcold = phys->vold;
 	REAL z, c0, c1, C0, C1, dt = prop->dt, u0, u0new, uc0, vc0, uc0old, vc0old, ub0;
-
+	
 	for (jptr = grid->edgedist[2]; jptr < grid->edgedist[5]; jptr++) {
 		j = grid->edgep[jptr];
 
@@ -71,7 +71,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	int iptr, i, ii;
 	int nf, ne, neigh;
 	REAL z;
-
+	
 	//Type-2 zero gradient (Neumann) boundary condition
 	/*
 	for(jptr=grid->edgedist[2];jptr<grid->edgedist[3];jptr++) {
@@ -114,6 +114,8 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ib = grid->grad[2 * j];
+			if (ib==-1)
+				ib = grid->grad[2 * j+1];
 			//suntans default
 			/*
 			for(k=grid->ctop[ib];k<grid->Nk[ib];k++)
@@ -235,7 +237,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm comm) {
 	int i, ii, j, jj, jind, iptr, jptr, n, k;
 	REAL u, v, w, h, rampfac;
-
+	
 	if (prop->thetaramptime > 0) {
 		rampfac = 1 - exp(-prop->rtime / prop->thetaramptime);//Tidal rampup factor 
 	}
@@ -293,34 +295,25 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			*/
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.start
 			
-			REAL HeightCell1,HeightCell2,ElevationCell1,ElevationCell2,ElevationAverage,Cell1Depth,DepthCell1,DepthCell2,DepthAverage,EdgeElevation,ElevationCorrectionFactor;	
-			int NeighbourCell1,NeighbourCell2;
+			REAL WaterColumnHeight,HeightCorrectionFactor;	
+			int NeighbourCell;
 			
-			NeighbourCell1=grid->grad[2*j];
-			NeighbourCell2=grid->grad[2*j+1];				
-			if (NeighbourCell1==-1)
-				NeighbourCell1=NeighbourCell2;
-			if (NeighbourCell2==-1)
-				NeighbourCell2=NeighbourCell1;
-			if (NeighbourCell1==-1 && NeighbourCell2==-1)
-				printf("\n\n\nWarning. There is something wrong with the grid. Take a look at the boundaries.c\n\n\n");
-			
-			ElevationCell1=phys->h[NeighbourCell1];
-			ElevationCell2=phys->h[NeighbourCell2];
-			ElevationAverage=(ElevationCell1+ElevationCell2)/2;
-			DepthCell1=ReturnDepth(grid->xv[NeighbourCell1],grid->yv[NeighbourCell1]);
-			DepthCell2=ReturnDepth(grid->xv[NeighbourCell2],grid->yv[NeighbourCell2]);
-			DepthAverage=(DepthCell1+DepthCell2)/2;
-			EdgeElevation=(DepthAverage+ElevationAverage);
-			ElevationCorrectionFactor=DepthAverage/EdgeElevation;//Correction factor for velocity to take into account that the sea level changes at the boundary so the velocity should be corrected to keep the discharge constant
-						
-			for(k=grid->etop[j];k<grid->Nke[j];k++)
+			NeighbourCell=grid->grad[2*j];
+			if (NeighbourCell==-1)
+				NeighbourCell=grid->grad[2*j+1];
+			if (NeighbourCell==-1)
 			{
-				REAL BoundaryUTides=0;
-				BoundaryUTides+=-1*grid->n1[j]*ElevationCorrectionFactor*prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
-				BoundaryUTides+=-1*grid->n1[j]*ElevationCorrectionFactor*prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
-
-				phys->boundary_u[jind][k]=BoundaryUTides;
+				printf("\n\n\nError. There is something wrong with the grid at jptr=%d. Take a look at the boundaries.c\n\n\n",jptr);
+				return;
+			}		
+			HeightCorrectionFactor=(WaterColumnHeight+phys->h[NeighbourCell])/WaterColumnHeight;//To keep the velocity equal between ebb and flood
+			REAL BoundaryUTides=0;
+			BoundaryUTides+=prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
+			BoundaryUTides+=prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
+			BoundaryUTides/=HeightCorrectionFactor;
+			for(k=grid->etop[j];k<grid->Nke[j];k++)
+			{			
+				phys->boundary_u[jind][k]=BoundaryUTides*-1*grid->n1[j];//if negative water goes up
 				phys->boundary_v[jind][k]=0;
 				phys->boundary_w[jind][k]=0;
 			}
@@ -498,7 +491,7 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	// Step 1) Allocate the structure array data
 	// Moved to phys.c
-
+	
 	// Step 2) Read in the coordinate info
 	if (VERBOSE > 1 && myproc == 0) printf("Reading netcdf boundary coordinate data...\n");
 	ReadBndNCcoord(prop->netcdfBdyFileID, prop, grid, myproc, comm);
@@ -510,8 +503,8 @@ void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	// Step 4) Read in the forward and backward time steps into the boundary arrays
 	if (VERBOSE > 1 && myproc == 0) printf("Reading netcdf boundary initial data...\n");
 	ReadBdyNC(prop, grid, myproc, comm);
-
-
+	
+	
 }//end function
 
 /*
