@@ -305,7 +305,11 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			{
 				printf("\n\n\nError. There is something wrong with the grid at jptr=%d. Take a look at the boundaries.c\n\n\n",jptr);
 				return;
-			}		
+			}
+			WaterColumnHeight=0;
+			for(k=0;k<grid->Nkc[NeighbourCell];k++)
+				WaterColumnHeight+=grid->dz[k];
+			
 			HeightCorrectionFactor=(WaterColumnHeight+phys->h[NeighbourCell])/WaterColumnHeight;//To keep the velocity equal between ebb and flood
 			REAL BoundaryUTides=0;
 			BoundaryUTides+=prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
@@ -313,8 +317,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			BoundaryUTides/=HeightCorrectionFactor;
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{			
-				phys->boundary_u[jind][k]=BoundaryUTides*-1*grid->n1[j];//if negative water goes up
-				phys->boundary_v[jind][k]=0;
+				phys->boundary_u[jind][k]=BoundaryUTides*-1*grid->n1[j];//For our model all of the N1 and N2 are negative
+				phys->boundary_v[jind][k]=BoundaryUTides*1*grid->n1[j];//For our model all of the N1 and N2 are negative
 				phys->boundary_w[jind][k]=0;
 			}
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.end
