@@ -311,14 +311,25 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				WaterColumnHeight+=grid->dz[k];
 			
 			HeightCorrectionFactor=(WaterColumnHeight+phys->h[NeighbourCell])/WaterColumnHeight;//To keep the velocity equal between ebb and flood
-			REAL BoundaryUTides=0;
-			BoundaryUTides+=prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
-			BoundaryUTides+=prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
-			BoundaryUTides/=HeightCorrectionFactor;
+			REAL UTides,VTides;
+			UTides=UTides=0;
+			UTides+=prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
+			UTides+=prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
+			UTides/=HeightCorrectionFactor;
+
+			if(prop->rtime>=31*60)
+			{
+				VTides+=prop->DiurnalTideAmplitude*0.83*30*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime+30*60);
+				VTides+=prop->SemiDiurnalTideAmplitude*0.69*30*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime+30*60);
+				VTides/=HeightCorrectionFactor;
+			}
+			else
+				VTides=0;
+
 			for(k=grid->etop[j];k<grid->Nke[j];k++)
 			{			
-				phys->boundary_u[jind][k]=BoundaryUTides*-1*grid->n1[j];//For our model all of the N1 and N2 are negative
-				phys->boundary_v[jind][k]=BoundaryUTides*1*grid->n1[j];//For our model all of the N1 and N2 are negative
+				phys->boundary_u[jind][k]=UTides*-1*grid->n1[j];//For our model all of the N1 and N2 are negative
+				phys->boundary_v[jind][k]=VTides*1*grid->n2[j];//For our model all of the N1 and N2 are negative
 				phys->boundary_w[jind][k]=0;
 			}
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.end
