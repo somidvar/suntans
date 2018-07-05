@@ -15,6 +15,7 @@
 #include "mynetcdf.h"
 #include "sediments.h"
 #include "initialization.h"
+#include "stdlib.h"
 
  // Local functions
  //static void GetBoundaryVelocity(REAL *ub, int *forced, REAL x, REAL y, REAL t, REAL h, REAL d, REAL omega, REAL amp);
@@ -72,22 +73,8 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	int nf, ne, neigh;
 	REAL z;
 	
-	//Type-2 zero gradient (Neumann) boundary condition
-	/*
-	for(jptr=grid->edgedist[2];jptr<grid->edgedist[3];jptr++) {
-		j=grid->edgep[jptr];
-		ib=grid->grad[2*j];
-
-		for(k=grid->ctop[ib];k<grid->Nk[ib];k++) {
-	  phys->boundary_T[jptr-grid->edgedist[2]][k]=phys->T[ib][k];
-	  phys->boundary_s[jptr-grid->edgedist[2]][k]=phys->s[ib][k];
-		}
-	}
-	*/
-	
 	// Type-2
 	if (prop->netcdfBdy) {
-		printf("The model is using NETCDF for Boundary Scalars\n");
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
@@ -99,10 +86,8 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			ii += 1;
 
 			for (k = grid->ctop[ib]; k < grid->Nk[ib]; k++) {
-				//for(k=grid->etop[j];k<grid->Nke[j];k++) {
 				phys->boundary_T[jind][k] = bound->boundary_T[k][bound->ind2[ii]];
 				phys->boundary_s[jind][k] = bound->boundary_S[k][bound->ind2[ii]];
-				//printf("edge: %d, k : %d, boundary_s = %f\n",jind,k,phys->boundary_s[jind][k]);
 			}
 		}
 	}
@@ -114,25 +99,15 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
 			ib = grid->grad[2 * j];
-			if (ib==-1)
-				ib = grid->grad[2 * j+1];
-			//suntans default
-			/*
-			for(k=grid->ctop[ib];k<grid->Nk[ib];k++)
-			{
-				phys->boundary_T[jind][k]=0;
-				phys->boundary_s[jind][k]=0;
-			}
-			*/
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
 			REAL CurrentDepth=0;
 			REAL ColumnDepth=ReturnDepth(grid->xe[jptr],grid->ye[jptr]);
 			if (ib==-1)
 			{
-				printf("\n\n\nWarning. There is something wrong with the grid. Take a look at the boundaries.c\n\n\n");
-				return;
+				printf("\n\nError. There is something wrong with the grid. Take a look at the boundaries.c\n\n\n");
+				exit(11);
 			}
-			for(k=0;k<grid->Nkc[jptr];k++)
+			for (k = grid->ctop[ib]; k < grid->Nk[ib]; k++)
 			{
 				CurrentDepth+=grid->dz[k]/2;//getting the depth at the middle of the edge
 				REAL TempDepth=CurrentDepth+(1-CurrentDepth/ColumnDepth)*phys->h[ib];
@@ -169,15 +144,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
-			//Suntans Default
-			/*
-			for(k=grid->ctop[i];k<grid->Nk[i];k++) {
-				phys->T[i][k] = 0;
-				phys->s[i][k] = 0;
-			}
-			*/
-			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start
-			
+			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start		
 			REAL CurrentDepth=0;
 			REAL ColumnDepth=ReturnDepth(grid->xv[i],grid->yv[i]);
 			
@@ -196,35 +163,6 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
   // Need to communicate the cell data for type 3 boundaries
   ISendRecvCellData3D(phys->T,grid,myproc,comm);
   ISendRecvCellData3D(phys->s,grid,myproc,comm);
-	
-		
-	// Set the edge array to the value in the boundary array
-   /* ii=-1;
-  int myproc,int myproc,   for(jptr=grid->edgedist[3];jptr<grid->edgedist[4];jptr++) {
-	 jind = jptr-grid->edgedist[2];
-	 j = grid->edgep[jptr];
-	 ib=grid->grad[2*j];
-	 ii+=1;// This is the same as jind...
-	 //printf("ii: %d, jptr: %d, jind: %d, j: %d,ind3edge[ii]: %d\n",ii, jptr,jind,j,bound->ind3edge[ii]);
-	 for(k=grid->ctop[ib];k<grid->Nk[ib];k++) {
-	   phys->boundary_T[jind][k]=bound->T[bound->ind3edge[ii]][k];
-	   phys->boundary_s[jind][k]=bound->S[bound->ind3edge[ii]][k];
-	 }
-   }
-   */
-   // Find the edge index of the boundary cell
-   /*
-   for(nf=0;nf<NFACES;nf++){
-   if(neigh=grid->neigh[i*NFACES+nf]==-1) {
-		ne = grid->edgep[grid->face[i*NFACES+nf]];
-		printf("ne: %d, grid->edgedist[3]: %d\n",ne,grid->edgedist[3]);
-		for(k=grid->ctop[i];k<grid->Nk[i];k++) {
-		phys->boundary_T[grid->edgedist[3]-ne][k] = bound->T[bound->ind3[ii]][k];
-		phys->boundary_s[grid->edgedist[3]-ne][k] = bound->S[bound->ind3[ii]][k];
-		}
-   }
-   }
-   */
 } // End funciton
 
 /*
@@ -238,20 +176,13 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	int i, ii, j, jj, jind, iptr, jptr, n, k;
 	REAL u, v, w, h, rampfac;
 	
-	if (prop->thetaramptime > 0) {
-		rampfac = 1 - exp(-prop->rtime / prop->thetaramptime);//Tidal rampup factor 
-	}
-	else {
-		rampfac = 1.0;
-	}
-
-	// Test
+	rampfac=1;
 	REAL amp = 0.25;
 	REAL omega = 7.27e-5;
 
 	// Update the netcdf boundary data
 	if (prop->netcdfBdy == 1) {
-		printf("The model is using NETCDF for Boundary Velocities\n");
+		printf("Type 1 boundary function is enabled with NETCDF in BoundaryVelocities\n");
 		UpdateBdyNC(prop, grid, myproc, comm);
 	}
 	// Type-2
@@ -270,8 +201,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				phys->boundary_u[jind][k] = bound->boundary_u[k][bound->ind2[ii]] * rampfac;
 				phys->boundary_v[jind][k] = bound->boundary_v[k][bound->ind2[ii]] * rampfac;
 				phys->boundary_w[jind][k] = bound->boundary_w[k][bound->ind2[ii]] * rampfac;
-				// printf("edge: %d,j: %d, k : %d, boundary_u = %f\n",jind,j,k,phys->boundary_u[jind][k]);
-				// printf("bound->boundary_u[k][bound->ind2[ii]]=%f\n",bound->boundary_u[k][bound->ind2[ii]]);
 			}
 		}
 	}
@@ -283,16 +212,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
-			
-			//suntans defualt
-			/*
-			for(k=grid->etop[j];k<grid->Nke[j];k++)
-			{
-				phys->boundary_u[jind][k]=0;
-				phys->boundary_v[jind][k]=0;
-				phys->boundary_w[jind][k]=0;
-			}
-			*/
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.start
 			
 			REAL WaterColumnHeight,HeightCorrectionFactor;	
@@ -303,8 +222,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 				NeighbourCell=grid->grad[2*j+1];
 			if (NeighbourCell==-1)
 			{
-				printf("\n\n\nError. There is something wrong with the grid at jptr=%d. Take a look at the boundaries.c\n\n\n",jptr);
-				return;
+				printf("\n\nError. There is something wrong with the grid at jptr=%d. Take a look at the boundaries.c\n\n\n",jptr);
+				exit(11);
 			}
 			WaterColumnHeight=0;
 			for(k=0;k<grid->Nkc[NeighbourCell];k++)
@@ -335,8 +254,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			//Added by ----Sorush Omidvar---- to implement the tides at open boundaries considering the FrontTidesWindsDelay.end
 		}
 	}
-	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?Start
-	
 	// Type-3
 	if (prop->netcdfBdy) {
 		ii = -1;
@@ -394,8 +311,6 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	ISendRecvCellData3D(phys->uc, grid, myproc, comm);
 	ISendRecvCellData3D(phys->vc, grid, myproc, comm);
 	//ISendRecvCellData3D(phys->wc,grid,myproc,comm);
-	
-	//-----Sorush Omidvar---- ----ATTENTION---- should I keep this?End
 }
 
 /*
@@ -409,91 +324,17 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
  */
 void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 	int j, jptr;
-	int Nc = grid->Nc;
-	int i, iptr, nf, ne, nc1, nc2, neigh;
-	REAL dgf, def1, def2, rampfac;
 
-	if (prop->thetaramptime > 0) {
-		rampfac = 1 - exp(-prop->rtime / prop->thetaramptime);//Rampup factor 
-	}
-	else {
-		rampfac = 1.0;
-	}
+	for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++)
+	{
+		j = grid->edgep[jptr];
+		phys->tau_B[j] = 0;		
+		REAL WindTemp=-1.0*grid->n1[j]*prop->tau_T*(1+sin(2*PI/prop->DiurnalWindPeriod*(prop->rtime+prop->WindTimeLag)))/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from time lag
+		if (prop->rtime<=48*3600)
+			WindTemp*=prop->rtime/(48*3600);// Increasing the wind stress gradually
+		phys->tau_T[j]=WindTemp;
+	}	
 
-	if (prop->metmodel >= 2) {// Interpoalte the spatially variable wind stress onto the edges
-		//Loop through edges and find the cell neighbours
-		// computational edges
-		for (jptr = grid->edgedist[0]; jptr < grid->edgedist[1]; jptr++) {
-			j = grid->edgep[jptr];
-
-			nc1 = grid->grad[2 * j];
-			nc2 = grid->grad[2 * j + 1];
-			if (nc1 == -1) nc1 = nc2;
-			if (nc2 == -1) nc2 = nc1;
-
-			// Note that dgf==dg only when the cells are orthogonal!
-			def1 = grid->def[nc1*grid->maxfaces + grid->gradf[2 * j]];
-			def2 = grid->def[nc2*grid->maxfaces + grid->gradf[2 * j + 1]];
-			dgf = def1 + def2;
-
-			//This assume cells are orthogonal
-			//   phys->tau_T[ne] = (met->tau_x[nc1]*def1/grid->dg[ne] +
-			//	   met->tau_x[nc2]*def2/grid->dg[ne])*grid->n1[ne] + 
-			//       (met->tau_y[nc1]*def1/grid->dg[ne] + 
-			//	met->tau_y[nc2]*def2/grid->dg[ne])*grid->n2[ne];  
-
-			def1 /= dgf;
-			def2 /= dgf;
-			phys->tau_T[j] = (met->tau_x[nc2] * def1 + met->tau_x[nc1] * def2)*grid->n1[j] +
-				(met->tau_y[nc2] * def1 + met->tau_y[nc1] * def2)*grid->n2[j];
-
-			phys->tau_T[j] /= RHO0;
-			phys->tau_T[j] *= rampfac;
-		}
-
-		/* Looping through cells
-		for(i=0;i<Nc;i++){
-	   for(nf=0;nf<grid->nfaces[i];nf++) {
-		   //if((neigh=grid->neigh[i*grid->maxfaces+nf])!=-1) {
-		   ne = grid->face[i*grid->maxfaces+nf];
-
-		   nc1 = grid->grad[2*ne];
-		   nc2 = grid->grad[2*ne+1];
-
-		   //def1 = grid->def[nc1*NFACES+grid->gradf[2*ne]];
-		   //def2 = grid->def[nc2*NFACES+grid->gradf[2*ne+1]];
-		   if(nc1 != -1 && nc2 != -1){
-			   if( grid->gradf[2*ne]==-1 || grid->gradf[2*ne+1]==-1)
-			   printf("Warning gradf==-1, nc1 = %d, nc2 = %d\n",nc1,nc2);
-			   def1 = grid->def[nc1*grid->maxfaces+grid->gradf[2*ne]];
-			   def2 = grid->def[nc2*grid->maxfaces+grid->gradf[2*ne+1]];
-			   //printf("nc1=%d, nc2=%d, ne=%d, grid->gradf[2*ne] = %d, grid->gradf[2*ne+1] = %d\n",nc1,nc2,ne,grid->gradf[2*ne],grid->gradf[2*ne+1]);
-
-			   phys->tau_T[ne] = (met->tau_x[nc1]*def1/grid->dg[ne] +
-			   met->tau_x[nc2]*def2/grid->dg[ne])*grid->n1[ne] +
-			   (met->tau_y[nc1]*def1/grid->dg[ne] +
-			   met->tau_y[nc2]*def2/grid->dg[ne])*grid->n2[ne];
-
-			   phys->tau_T[ne] /= RHO0;
-			   phys->tau_T[ne] *= rampfac;
-		   }
-		   }
-	   //}//end if
-		}
-		*/
-	}
-	else {// Set stress to constant
-		for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++)
-		{
-			j = grid->edgep[jptr];
-			//phys->tau_T[j] = grid->n2[j] * prop->tau_T;//Suntans default
-			phys->tau_B[j] = 0;		
-			REAL WindTemp=-1.0*grid->n1[j]*prop->tau_T*(1+sin(2*PI/prop->DiurnalWindPeriod*(prop->rtime+prop->WindTimeLag)))/2;//Changed by ----Sorush Omidvar---- so that the wind stress is always shoreward and starts from time lag
-			if (prop->rtime<=48*3600)
-				WindTemp*=prop->rtime/(48*3600);// Increasing the wind stress gradually
-			phys->tau_T[j]=WindTemp;
-		}	
-	}
 }
 
 /*

@@ -15,40 +15,21 @@
 #include "sendrecv.h"
 #include "math.h"
 #include "initialization.h"
+#include "stdlib.h"
 
 void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 	int j, jptr, nc1, nc2, k;
 	REAL Coriolis_f, ubar, depth_face;
-	/* This is the sponge layer */
-	/* MR Turned off - rSponge variable not initialized correctly!
-	if(prop->sponge_distance) {
-	  for(jptr=grid->edgedist[0];jptr<grid->edgedist[1];jptr++) {
-		j = grid->edgep[jptr];
-
-		nc1 = grid->grad[2*j];
-		nc2 = grid->grad[2*j+1];
-
-		ubar = 0;
-		for(k=grid->etop[j];k<grid->Nke[j];k++) {
-	  ubar += grid->dzf[j][k]*phys->u[j][k];
-	  depth_face += grid->dzf[j][k];
-		}
-		ubar/=depth_face;
-
-		for(k=grid->etop[j];k<grid->Nke[j];k++)
-	  usource[j][k]-=prop->dt*exp(-4.0*rSponge[j]/prop->sponge_distance)/
-		prop->sponge_decay*(phys->u[j][k]-ubar);
-	  }
-	}
-	*/
 
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.Start
-	int EdgeCounter;
-	if(SpongeCellDistance[0]!=SpongeCellDistance[0])
-		printf("\n\n\nWarning. Initializing of sponge layer is needed.\n\n\n");
-
 	if (prop->RadiationBoundary==1)
 	{
+		if(!SpongeEdgeDistance || !SpongeCellDistance)
+		{
+			printf("\n\nError. Initializing of sponge layer is needed.\n\n\n");
+			exit(10);
+		}
+
 		REAL ColumnDepth,CurrentDepth,RampFactor,SalinityTemporary,ThresholdSalinity;
 		ThresholdSalinity=0.01;
 		int CellCounter, EdgeCounter;
@@ -74,6 +55,10 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 			}
 		}
 	}
+	else{
+		printf("\n\nError.The sponge has been replaced by Sorush Omidvar. Deploy a new sponge.\n");
+		exit(10);
+	}
 	//Added by ----Sorush Omidvar----. This is a replacement for the defult sponge layer. The sponge layer relax isohalines and velocity at the sea side.end
 	
 	/* Coriolis for a 2d problem */
@@ -88,33 +73,6 @@ void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop) {
 				v_coriolis[j][k] = 0.0;
 		}
 	}
-	//----Took out by -----Sorush Omidvar---- since the model is 2d.start
-	/*
-	// Hard-code coriolis here so that it can be zero in the main code
-	Coriolis_f = 7.25e-5;
-
-	for (jptr = grid->edgedist[0]; jptr < grid->edgedist[1]; jptr++) {
-		j = grid->edgep[jptr];
-
-		nc1 = grid->grad[2 * j];
-		nc2 = grid->grad[2 * j + 1];
-
-		for (k = grid->etop[j]; k < grid->Nke[j]; k++)
-			usource[j][k] += prop->dt*Coriolis_f*(v_coriolis[j][k] * grid->n1[j] -
-				InterpToFace(j, k, phys->uc, phys->u, grid)*grid->n2[j]);
-	}
-
-	for (jptr = grid->edgedist[0]; jptr < grid->edgedist[1]; jptr++) {
-		j = grid->edgep[jptr];
-
-		nc1 = grid->grad[2 * j];
-		nc2 = grid->grad[2 * j + 1];
-
-		for (k = grid->etop[j]; k < grid->Nke[j]; k++)
-			v_coriolis[j][k] -= prop->dt*Coriolis_f*InterpToFace(j, k, phys->uc, phys->u, grid);
-	}
-	*/
-	//----Took out by -----Sorush Omidvar---- since the model is 2d.end
 }
 
 /*
@@ -159,14 +117,11 @@ void SaltSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT 
  *
  */
 void InitSponge(gridT *grid, int myproc, propT *prop) {
-	int Nb, p1, p2, mark, g1, g2, k;
+	int Nb, p1, p2, mark, g1, g2;
 	int j, n, NeAll, NpAll;
 	REAL *xb, *yb, *xp, *yp, r2;
 	char str[BUFFERLENGTH];
 	FILE *ifile;
-	
-	if(myproc==0)//Added by ----Sorush Omidvar----. This should be changed later
-		printf("Warning the value for Pycnocline Depth in the calculation of RossbyCurvatureRadius is set to 21 meter in initialization.c.\n");//Added by ----Sorush Omidvar----. This should be changed later
 
 	NeAll = MPI_GetSize(EDGEFILE, "InitSponge", myproc);
 	NpAll = MPI_GetSize(POINTSFILE, "InitSponge", myproc);
@@ -174,9 +129,6 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 	xp = (REAL *)SunMalloc(NpAll * sizeof(REAL), "InitSponge");
 	yp = (REAL *)SunMalloc(NpAll * sizeof(REAL), "InitSponge");
 	rSponge = (REAL *)SunMalloc(grid->Ne * sizeof(REAL), "InitSponge");
-	
-	SpongeCellDistance= (REAL *)SunMalloc(grid->Nc*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----
-	SpongeEdgeDistance= (REAL *)SunMalloc(grid->Ne*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----	
 
 	// Read in points on entire grid
 	ifile = MPI_FOpen(POINTSFILE, "r", "InitSponge", myproc);
@@ -211,29 +163,7 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 		}
 	}
 	fclose(ifile);
-	
-	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. start
-	if(myproc==0)
-	{
-		printf("Sponge Layer Cell Location X=%f, Y=%f\t\n",prop->SpongeCellLocationX,prop->SpongeCellLocationY);
-		printf("Sponge Layer Edge Location X=%f, Y=%f\t\n",prop->SpongeEdgeLocationX,prop->SpongeEdgeLocationY);
-		fflush(stdout);
-	}
-	
-	int CellCounter;
-	for(CellCounter=0;CellCounter<grid->Nc;CellCounter++)
-	{
-		SpongeCellDistance[CellCounter]=pow(prop->SpongeCellLocationX-grid->xv[CellCounter],2)+pow(prop->SpongeCellLocationY-grid->yv[CellCounter],2);
-		SpongeCellDistance[CellCounter]=sqrt(SpongeCellDistance[CellCounter]);
-	}
-	int EdgeCounter;
-	for(EdgeCounter=0;EdgeCounter<grid->Ne;EdgeCounter++)
-	{
-		SpongeEdgeDistance[EdgeCounter]=pow(prop->SpongeEdgeLocationX-grid->xe[EdgeCounter],2)+pow(prop->SpongeEdgeLocationY-grid->ye[EdgeCounter],2);
-		SpongeEdgeDistance[EdgeCounter]=sqrt(SpongeEdgeDistance[EdgeCounter]);
-	}
-	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. end
-	
+
 	// Now compute the minimum distance between the edge on the
 	// local processor and the boundary and place this in rSponge.
 	for (j = 0; j < grid->Ne; j++) {
@@ -247,4 +177,29 @@ void InitSponge(gridT *grid, int myproc, propT *prop) {
 		rSponge[j] = sqrt(rSponge[j]);
 		//    printf("Processor %d: rSponge[%d]=%f\n",myproc,j,rSponge[j]);
 	}
+	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. start
+	if (prop->RadiationBoundary==1)
+	{
+		SpongeCellDistance= (REAL *)SunMalloc(grid->Nc*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----
+		SpongeEdgeDistance= (REAL *)SunMalloc(grid->Ne*sizeof(REAL),"InitSponge");//Added by ----Sorush Omidvar----	
+		if (myproc == 0)
+		{
+			printf("Sponge Layer Cell Location X=%f, Y=%f\t\n", prop->SpongeCellLocationX, prop->SpongeCellLocationY);
+			printf("Sponge Layer Edge Location X=%f, Y=%f\t\n", prop->SpongeEdgeLocationX, prop->SpongeEdgeLocationY);
+			fflush(stdout);
+		}
+		int CellCounter;
+		for (CellCounter = 0; CellCounter < grid->Nc; CellCounter++)
+		{
+			SpongeCellDistance[CellCounter] = pow(prop->SpongeCellLocationX - grid->xv[CellCounter], 2) + pow(prop->SpongeCellLocationY - grid->yv[CellCounter], 2);
+			SpongeCellDistance[CellCounter] = sqrt(SpongeCellDistance[CellCounter]);
+		}
+		int EdgeCounter;
+		for (EdgeCounter = 0; EdgeCounter < grid->Ne; EdgeCounter++)
+		{
+			SpongeEdgeDistance[EdgeCounter] = pow(prop->SpongeEdgeLocationX - grid->xe[EdgeCounter], 2) + pow(prop->SpongeEdgeLocationY - grid->ye[EdgeCounter], 2);
+			SpongeEdgeDistance[EdgeCounter] = sqrt(SpongeEdgeDistance[EdgeCounter]);
+		}
+	}
+	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. end
 }
