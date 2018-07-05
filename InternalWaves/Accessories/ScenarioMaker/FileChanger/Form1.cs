@@ -25,7 +25,7 @@ namespace FileChanger
         {
             FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases*LagCases;
             InitializeComponent();
-            MotherDirectory = @"D:\Test\suntans-9th";
+            MotherDirectory = @"D:\Test\suntans-10th";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
@@ -33,7 +33,7 @@ namespace FileChanger
             string[] Address = new string[FileNumber];
             string[] ExtensionNumber = new string[FileNumber];
             double Tau_T = -1000;
-            double NSteps = 1.21e5;
+            double NSteps = 3.63e5;
             double DiurnalAmplitude = -1000;
             double SemiDiurnalAmplitude = -1000;
             double Pycnocline = -1000;
@@ -83,13 +83,13 @@ namespace FileChanger
                             Tau_T = 1.22 * 0.0012 * Math.Pow(1.5, 2) / 1025;
                             break;
                         case 2:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(3, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(3.0, 2) / 1025;
                             break;
                         case 3:
                             Tau_T = 1.22 * 0.0012 * Math.Pow(4.5, 2) / 1025;
                             break;
                         case 4:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(6, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(6.0, 2) / 1025;
                             break;
                         default:
                             break;
@@ -99,19 +99,19 @@ namespace FileChanger
                         switch (PycnoclineCounter % PycnoclineCases)
                         {
                             case 0:
-                                Pycnocline = 10;
+                                Pycnocline = 10.0;
                                 break;
                             case 1:
                                 Pycnocline = 12.5;
                                 break;
                             case 2:
-                                Pycnocline = 15;
+                                Pycnocline = 15.0;
                                 break;
                             case 3:
                                 Pycnocline = 17.5;
                                 break;
                             case 4:
-                                Pycnocline = 20;
+                                Pycnocline = 20.0;
                                 break;
                             default:
                                 break;
