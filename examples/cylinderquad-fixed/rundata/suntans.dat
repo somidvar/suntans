@@ -113,41 +113,70 @@ DSal							33.6			# Background Salinity used by Omidvar and Woodson salinity=ASa
 WindTimeLag						0			# The lag time between wind and tide in sec used by Omidvar and Woodson
 ########################################################################
 #
+# NetCDF / Meteorological / Boundary parameters
+#
+########################################################################
+outputNetcdf	 	1				# Output data to netcdf format (0 - binary, 1 - netcdf)
+outputNetcdfFile	Result			# Name of the output netcdf file
+starttime           0.0				# start time
+basetime            0.0				# basetime
+metmodel            0     			# metmodel specification (0 for analytical, >0 for read netcdf)
+netcdfBdy           0	  			# 1 - Read the open boundary data from a netcdf file
+readinitialnc		0	  			# 1 - Read initial conditions from a netcdf file, 0 otherwise
+calcage        		0     			# Turn on the age calculation
+calcaverage         0	  			# Calculate averages
+ntaverage           120	  			#
+averageNetcdfFile	iwaves_AVG.nc	#
+# NetCDF / Meteorological / Boundary parameters
+########################################################################
+#
+#
+########################################################################
+outputNetcdf	 	1				# Output data to netcdf format (0 - binary, 1 - netcdf)
+outputNetcdfFile	Result			# Name of the output netcdf file
+starttime           0.0				# start time
+basetime            0.0				# basetime
+metmodel            0     			# metmodel specification (0 for analytical, >0 for read netcdf)
+netcdfBdy           0	  			# 1 - Read the open boundary data from a netcdf file
+readinitialnc		0	  			# 1 - Read initial conditions from a netcdf file, 0 otherwise
+calcage        		0     			# Turn on the age calculation
+calcaverage         0	  			# Calculate averages
+ntaverage           120	  			#
+averageNetcdfFile	iwaves_AVG.nc	#
+########################################################################
+#
 #  Grid Files
 #
 ########################################################################
-pslg   full_circle.dat 	# Planar straight line graph (input)
-points points.dat	# Vertices file (input)
-edges  edges.dat		# Edge file (input)
-cells cells.dat		# Cell centered file (input)
-depth depth.dat		# Depth file for interpolation (if INTERPDEPTH=1) (input)
-nodes nodes.dat   # Node topology information (output)
-celldata celldata.dat	# Cell-centered output (output)
-edgedata edgedata.dat	# Edge-centered output (output)
-vertspace vertspace.dat	# Vertical grid spacing (output)
-topology topology.dat	# Grid topology data
+pslg   		oned.dat    	# Planar straight line graph (input)
+points 		points.dat		# Vertices file (input)
+edges 		edges.dat		# Edge file (input)
+cells 		cells.dat		# Cell centered file (input)
+depth 		depth.dat		# Depth file for interpolation (if INTERPDEPTH=1) (input)
+nodes 		nodes.dat   	# Node topology information (output)
+celldata 	celldata.dat	# Cell-centered output (output)
+edgedata 	edgedata.dat	# Edge-centered output (output)
+vertspace 	vertspace.dat	# Vertical grid spacing (output)
+topology 	topology.dat	# Grid topology data
 ########################################################################
 #
 #  Output Data Files
 #
 ########################################################################
-FreeSurfaceFile   	fs.dat
+FreeSurfaceFile   	    fs.dat
 HorizontalVelocityFile 	u.dat
 VerticalVelocityFile 	w.dat
-CdTFile                 cdt.dat
-CdBFile                 cdb.dat
-SalinityFile 		s.dat
-BGSalinityFile 		s0.dat
-TemperatureFile		T.dat
-PressureFile		q.dat
-VerticalGridFile 	g.dat
-ConserveFile		e.dat
+SalinityFile 			s.dat
+BGSalinityFile 			s0.dat
+TemperatureFile			T.dat
+PressureFile			q.dat
+VerticalGridFile 		g.dat
+ConserveFile			e.dat
 ProgressFile	        step.dat
-StoreFile		store.dat
-StartFile		start.dat
-EddyViscosityFile	nut.dat
+StoreFile				store.dat
+StartFile				start.dat
+EddyViscosityFile		nut.dat
 ScalarDiffusivityFile	kappat.dat
-vwgt                     vwgt.dat
 ########################################################################
 #
 # Input Data Files
@@ -155,9 +184,3 @@ vwgt                     vwgt.dat
 ########################################################################
 InitSalinityFile	sinit.dat
 InitTemperatureFile	Tinit.dat
-InputCdBFile            cdbint.dat
-InputCdTFile            cdtint.dat
-Inputz0BFile            z0bint.dat
-Inputz0TFile            z0tint.dat
-sediment                sedi.dat
-marsh                   marsh.dat
