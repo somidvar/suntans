@@ -64,34 +64,7 @@ int GetDZ(REAL *dz, REAL depth, REAL localdepth, int Nkmax, int myproc) {
  *
  */
 REAL ReturnDepth(REAL x, REAL y) {
-	//Sunatans default
-	/*
-	REAL Ls, xmid, Ds, D0;
-
-	Ls = 30000;
-	xmid = 100000;
-	D0 = 3000;
-	Ds = 200;
-	return D0 - 0.5*(D0 - Ds)*(1 + tanh(4 * (x - xmid) / Ls));
-
-	if (x <= xmid - Ls / 2)
-		return D0;
-	else if (x > xmid + Ls / 2)
-		return Ds;
-	else
-		return D0 - (D0 - Ds)*((x - xmid) / Ls + 0.5);
-	*/
-	
-	//Added by ----Sorush Omidvar---- when the shore is located at x=0.Start
-	/*
-	REAL ABath, BBath, CBath, DBath;
-	ABath = 40;
-    BBath = 0.0009;
-    CBath = 1500;
-    DBath = 35;
-	return ABath*(tanh(-BBath*(-x + CBath))) + DBath;	
-	*/
-	//Added by ----Sorush Omidvar---- when the shore is located at x=0.End
+	//Added by ----Sorush Omidvar---- when the shore is located at x=0.Based on Walter's 2012 paper.start
 	REAL p1,p2,p3,p4,p5;
 	if (x<51)
         return 5;
@@ -138,19 +111,6 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d) {
  *
  */
 REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
-	//Suntans default
-	/*
-	REAL deltaS, alphaS, D_pycnocline;
-
-	deltaS = 0.024;
-	alphaS = 0.0187;
-	D_pycnocline = 20;
-
-	if (z < -D_pycnocline)
-		return deltaS*pow(-z, 0.0187);
-	else
-		return deltaS*pow(D_pycnocline, 0.0187);
-	*/
 	//Added by ----Sorush Omidvar----. Salinity stratification.Start
 	if(z<prop->CSal)
 		return prop->ASal*(tanh(prop->BSal*(0))) + prop->DSal;
