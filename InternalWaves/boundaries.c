@@ -44,7 +44,7 @@ void OpenBoundaryFluxes(REAL **q, REAL **ub, REAL **ubn, gridT *grid, physT *phy
 	int j, jptr, ib, k, forced;
 	REAL **uc = phys->uc, **vc = phys->vc, **ucold = phys->uold, **vcold = phys->vold;
 	REAL z, c0, c1, C0, C1, dt = prop->dt, u0, u0new, uc0, vc0, uc0old, vc0old, ub0;
-	
+
 	for (jptr = grid->edgedist[2]; jptr < grid->edgedist[5]; jptr++) {
 		j = grid->edgep[jptr];
 
@@ -78,7 +78,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("Type 2 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type-2 enabled with NETCDF in BoundaryScalars at %d.\n",jptr);//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -94,7 +94,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 	else {//No NetCDF
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("Type 2 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type-2 enabled without NETCDF in BoundaryScalars at %d.\n",jptr);//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -128,7 +128,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
 		ii=-1;
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type-3 enabled with NETCDF in BoundaryScalars at %d.\n",iptr);//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			ii+=1;
@@ -141,7 +141,7 @@ void BoundaryScalars(gridT *grid, physT *phys, propT *prop, int myproc, MPI_Comm
    }else{
 		for(iptr=grid->celldist[1];iptr<grid->celldist[2];iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryScalars.\n");//Added by ----Sorush Omidvar----
+				printf("Type-2 enabled without NETCDF in BoundaryScalars at %d.\n",iptr);//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			//Added by ----Sorush Omidvar---- to get values for temperature and salinity at the boundary from initial condition. Start		
@@ -182,7 +182,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 
 	// Update the netcdf boundary data
 	if (prop->netcdfBdy == 1) {
-		printf("Type 1 boundary function is enabled with NETCDF in BoundaryVelocities\n");
+		printf("Type-1 enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
 		UpdateBdyNC(prop, grid, myproc, comm);
 	}
 	// Type-2
@@ -190,7 +190,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("Type 2 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("Type-2 enabled with NETCDF in BoundaryVelocities at=%d.\n",jptr);//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -208,7 +208,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		for (jptr = grid->edgedist[2]; jptr < grid->edgedist[3]; jptr++) 
 		{
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("Type 2 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("Type-2 enabled without NETCDF in BoundaryVelocities at=%d.\n",jptr);//Added by ----Sorush Omidvar----
 					
 			jind = jptr - grid->edgedist[2];
 			j = grid->edgep[jptr];
@@ -240,6 +240,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			{
 				VTides+=prop->DiurnalTideAmplitude*0.83*30*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime+30*60);
 				VTides+=prop->SemiDiurnalTideAmplitude*0.69*30*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime+30*60);
+
 				VTides/=HeightCorrectionFactor;
 			}
 			else
@@ -259,7 +260,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("1-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type-3 enabled with NETCDF in BoundaryVelocities at=%d.\n",iptr);//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			ii += 1;
@@ -269,7 +270,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	else { // No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("1-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("1-Type-3 enabled without NETCDF in BoundaryVelocities at=%d.\n",iptr);//Added by ----Sorush Omidvar----
 					
 			i = grid->cellp[iptr];
 			phys->h[i] = 0;
@@ -284,7 +285,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		ii = -1;
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("2-Type 3 boundary function is enabled with NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("2-Type-3 enabled with NETCDF in BoundaryVelocities at=%d.\n",iptr);//Added by ----Sorush Omidvar----
 			
 			i = grid->cellp[iptr];
 			ii += 1;
@@ -298,7 +299,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 	else {//No NetCDF
 		for (iptr = grid->celldist[1]; iptr < grid->celldist[2]; iptr++) {
 			if(prop->n==prop->nstart+1)//Added by ----Sorush Omidvar----
-				printf("2-Type 3 boundary function is enabled without NETCDF in BoundaryVelocities.\n");//Added by ----Sorush Omidvar----
+				printf("2-Type-3 enabled without NETCDF in BoundaryVelocities at=%d.\n",iptr);//Added by ----Sorush Omidvar----
 
 			i = grid->cellp[iptr];
 			for (k = grid->ctop[i]; k < grid->Nk[i]; k++) {
@@ -334,7 +335,6 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 			WindTemp*=prop->rtime/(48*3600);// Increasing the wind stress gradually
 		phys->tau_T[j]=WindTemp;
 	}	
-
 }
 
 /*
@@ -347,7 +347,7 @@ void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	// Step 1) Allocate the structure array data
 	// Moved to phys.c
-	
+
 	// Step 2) Read in the coordinate info
 	if (VERBOSE > 1 && myproc == 0) printf("Reading netcdf boundary coordinate data...\n");
 	ReadBndNCcoord(prop->netcdfBdyFileID, prop, grid, myproc, comm);
@@ -359,8 +359,6 @@ void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 	// Step 4) Read in the forward and backward time steps into the boundary arrays
 	if (VERBOSE > 1 && myproc == 0) printf("Reading netcdf boundary initial data...\n");
 	ReadBdyNC(prop, grid, myproc, comm);
-	
-	
 }//end function
 
 /*
@@ -524,7 +522,6 @@ static void SegmentArea(propT *prop, gridT *grid, int myproc, MPI_Comm comm) {
 			}
 		}//end if
 	}
-
 	//Sum the area across processors
 	MPI_Reduce(bound->localsegarea, bound->segarea, (int)bound->Nseg, MPI_DOUBLE, MPI_SUM, 0, comm);
 	MPI_Bcast(bound->segarea, (int)bound->Nseg, MPI_DOUBLE, 0, comm);
@@ -555,9 +552,7 @@ int isGhostEdge(int j, gridT *grid, int myproc) {
 			isGhost = 1;
 	}
 	//printf("\n");
-
 	return isGhost;
-
 }//End function isGhostEdge
 
 
