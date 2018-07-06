@@ -238,8 +238,8 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 
 			if(prop->rtime>=31*60)
 			{
-				VTides+=prop->DiurnalTideAmplitude*0.83*30*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime+30*60);
-				VTides+=prop->SemiDiurnalTideAmplitude*0.69*30*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime+30*60);
+				VTides+=prop->DiurnalTideAmplitude*0.83*30*sin(2*PI/prop->DiurnalTidePeriod*(prop->rtime-31*60));
+				VTides+=prop->SemiDiurnalTideAmplitude*0.69*30*sin(2*PI/prop->SemiDiurnalTidePeriod*(prop->rtime-31*60));
 
 				VTides/=HeightCorrectionFactor;
 			}
