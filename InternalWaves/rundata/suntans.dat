@@ -70,7 +70,7 @@ ntoutStore						0				# How often to save restart data.  If 0 then just save at t
 TVDsalt							4				# Values for salt and temperature are Van Leer, for turbulence model use first-order upwind
 TVDtemp							4				# Values for salt and temperature are Van Leer, for turbulence model use first-order upwind
 TVDturb							0				# Values for salt and temperature are Van Leer, for turbulence model use first-order upwind
-AB 								3				# Adam-Bashforth for explicit terms
+AB 								2				# Adam-Bashforth for explicit terms
 TVDmomentum						3				# TVD for advection of momentum
 conserveMomentum				1 				# Use conservative momentum advection scheme or not
 thetaM							-1 				# Implicit vertical advection of horizontal momentum when thetaM>0.5. A value of -1 implies that the original conservative scheme is used in UPredictor()
