@@ -103,8 +103,8 @@ SpongeEdgeLocationY				50				# Y Location of Sponge Layer
 DiurnalTidePeriod				86148			# Diurnal tidal priod
 SemiDiurnalTidePeriod			44712			# Semi-Diurnal tidal priod
 DiurnalWindPeriod				86400			# Diurnal Wind Period
-DiurnalTideAmplitude			0		# Diurnal Tidal amplitude at sea-side for satisfying SSH and UBT=0.004 m/s at 15 m is -0.01817
-SemiDiurnalTideAmplitude		-0.04675		# Semi-Diurnal Tidal amplitude at sea-side for satisfying SSH and UBT=0.006 m/s at 15 m is -0.04675
+DiurnalTideU0					0				# Diurnal Tidal amplitude at sea-side for satisfying SSH and UBT=0.004 m/s at 15 m is -0.01817
+SemiDiurnalTideU0				-0.04675		# Semi-Diurnal Tidal amplitude at sea-side for satisfying SSH and UBT=0.006 m/s at 15 m is -0.04675
 tau_T							0			# Wind shear stress
 ASal							1.3				# Salinity range variation Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal
 BSal							0.14			# Salinity gradient used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal or Salinity=ASal*pow(-Z or CSal,BSal)+DSal

@@ -4102,8 +4102,8 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->DiurnalTidePeriod = MPI_GetValue(DATAFILE,"DiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->SemiDiurnalTidePeriod = MPI_GetValue(DATAFILE,"SemiDiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->DiurnalWindPeriod = MPI_GetValue(DATAFILE,"DiurnalWindPeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-  (*prop)->DiurnalTideAmplitude = MPI_GetValue(DATAFILE,"DiurnalTideAmplitude","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SemiDiurnalTideAmplitude = MPI_GetValue(DATAFILE,"SemiDiurnalTideAmplitude","ReadProperties",myproc);//Added by ----Sorush Omidvar  
+  (*prop)->DiurnalTideU0 = MPI_GetValue(DATAFILE,"DiurnalTideU0","ReadProperties",myproc);//Added by ----Sorush Omidvar
+  (*prop)->SemiDiurnalTideU0 = MPI_GetValue(DATAFILE,"SemiDiurnalTideU0","ReadProperties",myproc);//Added by ----Sorush Omidvar  
 
   (*prop)->ASal = MPI_GetValue(DATAFILE,"ASal","ReadProperties",myproc);//Added by ----Sorush Omidvar
   (*prop)->BSal = MPI_GetValue(DATAFILE,"BSal","ReadProperties",myproc);//Added by ----Sorush Omidvar

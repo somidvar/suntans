@@ -23,8 +23,8 @@ const int prettyplot_DEFAULT=0;
 const REAL DiurnalTidePeriod_DEFAULT=23.93*3600;
 const REAL SemiDiurnalTidePeriod_DEFAULT=12.42*3600;
 const REAL DiurnalWindPeriod_DEFAULT=24*3600;
-const REAL DiurnalTideAmplitude_DEFAULT=0;
-const REAL SemiDiurnalTideAmplitude_DEFAULT=0;
+const REAL DiurnalTideU0_DEFAULT=0;
+const REAL SemiDiurnalTideU0_DEFAULT=0;
 
 //Added by ----Sorush Omidvar----default value for salinity function used by Omidvar and Woodson
 const REAL ASal_DEFAULT=0;

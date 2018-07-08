@@ -232,22 +232,22 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 			HeightCorrectionFactor=(WaterColumnHeight+phys->h[NeighbourCell])/WaterColumnHeight;//To keep the velocity equal between ebb and flood
 			REAL UTides,VTides;
 			UTides=VTides=0;
-			UTides+=prop->DiurnalTideAmplitude*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
-			UTides+=prop->SemiDiurnalTideAmplitude*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
+			UTides+=prop->DiurnalTideU0*sin(2*PI/prop->DiurnalTidePeriod*prop->rtime);
+			UTides+=prop->SemiDiurnalTideU0*sin(2*PI/prop->SemiDiurnalTidePeriod*prop->rtime);
 			UTides/=HeightCorrectionFactor;
 
 			if(prop->rtime>=29*60)
 			{
 				REAL VTideV0;
 				
-				if (prop->DiurnalTideAmplitude!=0)
-					VTideV0=(0.72-41.1927*-1*prop->DiurnalTideAmplitude)/0.2773;
+				if (prop->DiurnalTideU0!=0)
+					VTideV0=(0.72-41.1927*-1*prop->DiurnalTideU0)/0.2773;
 				else
 					VTideV0=0;	
 				VTides+=VTideV0*sin(2*PI/prop->DiurnalTidePeriod*(prop->rtime-29*60));
 				
-				if (prop->SemiDiurnalTideAmplitude!=0)
-					VTideV0=(0.98-21.3796*-1*prop->SemiDiurnalTideAmplitude)/0.14395;
+				if (prop->SemiDiurnalTideU0!=0)
+					VTideV0=(0.98-21.3796*-1*prop->SemiDiurnalTideU0)/0.14395;
 				else
 					VTideV0=0;	
 				VTides+=VTideV0*sin(2*PI/prop->SemiDiurnalTidePeriod*(prop->rtime-29*60));

@@ -21,7 +21,7 @@ SUNPLOT=$SUNTANSHOME/sunplot
 maindatadir=rundata
 datadir=data
 
-NUMPROCS=1
+NUMPROCS=24
 
 if [ -z "$MPIHOME" ] ; then
     EXEC=$SUN

@@ -293,12 +293,12 @@ double GetDefaultValue(char *str, int *status) {
     return DiurnalWindPeriod_DEFAULT;
   }    
  //Added by ----Sorush Omidvar----
-  else if(!strcmp(str,"DiurnalTideAmplitude")) {
-    return DiurnalTideAmplitude_DEFAULT;
+  else if(!strcmp(str,"DiurnalTideU0")) {
+    return DiurnalTideU0_DEFAULT;
   }    
  //Added by ----Sorush Omidvar----
-  else if(!strcmp(str,"SemiDiurnalTideAmplitude")) {
-    return SemiDiurnalTideAmplitude_DEFAULT;
+  else if(!strcmp(str,"SemiDiurnalTideU0")) {
+    return SemiDiurnalTideU0_DEFAULT;
   }    
  //Added by ----Sorush Omidvar----
   else if(!strcmp(str,"ASal")) {
