@@ -18,9 +18,9 @@ clear all;
 close all;
 clc
 
-CaseNumber='90402';
-%DataPath='D:\suntans-9th-90402\InternalWaves\data\Result_0000.nc';
-DataPath='C:\Result_0000.nc';
+CaseNumber='90394';
+%DataPath='D:\suntans-9th-90394\InternalWaves\data\Result_0000.nc';
+DataPath='D:\Result_000015.nc';
 OutputAddress='C:\';
 KnuH=1;
 KappaH=0;
@@ -28,8 +28,8 @@ g=9.8;
 InterpRes=5;
 XEndIndex=Inf;
 %TimeStartIndex=1009;
-TimeStartIndex=1009;
-TimeEndIndex=2426;
+TimeStartIndex=1;
+TimeEndIndex=Inf;
 
 AnalysisSpeed=1;
 FPSMovie=30;
@@ -85,10 +85,10 @@ SapeloFlag=0;
     UH=squeeze(nansum(UC.*Z3DDiff,2))./HTotal;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
-    RhoB=mean(Density,3)-Rho0;
-    RhoPrime=Density-RhoB-Rho0;
-%     disp('EPPrime calculation is started')
-%     [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
+    RhoB=squeeze(Density(end,:,:))-Rho0;
+    RhoPrime=Density-Rho0-permute(repmat(RhoB,1,1,size(X,1)),[3,1,2]);
+    disp('EPPrime calculation is started')
+    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
     
     disp('EPPrime calculation is done')
 
@@ -267,6 +267,7 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
     %calculated. After that, the resolution was reduced to the normal. This
     %process has been done to capture the small displacment of isopycanls
     %and also not to interfere with the original vertical resolution.
+    
     if(SapeloFlag)
         c = parcluster('local');
         c.NumWorkers = 12;
@@ -277,67 +278,65 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
         end
     end
 
-    ZInterp=linspace(ZC(1),ZC(end),InterpRes*size(ZC,1));
+    ZInterp=linspace(ZC(1),ZC(end),InterpRes*size(ZC,1)-InterpRes+1);
     ZInterp=ZInterp';
+    
     EPPrimeCell=cell(size(X,1),1);
     DensityCell=cell(size(X,1),1);
-    RhoBCell=cell(size(X,1),1);
-    ZCCell=cell(size(X,1),1);
+    ZCCellNoInterp=cell(size(X,1),1);
+    ZCCellInterp=cell(size(X,1),1);
     IsopycnalDislocationCell=cell(size(X,1),1);
-
+    RhoBCell=cell(size(X,1),1);
+    
+    DepthX=0*squeeze(Density(:,:,1))+1;
+    DepthX=cumsum(DepthX,2);
+    DepthX=nanmax(DepthX,[],2);
+    
+    [ZCGrid,TimeGrid]=meshgrid(Time,ZC);
+    [ZInterpGrid,TimeInterpGrid]=meshgrid(Time,ZInterp);
+    RhoBInterp=interp2(ZCGrid,TimeGrid,RhoB,ZInterpGrid,TimeInterpGrid,'linear');%Linear gives fair result while spline,cause numerical oscillation
     for i=1:size(X,1)
-        EPPrimeCell{i}=nan(size(ZInterp,1),size(Time,1));
+        EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
-        RhoBCell{i}=squeeze(RhoB(i,:));
-        ZCCell{i}=ZC;
-        IsopycnalDislocationCell{i}=nan(size(ZInterp,1),size(Time,1));
-    end
+        ZCCellNoInterp{i}=ZC(1:DepthX(i));
+        ZCCellInterp{i}=ZInterp(1:InterpRes*(DepthX(i)-1)+1);
+        RhoBCell{i}=RhoBInterp(1:InterpRes*(DepthX(i)-1)+1,:);
+        IsopycnalDislocationCell{i}=nan(size(ZC,1),size(Time,1));
+    end  
+    
     CreatedParallelPool = parallel.pool.DataQueue;	
     afterEach(CreatedParallelPool, @UpdateStatusDisp);	
     ProgressStatus=0;
-
-    parfor i=1:size(X,1)
-        RhoBWorker=RhoBCell{i};
-        ZCWorker=ZCCell{i};
-        NotNanDepthIndexZC=find(~isnan(RhoBWorker));
-        NotNanDepthIndexZC=NotNanDepthIndexZC(end);
-        [~,NotNanDepthIndexZ]=nanmin(abs(ZInterp-ZCWorker(NotNanDepthIndexZC)));
-        RhoBInterp=interp1(ZCWorker(1:NotNanDepthIndexZC),...
-            squeeze(RhoBWorker(1:NotNanDepthIndexZC)),...
-            ZInterp(1:NotNanDepthIndexZ),'linear');%Linear interpolation gives better results in campirson to spline, because spline can cause numerical oscillation as it makes the profile smoother
         
-        if size(RhoBInterp,1)~=size(ZInterp,1)
-            RhoBInterp(end+1:size(ZInterp,1))=nan;
-        end
-        for k=1:size(Time,1)
+    parfor i=1:size(X,1)
+        ZCWorker=ZCCellNoInterp{i};
+        ZInterpWorker=ZCCellInterp{i};
+        for k=1:size(Time,1)           
             RhoProfile=squeeze(DensityCell{i}(:,k));
-            RhoProfileInterp=interp1(ZCWorker(1:NotNanDepthIndexZC),...
-                squeeze(RhoProfile(1:NotNanDepthIndexZC)),...
-                ZInterp(1:NotNanDepthIndexZ),'linear');%%Linear interpolation gives better results in campirson to spline, because spline can cause numerical oscillation as it makes the profile smoother
-            if size(RhoProfileInterp,1)~=size(ZInterp,1)
-                RhoProfileInterp(end+1:size(ZInterp,1))=nan;
-            end
-            for j=1:size(ZInterp,1)
-                if ~isnan(RhoBInterp(j))
-                    [~,TrackedDensityIndex]=nanmin(abs(RhoProfileInterp(j)-RhoBInterp));
-                    TrackedDensityIndex=TrackedDensityIndex(1);
-                    Dislocation=ZInterp(j)-ZInterp(TrackedDensityIndex);%if Dislocation<0 downwelling and if dislocation>0 upwelling
-                    Max=ZInterp(j);
-                    Min=ZInterp(j)-Dislocation;
-                    [~,MaxIndex]=nanmin(abs(ZInterp-Max));
-                    [~,MinIndex]=nanmin(abs(ZInterp-Min));
-                    if MinIndex>MaxIndex%upwelling
-                        EPPrimeCell{i}(j,k)=RhoProfileInterp(j)*Dislocation*g...
-                        +g*trapz(ZInterp(MaxIndex:MinIndex),RhoBInterp(MaxIndex:MinIndex));
-                        
-                    elseif MinIndex<MaxIndex%downwelling
-                        EPPrimeCell{i}(j,k)=RhoProfileInterp(j)*Dislocation*g...
-                        -g*trapz(ZInterp(MinIndex:MaxIndex),RhoBInterp(MinIndex:MaxIndex));
-                    elseif MaxIndex==MinIndex
-                        EPPrimeCell{i}(j,k)=0;
-                    end
-                    IsopycnalDislocationCell{i}(j,k)=Dislocation;
+            RhoBInterpWorker=squeeze(RhoBCell{i}(:,k));
+            for j=1:size(ZCWorker,1)
+                [~,TrackedDensityIndex]=nanmin(abs(RhoProfile(j)-RhoBInterpWorker));
+                TrackedDensityIndex=TrackedDensityIndex(1);
+                Dislocation=ZInterpWorker((j-1)*InterpRes+1)-ZInterpWorker(TrackedDensityIndex);%if Dislocation<0 downwelling and if dislocation>0 upwelling
+
+%                 if abs(RhoProfile(j)-RhoBInterpWorker(TrackedDensityIndex))/RhoProfile(j)<0.01%Anything less than 1% is just numerical oscillation and shall be removed
+%                     Dislocation=0;
+%                 end
+                if Dislocation==0
+                    EPPrimeCell{i}(j,k)=0;
                 end
+                if Dislocation<0%Downwelling
+                    MaxBoundary=(j-1)*InterpRes+1;
+                    MinBoundary=TrackedDensityIndex;
+                    EPPrimeCell{i}(j,k)=-g*trapz(-ZInterpWorker(MinBoundary:MaxBoundary),...
+                        RhoProfile(j)-RhoBInterpWorker(MinBoundary:MaxBoundary));
+                elseif Dislocation>0%Upwelling
+                    MaxBoundary=TrackedDensityIndex;
+                    MinBoundary=(j-1)*InterpRes+1;
+                    EPPrimeCell{i}(j,k)=+g*trapz(-ZInterpWorker(MinBoundary:MaxBoundary),...
+                        RhoProfile(j)-RhoBInterpWorker(MinBoundary:MaxBoundary));
+                end
+                IsopycnalDislocationCell{i}(j,k)=Dislocation;
             end
         end 
         send(CreatedParallelPool,i);
@@ -348,22 +347,11 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
         ProgressStatus= ProgressStatus + 1;	
     end
 
-    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZInterp,1),size(Time,1)),EPPrimeCell,'un',0);
+    EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
     EPPrime= cell2mat(EPPrimeConv);
-    EPPrimeTemp=nan(size(X,1),size(ZC,1),size(Time,1));
  
-    WaveAmplitudeConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZInterp,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
+    WaveAmplitudeConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
     IsopycnalDislocation= cell2mat(WaveAmplitudeConv);
-    IsopycanlDislocationTemp=nan(size(X,1),size(ZC,1),size(Time,1));
-    
-    for j=1:size(ZC,1)
-        [~,ZInterptoZCIndex]=nanmin(abs(ZC(j)-ZInterp));
-        ZInterptoZCIndex=ZInterptoZCIndex(1);
-        EPPrimeTemp(:,j,:)=EPPrime(:,ZInterptoZCIndex,:);
-        IsopycanlDislocationTemp(:,j,:)=IsopycnalDislocation(:,ZInterptoZCIndex,:);
-    end
-    EPPrime=EPPrimeTemp;
-    IsopycnalDislocation=IsopycanlDislocationTemp;
 end
 
 function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
