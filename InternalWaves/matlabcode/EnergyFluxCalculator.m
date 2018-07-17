@@ -20,12 +20,12 @@ clc
 
 CaseNumber='90394';
 %DataPath='D:\suntans-9th-90394\InternalWaves\data\Result_0000.nc';
-DataPath='D:\Result_000015.nc';
+DataPath='D:\Result_0000.nc';
 OutputAddress='C:\';
 KnuH=1;
 KappaH=0;
 g=9.8;
-InterpRes=5;
+InterpRes=1;
 XEndIndex=Inf;
 %TimeStartIndex=1009;
 TimeStartIndex=1;
@@ -87,9 +87,19 @@ SapeloFlag=0;
 
     RhoB=squeeze(Density(end,:,:))-Rho0;
     RhoPrime=Density-Rho0-permute(repmat(RhoB,1,1,size(X,1)),[3,1,2]);
+    
+%     This data are just for testing
+%     X=[100;200];
+%     Density=[0;0.8;1.8;0.2;1.8]+Rho0;
+%     Density=permute(repmat(Density,1,2,3),[2,1,3]);
+%     RhoB=repmat([0;0.2;0.8;1.6;1.8],1,3);
+%     Time=[1;2;3];
+%     ZC=[-7;-14;-21;-28;-35];
+%     Eta=[100,100;200,200;300,300]';
+%     InterpRes=1;
+    
     disp('EPPrime calculation is started')
     [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
-    
     disp('EPPrime calculation is done')
 
 %     %Creating the output NETCDF
@@ -126,17 +136,11 @@ SapeloFlag=0;
     WBottom=-DiffCustom(ZPlusD.*WBottom,1)./XXZTDiff;
     clear ZPlusD;
     ConversionRate=RhoPrime.*WBottom*g-DiffCustom(Q,2)./Z3DDiff.*WBottom;
+       
     WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Barotropic Vertical Velocity','Kang 7','m/s');
     clear WBottom;
     WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic','17','Wat/m^3');
-        
-    DepthFinder=ones(size(X,1),size(ZC,1))+squeeze(UC(:,:,1));
-    DepthFinder=nansum(DepthFinder,2);
-    for i=1:size(X,1)
-        ConversionRate(i,DepthFinder(i)-1:DepthFinder(i),:)=0;%Making the 
-        %cells above the bed zero to avoid numerical 
-    end
-    clear DepthFinder;   
+ 
     ConversionRate=squeeze(sum((ConversionRate).*Z3DDiff,2));
     WritingParameter(NETCDFID,ConversionRate,'ConversionDI','NC_FLOAT',[XDimID,TimeDimID],'Time-averaged depth-integrated conversion rate of barotropic to baroclinic.The two cells above the bed was set to zero to avoid numerical issues due to buldging of isopycanls','-','Wat/m^2');
 
@@ -295,19 +299,19 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
     [ZCGrid,TimeGrid]=meshgrid(Time,ZC);
     [ZInterpGrid,TimeInterpGrid]=meshgrid(Time,ZInterp);
     RhoBInterp=interp2(ZCGrid,TimeGrid,RhoB,ZInterpGrid,TimeInterpGrid,'linear');%Linear gives fair result while spline,cause numerical oscillation
+    
     for i=1:size(X,1)
         EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
         ZCCellNoInterp{i}=ZC(1:DepthX(i));
-        ZCCellInterp{i}=ZInterp(1:InterpRes*(DepthX(i)-1)+1);
-        RhoBCell{i}=RhoBInterp(1:InterpRes*(DepthX(i)-1)+1,:);
+        ZCCellInterp{i}=ZInterp(:);
+        RhoBCell{i}=RhoBInterp(:,:);
         IsopycnalDislocationCell{i}=nan(size(ZC,1),size(Time,1));
     end  
-    
     CreatedParallelPool = parallel.pool.DataQueue;	
     afterEach(CreatedParallelPool, @UpdateStatusDisp);	
     ProgressStatus=0;
-        
+
     parfor i=1:size(X,1)
         ZCWorker=ZCCellNoInterp{i};
         ZInterpWorker=ZCCellInterp{i};
@@ -318,14 +322,10 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
                 [~,TrackedDensityIndex]=nanmin(abs(RhoProfile(j)-RhoBInterpWorker));
                 TrackedDensityIndex=TrackedDensityIndex(1);
                 Dislocation=ZInterpWorker((j-1)*InterpRes+1)-ZInterpWorker(TrackedDensityIndex);%if Dislocation<0 downwelling and if dislocation>0 upwelling
-
-%                 if abs(RhoProfile(j)-RhoBInterpWorker(TrackedDensityIndex))/RhoProfile(j)<0.01%Anything less than 1% is just numerical oscillation and shall be removed
-%                     Dislocation=0;
-%                 end
+                
                 if Dislocation==0
                     EPPrimeCell{i}(j,k)=0;
-                end
-                if Dislocation<0%Downwelling
+                elseif Dislocation<0%Downwelling
                     MaxBoundary=(j-1)*InterpRes+1;
                     MinBoundary=TrackedDensityIndex;
                     EPPrimeCell{i}(j,k)=-g*trapz(-ZInterpWorker(MinBoundary:MaxBoundary),...
@@ -349,7 +349,7 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
 
     EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
     EPPrime= cell2mat(EPPrimeConv);
- 
+    
     WaveAmplitudeConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
     IsopycnalDislocation= cell2mat(WaveAmplitudeConv);
 end
