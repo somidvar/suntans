@@ -112,10 +112,7 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d) {
  */
 REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
 	//Added by ----Sorush Omidvar----. Salinity stratification.Start
-	if(z<prop->CSal)
-		return prop->ASal*(tanh(prop->BSal*(0))) + prop->DSal;
-	else
-		return prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
+	return prop->ASal*(tanh(prop->BSal*(z -prop->CSal))) + prop->DSal;
  	//Added by ----Sorush Omidvar----. Salinity stratification.End
  }
 
