@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -q batch
+#PBS -q aquari_q
 #PBS -N IW-10001
 #PBS -l nodes=1:ppn=48:aquarinode
 #PBS -l walltime=24:00:00
@@ -9,11 +9,7 @@
 
 cd $PBS_O_WORKDIR
 
-ml MVAPICH2/2.2-GCC-5.4.0-2.26
-ml SUNTANS/20180305-foss-2016b
-ml HDF5/1.8.7-foss-2016b
-ml netCDF/4.1.3-foss-2016b-v4
-ml gmvolf/2016b
+ml SUNTANS/20180305-gmvolf-2016b
 
 echo
 echo "Job ID: $PBS_JOBID"

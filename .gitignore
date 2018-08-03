@@ -17,5 +17,9 @@ InternalWaves/data
 InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.m
 InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.sh
 
+#The report files of SAPELO
+/home/omidvar/suntans/InternalWaves/IW-10001.e*
+/home/omidvar/suntans/InternalWaves/IW-10001.o*
+
 #The plots made for the presentations
 InternalWaves/matlabcode/*.png
