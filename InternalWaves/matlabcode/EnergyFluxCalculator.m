@@ -20,15 +20,15 @@ clc
 
 CaseNumber='90394';
 %DataPath='D:\suntans-9th-90394\InternalWaves\data\Result_0000.nc';
+%DataPath='D:\M2Wind.nc';
 DataPath='D:\Result_0000.nc';
 OutputAddress='C:\';
-KnuH=1;
+KnuH=0;
 KappaH=0;
 g=9.8;
 InterpRes=1;
-XEndIndex=Inf;
-%TimeStartIndex=1009;
-TimeStartIndex=1;
+XEndIndex=50;
+TimeStartIndex=8942*2;
 TimeEndIndex=Inf;
 
 AnalysisSpeed=1;
@@ -44,7 +44,8 @@ SemiDiurnalTideOmega=2*pi()/12.4/3600;
 SapeloFlag=0;
 
     
-    Rho0=1025;%Setting the reference density    
+    B0=0.14;
+    Rho0=1025.9;%Setting the reference density    
     CountTimeIndex=TimeEndIndex-TimeStartIndex;
     disp('Reading the NETCDF')
     X=ncread(DataPath,'xv',1,XEndIndex);
@@ -86,9 +87,9 @@ SapeloFlag=0;
     UPrime=UC-permute(repmat(UH,1,1,size(ZC,1)),[1 3 2]);
 
     RhoB=squeeze(Density(end,:,:))-Rho0;
-    RhoPrime=Density-Rho0-permute(repmat(RhoB,1,1,size(X,1)),[3,1,2]);
-    
-%     This data are just for testing
+    RhoPrime=Density-Rho0-permute(repmat(RhoB,1,1,size(X,1)),[3,1,2]);    
+ 
+    %     This data are just for testing
 %     X=[100;200];
 %     Density=[0;0.8;1.8;0.2;1.8]+Rho0;
 %     Density=permute(repmat(Density,1,2,3),[2,1,3]);
@@ -99,9 +100,9 @@ SapeloFlag=0;
 %     InterpRes=1;
     
     disp('EPPrime calculation is started')
-    [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
-    disp('EPPrime calculation is done')
-
+    [EPPrime,IsopycnalDislocation,RhoBZMinusDelta,RhoBDiffTInt]=EPCalculator(X,ZC,Time,Density-Rho0,RhoB,InterpRes,g,SapeloFlag);
+    disp('EPPrime calculation is done')      
+    
 %     %Creating the output NETCDF
 %     netcdf.setDefaultFormat('FORMAT_NETCDF4'); 
 %     mode = netcdf.getConstant('CLOBBER');
@@ -130,13 +131,43 @@ SapeloFlag=0;
 %     WritingParameter(NETCDFID,IsopycnalDislocation,'Dislocation','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Displacement of isopycnals at X,Z and T. Positive value are upwelling','12','m');
 %     WritingParameter(NETCDFID,UH,'UH','NC_FLOAT',[XDimID,TimeDimID],'Barotropic horizontal velocity','6','m/s');
     
+    
     ZPlusD=Z3D+UC*0;
     ZPlusD=ZPlusD-repmat(nanmin(ZPlusD,[],2),1,size(ZC,1),1);
     WBottom=permute(repmat(UH,1,1,size(ZC,1)),[1,3,2]);
     WBottom=-DiffCustom(ZPlusD.*WBottom,1)./XXZTDiff;
     clear ZPlusD;
-    ConversionRate=RhoPrime.*WBottom*g-DiffCustom(Q,2)./Z3DDiff.*WBottom;
-       
+    
+    %ConversionRate1=RhoPrime.*WBottom*g-DiffCustom(Q,2)./Z3DDiff.*WBottom;
+    
+    
+    RhoBVerticalvelocity=diff(Eta,1,2)./permute(repmat(diff(Time,1),1,size(X,1)),[2,1]);
+    RhoBVerticalvelocity(:,end+1)=RhoBVerticalvelocity(:,end);
+    RhoBVerticalvelocity=permute(repmat(RhoBVerticalvelocity,1,1,size(ZC,1)),[1,3,2]);
+    
+    ConversionRate=RhoPrime.*W*g-g*RhoBVerticalvelocity.*(RhoPrime+permute(repmat(RhoB,1,1,size(X,1)),[3,1,2])-RhoBZMinusDelta);
+    
+    
+    HMinusZ=repmat(ZC,1,size(X,1))';
+    HMinusZ=HMinusZ+0*squeeze(UC(:,:,1));
+    H0=nanmin(HMinusZ,[],2);
+    H0=repmat(H0,1,size(ZC,1))+squeeze(UC(:,:,1))*0;
+    HMinusZ=H0-HMinusZ;
+    HMinusZ=repmat(HMinusZ,1,1,size(Time,1));
+    H0=repmat(H0,1,1,size(Time,1));
+    
+    TemporalImbalance=g*RhoBVerticalvelocity.*IsopycnalDislocation./H0;
+    TemporalImbalanceTemp1=diff(RhoB,1,1)./repmat(diff(ZC,1),1,size(Time,1));
+    TemporalImbalanceTemp1(end+1,:)=TemporalImbalanceTemp1(end,:);
+    TemporalImbalanceTemp1=permute(repmat(TemporalImbalanceTemp1,1,1,size(X,1)),[3,1,2]);
+    TemporalImbalanceTemp1=B0*(HMinusZ+IsopycnalDislocation).*TemporalImbalanceTemp1;
+    TemporalImbalanceTemp2=1+permute(repmat(Eta,1,1,size(ZC,1)),[1,3,2])./H0;
+    TemporalImbalanceTemp2=permute(repmat(RhoB,1,1,size(X,1)),[3,1,2]).*(-1/TemporalImbalanceTemp2+B0);
+    TemporalImbalance=TemporalImbalance.*(TemporalImbalanceTemp1+TemporalImbalanceTemp2);
+    
+    
+    ConversionRateT=ConversionRate+TemporalImbalance;
+    ConversionRateKang=RhoPrime.*W*g;
     WritingParameter(NETCDFID,WBottom,'WBot','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Barotropic Vertical Velocity','Kang 7','m/s');
     clear WBottom;
     WritingParameter(NETCDFID,ConversionRate,'Conversion','NC_FLOAT',[XDimID,ZCDimID,TimeDimID],'Conversion rate of barotropic to baroclinic','17','Wat/m^3');
@@ -265,7 +296,7 @@ function WritingParameter(NETCDFID,ParameterName,ParameterNETCDFName,ParameterTy
     disp([ParameterNETCDFName,' is saved in the NETCDF'])
 end
 
-function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,InterpRes,g,SapeloFlag)   
+function [EPPrime,IsopycnalDislocation,RhoBZMinusDelta,RhoBDiffTInt]=EPCalculator(X,ZC,Time,Density,RhoB,InterpRes,g,SapeloFlag)   
     %To better calculate the APE, teh whole density profile is interpolated
     %at each time step for each X. The  the displacement of isopycanls was
     %calculated. After that, the resolution was reduced to the normal. This
@@ -282,7 +313,7 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
         end
     end
 
-    ZInterp=linspace(ZC(1),ZC(end),InterpRes*size(ZC,1)-InterpRes+1);
+    ZInterp=linspace(ZC(1),ZC(end),InterpRes*(size(ZC,1)-1)+1);
     ZInterp=ZInterp';
     
     EPPrimeCell=cell(size(X,1),1);
@@ -290,6 +321,8 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
     ZCCellNoInterp=cell(size(X,1),1);
     ZCCellInterp=cell(size(X,1),1);
     IsopycnalDislocationCell=cell(size(X,1),1);
+    RhoBZMinusDeltaCell=cell(size(X,1),1);
+    RhoBDiffTIntCell=cell(size(X,1),1);
     RhoBCell=cell(size(X,1),1);
     
     DepthX=0*squeeze(Density(:,:,1))+1;
@@ -299,14 +332,17 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
     [ZCGrid,TimeGrid]=meshgrid(Time,ZC);
     [ZInterpGrid,TimeInterpGrid]=meshgrid(Time,ZInterp);
     RhoBInterp=interp2(ZCGrid,TimeGrid,RhoB,ZInterpGrid,TimeInterpGrid,'linear');%Linear gives fair result while spline,cause numerical oscillation
-    
+    RhoBDiffTIntTemp=diff(RhoB,1,2)./permute(repmat(diff(Time),1,size(ZC,1)),[2,1]);
+    RhoBDiffTIntTemp(:,end+1)=RhoBDiffTIntTemp(:,end);
     for i=1:size(X,1)
         EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
         ZCCellNoInterp{i}=ZC(1:DepthX(i));
         ZCCellInterp{i}=ZInterp(:);
         RhoBCell{i}=RhoBInterp(:,:);
+        RhoBDiffTIntCell{i}=RhoBDiffTIntTemp+0*squeeze(Density(i,:,:));
         IsopycnalDislocationCell{i}=nan(size(ZC,1),size(Time,1));
+        RhoBZMinusDeltaCell{i}=nan(size(ZC,1),size(Time,1));
     end  
     CreatedParallelPool = parallel.pool.DataQueue;	
     afterEach(CreatedParallelPool, @UpdateStatusDisp);	
@@ -325,17 +361,22 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
                 
                 if Dislocation==0
                     EPPrimeCell{i}(j,k)=0;
+                    RhoBZMinusDeltaCell{i}(j,k)=RhoBInterpWorker((j-1)*InterpRes+1);
                 elseif Dislocation<0%Downwelling
                     MaxBoundary=(j-1)*InterpRes+1;
                     MinBoundary=TrackedDensityIndex;
                     EPPrimeCell{i}(j,k)=-g*trapz(-ZInterpWorker(MinBoundary:MaxBoundary),...
                         RhoProfile(j)-RhoBInterpWorker(MinBoundary:MaxBoundary));
+                    RhoBZMinusDeltaCell{i}(j,k)=RhoBInterpWorker((MinBoundary-1)*InterpRes+1);
+                    
                 elseif Dislocation>0%Upwelling
                     MaxBoundary=TrackedDensityIndex;
                     MinBoundary=(j-1)*InterpRes+1;
                     EPPrimeCell{i}(j,k)=+g*trapz(-ZInterpWorker(MinBoundary:MaxBoundary),...
                         RhoProfile(j)-RhoBInterpWorker(MinBoundary:MaxBoundary));
+                    RhoBZMinusDeltaCell{i}(j,k)=RhoBInterpWorker((MaxBoundary-1)*InterpRes+1);
                 end
+                RhoBDiffTIntCell{i}(j,k)=-g*abs(Dislocation)*RhoBDiffTIntCell{i}(j,k);
                 IsopycnalDislocationCell{i}(j,k)=Dislocation;
             end
         end 
@@ -350,8 +391,14 @@ function [EPPrime,IsopycnalDislocation]=EPCalculator(X,ZC,Time,Density,RhoB,Inte
     EPPrimeConv = cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),EPPrimeCell,'un',0);
     EPPrime= cell2mat(EPPrimeConv);
     
-    WaveAmplitudeConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
-    IsopycnalDislocation= cell2mat(WaveAmplitudeConv);
+    IsopycnalDislocationConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),IsopycnalDislocationCell,'un',0);
+    IsopycnalDislocation= cell2mat(IsopycnalDislocationConv);
+    
+    RhoBZMinusDeltaConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),RhoBZMinusDeltaCell,'un',0);
+    RhoBZMinusDelta= cell2mat(RhoBZMinusDeltaConv);
+    
+    RhoBDiffTIntCellConv= cellfun(@(TempCellConv)reshape(TempCellConv,1,size(ZC,1),size(Time,1)),RhoBDiffTIntCell,'un',0);
+    RhoBDiffTInt= cell2mat(RhoBDiffTIntCellConv);
 end
 
 function [DataTruncated,XTruncated]=DataXTruncator(Data,X)
