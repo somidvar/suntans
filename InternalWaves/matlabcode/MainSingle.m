@@ -25,20 +25,23 @@ else
     OutputAddress='D:\';
 end
 
-if exist(DataPath,'file')==0
-    disp('There is no NETCDF file to process')
-    return;
-end
+% if exist(DataPath,'file')==0
+%     disp('There is no NETCDF file to process')
+%     return;
+% end
 
+
+DataPath='D:\step\InternalWaves\data\Result_0000.nc';
+OutputAddress='D:\';
 KnuH=1;
 KappaH=0;
 g=9.8;
 InterpRes=5;
 XEndIndex=Inf;
-TimeStartIndex=1009;
+TimeStartIndex=1;
 TimeEndIndex=Inf;
 
-AnalysisSpeed=1;
+AnalysisSpeed=5;
 FPSMovie=30;
 
 ModelTimeOffset=0;
@@ -47,7 +50,8 @@ WindLag=21;
 WindTauMax=0;
 WindOmega=2*pi/(24*3600);
 DiurnalTideOmega=2*pi()/23.93/3600;
-SemiDiurnalTideOmega=2*pi()/12.4/3600;
+%SemiDiurnalTideOmega=2*pi()/12.4/3600;
+SemiDiurnalTideOmega=0;
 
 WavePlotter(AnalysisSpeed,FPSMovie,DiurnalTideOmega,SemiDiurnalTideOmega,WindOmega,WindTauMax,DataPath,OutputAddress,CaseNumber,ModelTimeOffset,WindLag);
 %EnergyFluxCalculator(DataPath,CaseNumber,OutputAddress,...

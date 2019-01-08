@@ -23,3 +23,6 @@ InternalWaves/Accessories/MatlabFilechanger/MATLABSUB/*.sh
 
 #The plots made for the presentations
 InternalWaves/matlabcode/*.png
+
+#Temporary databases
+InternalWaves/matlabcode/APEResult.mat

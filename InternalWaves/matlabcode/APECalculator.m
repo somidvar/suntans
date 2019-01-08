@@ -10,7 +10,7 @@ set(groot,'defaulttextinterpreter','latex');
 set(groot, 'defaultAxesTickLabelInterpreter','latex');  
 set(groot, 'defaultLegendInterpreter','latex');  
 
-CaseNumberTotal=11;
+CaseNumberTotal=12;
 ConversionTimeVarientCell=cell(CaseNumberTotal,1);
 ConversionTimeVarient1Cell=cell(CaseNumberTotal,1);
 ConversionTemporalCell=cell(CaseNumberTotal,1);
@@ -21,28 +21,31 @@ RhoBConventionalCell=cell(CaseNumberTotal,1);
 RhoBTimeVarientCell=cell(CaseNumberTotal,1);
 RhoPrimeConventionalCell=cell(CaseNumberTotal,1);
 RhoPrimeTimeVarientCell=cell(CaseNumberTotal,1);
+DensityCell=cell(CaseNumberTotal,1);
 WCell=cell(CaseNumberTotal,1);
 
 ZCCell=cell(CaseNumberTotal,1);
 TimeCell=cell(CaseNumberTotal,1);
-
-for i=1:11
-    DataPath=strcat('\\Engr668595d\WD2\case',num2str(i),'\InternalWaves\data\Result_0000.nc');
-    InterpRes=10;
-    TimeStartIndex=8943-floor(44710/60)*4;
-    TimeSTR=2;
+for i=8:8%CaseNumberTotal
+    DataPath=strcat('\\Engr668595d\WD2\APE3\case',num2str(i),'\InternalWaves\data\Result_0000.nc');
+    DataPath=strcat('D:\step\InternalWaves\data\Result_0000.nc');
+    InterpRes=50;
+    TimeStartIndex=5962-floor(44710/60*1);
+    TimeSTR=1;
     [IsopycnalDislocationCell{i},ConversionTimeVarientCell{i},ConversionTimeVarient1Cell{i},...
         ConversionTemporalCell{i},ConversionConventionalCell{i},...
         ZCCell{i},TimeCell{i},RhoBConventionalCell{i},RhoBTimeVarientCell{i},...
-        RhoPrimeConventionalCell{i},RhoPrimeTimeVarientCell{i},WCell{i}]=...
+        RhoPrimeConventionalCell{i},RhoPrimeTimeVarientCell{i},WCell{i},DensityCell{i}]=...
         ConversionCalculator(DataPath,InterpRes,TimeStartIndex,TimeSTR,i);
         
         figure;
         hold on;
-        plot(TimeCell{i}/3600,0.1*squeeze(nansum(ConversionConventionalCell{i}(1,:,:),2)),'-','linewidth',3,'Color','black');
-        plot(TimeCell{i}/3600,0.1*squeeze(nansum(ConversionTimeVarientCell{i}(1,:,:),2)),'-','linewidth',3,'Color','blue');
-        plot(TimeCell{i}/3600,0.1*squeeze(nansum(ConversionTimeVarient1Cell{i}(1,:,:),2)),':','linewidth',1.5,'Color','blue');
-        plot(TimeCell{i}/3600,0.1*squeeze(nansum(ConversionTemporalCell{i}(1,:,:),2)),'--','linewidth',1.5,'Color','blue');
+        RangeLimit=50;
+        RangeIndex=find(squeeze(WCell{i}(1,:,1)*0==0),1,'last')-RangeLimit;
+        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionConventionalCell{i}(1,RangeLimit:RangeIndex,:)),1),'-','linewidth',3,'Color','black');
+        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTimeVarientCell{i}(1,RangeLimit:RangeIndex,:)),1),'-','linewidth',3,'Color','blue');
+        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTimeVarient1Cell{i}(1,RangeLimit:RangeIndex,:)),1),':','linewidth',1.5,'Color','blue');
+        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTemporalCell{i}(1,RangeLimit:RangeIndex,:)),1),'--','linewidth',1.5,'Color','blue');
         legend('Conventional Conversion','Time-Varient Net Conversion','Time-Varient Conversion Term','Time-Varient Temporal Term')
         xlabel('Time (hr)','Interpreter','latex');
         ylabel('Depth-integrated conversion rate');
@@ -52,11 +55,11 @@ for i=1:11
 
         figure;
         hold on;
-        plot(squeeze(nanmean(ConversionConventionalCell{i}(1,:,:),3)),ZCCell{i},'-','linewidth',3,'Color','black');
-        plot(squeeze(nanmean(ConversionTimeVarientCell{i}(1,:,:),3)),ZCCell{i},'-','linewidth',3,'Color','blue');
-        plot(squeeze(nanmean(ConversionTimeVarient1Cell{i}(1,:,:),3)),ZCCell{i},':','linewidth',3,'Color','blue');
-        plot(squeeze(nanmean(ConversionTemporalCell{i}(1,:,:),3)),ZCCell{i},'--','linewidth',3,'Color','blue');
-        legend('Conventional Method','Time-Varient $\rho_b$')
+        plot(trapz(TimeCell{i},squeeze(ConversionConventionalCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'-','linewidth',3,'Color','black');
+        plot(trapz(TimeCell{i},squeeze(ConversionTimeVarientCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'-','linewidth',3,'Color','blue');
+        plot(trapz(TimeCell{i},squeeze(ConversionTimeVarient1Cell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),':','linewidth',3,'Color','blue');
+        plot(trapz(TimeCell{i},squeeze(ConversionTemporalCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'--','linewidth',3,'Color','blue');
+        legend('Conventional Conversion','Time-Varient Net Conversion','Time-Varient Conversion Term','Time-Varient Temporal Term')
         xlabel('Time-averaged conversion rate','Interpreter','latex');
         ylabel('Depth (m)');
         grid on
@@ -64,47 +67,88 @@ for i=1:11
         set(gca,'FontWeight','bold');
 end
 
-save('APEResult.mat')
+%save('APEResult.mat')
 
 function [IsopycnalDislocation,ConversionTimeVarient,ConversionTimeVarient1,...
         ConversionTemporal,ConversionConventional,ZC,Time,RhoBConventional...
-        ,RhoBTimeVarient,RhoPrimeConventional,RhoPrimeTimeVarient,W]=...
+        ,RhoBTimeVarient,RhoPrimeConventional,RhoPrimeTimeVarient,W,Density]=...
         ConversionCalculator(DataPath,InterpRes,TimeStartIndex,TimeSTR,CaseNumber)
-
-    DomainLength=ncread(DataPath,'xv');
-    DomainLengthIndex=size(DomainLength,1);
-    if CaseNumber==1 || CaseNumber==3
-        XStartIndex=193;
-    elseif CaseNumber==2 || CaseNumber==4 || CaseNumber==9 ||CaseNumber==10 || CaseNumber==11
-        XStartIndex=793;
-    elseif CaseNumber==5 || CaseNumber==7
-        XStartIndex=33;
-    elseif CaseNumber==6 || CaseNumber==8
-        XStartIndex=133;
-    end 
+    
+    XStartIndex=991;    
     
     g=9.8;
     XEndIndex=2;
-    TimeEndIndex=Inf;
-    Rho0=1024;%Setting the reference density    
-    CountTimeIndex=TimeEndIndex-TimeStartIndex;
+    Rho0=1025;%Setting the reference density
+    ZMaxIndex=Inf;
+    %CountTimeIndex=floor(44710/60/TimeSTR*2);
+    CountTimeIndex=Inf;
     disp(strcat('Reading the NETCDF at',DataPath))
     X=ncread(DataPath,'xv',XStartIndex,XEndIndex);
     Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex,TimeSTR);
-    ZC=-ncread(DataPath,'z_r');%I changed ZC and ZE sign to make it compatible with formulas
-%     Eta=ncread(DataPath,'eta',[XStartIndex,TimeStartIndex],[XEndIndex,CountTimeIndex],[1,TimeSTR]);
-%     disp('Eta is done')
-    Density=1000*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex],[1,1,TimeSTR])+1000;
+    ZC=-ncread(DataPath,'z_r',1,ZMaxIndex);%I changed ZC and ZE sign to make it compatible with formulas
+    Eta=ncread(DataPath,'eta',[XStartIndex,TimeStartIndex],[XEndIndex,CountTimeIndex],[1,TimeSTR]);
+    disp('Eta is done')
+    Density=1000*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeSTR])+1000;
     disp('Density is done')
 
-    RhoBTimeVarient=squeeze(1000*ncread(DataPath,'rho',[DomainLengthIndex,1,TimeStartIndex],[1,Inf,CountTimeIndex],[1,1,TimeSTR])+1000-Rho0);
-    disp('RhoB is done')
-
-    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,Inf,CountTimeIndex],[1,1,TimeSTR]);
+%     LastXIndex=ncinfo(DataPath);
+%     LastXIndex=LastXIndex.Dimensions(1).Length;
+%     RhoBTimeVarient=squeeze(1000*ncread(DataPath,'rho',[LastXIndex,1,TimeStartIndex],[1,Inf,CountTimeIndex],[1,1,TimeSTR])+1000-Rho0);
+%     RhoBConventional=trapz(Time,RhoBTimeVarient,2)/(Time(end)-Time(1));
+%     RhoBConventional=permute(repmat(RhoBConventional,1,size(Time,1),size(X,1)),[3,1,2]);
+%     disp('RhoB is done')
+    
+    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeSTR]);
     W=movsum(W,2,2)/2;%Averaging the w over two horizontal edge to get the center value
     W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
     disp('W is done')
+    
 
+    RhoBConventional=-0.2002*tanh(0.08265*(ZC+45.89))+1025-Rho0;
+    RhoBConventional=permute(repmat(RhoBConventional,1,size(Time,1),size(X,1)),[3,1,2]);
+
+    Epsilon=repmat(squeeze(Eta(1,:)),size(ZC,1),1);
+    Epsilon=Epsilon.*repmat(1-ZC/-250,1,size(Time,1));
+    RhoBTimeVarient=-0.2002*tanh(0.08265*((repmat(ZC,1,size(Time,1))-Epsilon+45.89)))+1025-Rho0;
+%     switch(CaseNumber)
+%         case 1
+%             RhoBConventional=permute(repmat(-0.0185*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
+%             RhoBTimeVarient=-0.0185*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
+%         case 2
+%             RhoBConventional=permute(repmat(-0.00904*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
+%             RhoBTimeVarient=-0.009904*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
+%         case 3
+%             RhoBConventional=permute(repmat(-0.01385*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
+%             RhoBTimeVarient=-0.01385*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
+%         case 4
+%             RhoBConventional=permute(repmat(-0.01368*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
+%             RhoBTimeVarient=-0.01368*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
+%         case 5
+%             RhoBConventional=
+%         case 6
+%             RhoBConventional=
+%         case 7
+%             RhoBConventional=
+%         case 8
+%             RhoBConventional=
+%         case 9
+%             RhoBConventional=
+%         case 10
+%             RhoBConventional=
+%         case 11
+%             RhoBConventional=
+%         case 12
+%             RhoBConventional=;
+%    end
+
+    %     Epsilon=repmat(squeeze(Eta(1,:)),size(ZC,1),1);
+%     Epsilon=Epsilon.*repmat(1-ZC/-200.05,1,size(Time,1));
+%     RhoBTimeVarient=-0.3*tanh(0.03282*(repmat(ZC,1,size(Time,1))+49.24-Epsilon))+1;
+    RhoPrimeConventional=Density-Rho0-RhoBConventional;
+    ConversionConventional=RhoPrimeConventional*g.*W;   
+    
+
+    
     disp('NETCDF reading is compeleted')
     disp('EPPrime calculation is started')
     [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density-Rho0,RhoBTimeVarient,InterpRes,g);
@@ -114,9 +158,6 @@ function [IsopycnalDislocation,ConversionTimeVarient,ConversionTimeVarient1,...
 %     RhoBVerticalvelocity(:,end+1)=RhoBVerticalvelocity(:,end);
 %     RhoBVerticalvelocity=permute(repmat(RhoBVerticalvelocity,1,1,size(ZC,1)),[1,3,2]);
 
-    RhoBConventional=permute(repmat(mean(RhoBTimeVarient,2),1,size(Time,1),size(X,1)),[3,1,2]);
-    RhoPrimeConventional=Density-Rho0-RhoBConventional;
-    ConversionConventional=RhoPrimeConventional*g.*W;
 
     RhoPrimeTimeVarient=Density-Rho0-permute(repmat(RhoBTimeVarient,1,1,size(X,1)),[3,1,2]); 
     ConversionTimeVarient1=RhoPrimeTimeVarient.*W*g;
@@ -155,17 +196,16 @@ function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Densit
     CreatedParallelPool = parallel.pool.DataQueue;	
     afterEach(CreatedParallelPool, @UpdateStatusDisp);	
     ProgressStatus=0;
-    disp('The top and bottom 20 layers were dismissed for the sake of numerical stability')
+    disp('For the sake of numerical, the top and bottom 5 meters are dissmissed')
+    RangeLimit=50;
     parfor i=1:size(X,1)
         ZCWorker=ZCCell{i};
         for k=1:size(Time,1)           
             RhoWorker=squeeze(DensityCell{i}(:,k));
             RhoBWorker=squeeze(RhoBCell{i}(:,k));
             RhoBDiffTTempWorker=RhoBDiffTTempCell{i}(:,k);
-            for j=20:size(ZCWorker,1)-20%Sometimes the value of the Rho at top and bottom cells cannot be find in Rhob
-                if isnan(RhoWorker(j))%To speed up
-                    continue;
-                end
+            LastJIndex=find(RhoWorker*0==0,1,'last');
+            for j=RangeLimit:LastJIndex%Sometimes the value of the Rho at top and bottom cells cannot be find in Rhob
                 if RhoWorker(j)==RhoBWorker(j)%sometimes the density is constant with depth, to avoid numerical fluctation of Rho in finding the equivalant in RhoB this criteria was enforced
                     Dislocation=0;
                     ConversionTemporalCell{i}(j,k)=0;
