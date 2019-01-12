@@ -90,82 +90,64 @@ function [IsopycnalDislocation,ConversionTimeVarient,ConversionTimeVarient1,...
     disp('Eta is done')
     Density=1000*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeSTR])+1000;
     disp('Density is done')
-
-%     LastXIndex=ncinfo(DataPath);
-%     LastXIndex=LastXIndex.Dimensions(1).Length;
-%     RhoBTimeVarient=squeeze(1000*ncread(DataPath,'rho',[LastXIndex,1,TimeStartIndex],[1,Inf,CountTimeIndex],[1,1,TimeSTR])+1000-Rho0);
-%     RhoBConventional=trapz(Time,RhoBTimeVarient,2)/(Time(end)-Time(1));
-%     RhoBConventional=permute(repmat(RhoBConventional,1,size(Time,1),size(X,1)),[3,1,2]);
-%     disp('RhoB is done')
-    
+   
     W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeSTR]);
     W=movsum(W,2,2)/2;%Averaging the w over two horizontal edge to get the center value
     W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
     disp('W is done')
     
 
-    RhoBConventional=-0.2002*tanh(0.08265*(ZC+45.89))+1025-Rho0;
-    RhoBConventional=permute(repmat(RhoBConventional,1,size(Time,1),size(X,1)),[3,1,2]);
-
-    Epsilon=repmat(squeeze(Eta(1,:)),size(ZC,1),1);
-    Epsilon=Epsilon.*repmat(1-ZC/-250,1,size(Time,1));
-    RhoBTimeVarient=-0.2002*tanh(0.08265*((repmat(ZC,1,size(Time,1))-Epsilon+45.89)))+1025-Rho0;
-%     switch(CaseNumber)
-%         case 1
-%             RhoBConventional=permute(repmat(-0.0185*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
-%             RhoBTimeVarient=-0.0185*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
-%         case 2
-%             RhoBConventional=permute(repmat(-0.00904*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
-%             RhoBTimeVarient=-0.009904*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
-%         case 3
-%             RhoBConventional=permute(repmat(-0.01385*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
-%             RhoBTimeVarient=-0.01385*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
-%         case 4
-%             RhoBConventional=permute(repmat(-0.01368*ZC+1025,1,size(Time,1),size(X,1)),[3,1,2])-Rho0;
-%             RhoBTimeVarient=-0.01368*(repmat(ZC,1,size(Time,1))-Epsilon)+1025-Rho0;
-%         case 5
-%             RhoBConventional=
-%         case 6
-%             RhoBConventional=
-%         case 7
-%             RhoBConventional=
-%         case 8
-%             RhoBConventional=
-%         case 9
-%             RhoBConventional=
-%         case 10
-%             RhoBConventional=
-%         case 11
-%             RhoBConventional=
-%         case 12
-%             RhoBConventional=;
-%    end
-
-    %     Epsilon=repmat(squeeze(Eta(1,:)),size(ZC,1),1);
-%     Epsilon=Epsilon.*repmat(1-ZC/-200.05,1,size(Time,1));
-%     RhoBTimeVarient=-0.3*tanh(0.03282*(repmat(ZC,1,size(Time,1))+49.24-Epsilon))+1;
-    RhoPrimeConventional=Density-Rho0-RhoBConventional;
-    ConversionConventional=RhoPrimeConventional*g.*W;   
+    ZCTemp=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+Density*0;
+    DepthTemp=repmat(nanmin(ZCTemp,[],2),1,size(ZC,1),1);
+    Epsilon=permute(repmat(squeeze(Eta(1,:)),size(X,1),1,size(ZC,1)),[1,3,2]);
+    Epsilon=Epsilon.*(1-ZCTemp./DepthTemp);  
     
-
+    RhoBConventional=trapz(Time,Density,3)/(Time(end)-Time(1))-Rho0;
+    RhoBConventional=repmat(RhoBConventional,1,1,size(Time,1));   
+    RhoPrimeConventional=Density-Rho0-RhoBConventional;
+    
+    RhoBTimeVarient=nan(size(X,1),size(ZC,1),size(Time,1));
+    for i=1:size(X,1)
+        RhoBConvLocal=squeeze(RhoBConventional(i,:,1))';
+        LastJIndex=find(RhoBConvLocal*0==0,1,'last');
+        for j=1:LastJIndex
+            if(RhoBConvLocal(j)-RhoBConvLocal(1)>0.001)%Finding the mixed layer depth
+                FirstJIndex=j;
+                break;
+            end
+        end
+        F = @(RhoBCoe,RhoData)RhoBCoe(1)*RhoData.^RhoBCoe(2)+RhoBCoe(3);%The fitted profile is Density=a*ZC^b+c
+        ZZZ0=[0.024*1000,0.0187,0];%Initial guess is based on the initial conditions
+        options = optimoptions('lsqcurvefit','Display','off');
+        [RhoBCoeff,~,~,~,~] = lsqcurvefit(F,ZZZ0,-ZC(FirstJIndex:LastJIndex),RhoBConvLocal(FirstJIndex:LastJIndex)...
+            ,[],[],options); 
+        RhoBFittedA=RhoBCoeff(1);
+        RhoBFittedB=RhoBCoeff(2);
+        RhoBFittedC=RhoBCoeff(3);
+        for j=1:size(ZC,1)
+            for k=1:size(Time,1)
+                if(j<FirstJIndex)
+                    RhoBTimeVarient(i,j,k)=RhoBConvLocal(j);
+                elseif(~isnan(Epsilon(i,j,k)))
+                    RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,j,k))^RhoBFittedB+RhoBFittedC;
+                else
+                    RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,LastJIndex,k))^RhoBFittedB+RhoBFittedC;
+                end
+            end
+        end
+    end 
     
     disp('NETCDF reading is compeleted')
     disp('EPPrime calculation is started')
     [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density-Rho0,RhoBTimeVarient,InterpRes,g);
     disp('EPPrime calculation is done')      
 
-%     RhoBVerticalvelocity=diff(Eta,1,2)./permute(repmat(diff(Time,1),1,size(X,1)),[2,1]);
-%     RhoBVerticalvelocity(:,end+1)=RhoBVerticalvelocity(:,end);
-%     RhoBVerticalvelocity=permute(repmat(RhoBVerticalvelocity,1,1,size(ZC,1)),[1,3,2]);
-
-
-    RhoPrimeTimeVarient=Density-Rho0-permute(repmat(RhoBTimeVarient,1,1,size(X,1)),[3,1,2]); 
+    RhoPrimeTimeVarient=Density-Rho0-RhoBTimeVarient;
     ConversionTimeVarient1=RhoPrimeTimeVarient.*W*g;
     ConversionTimeVarient=ConversionTimeVarient1+ConversionTemporal;  
+    ConversionConventional=RhoPrimeConventional*g.*W;  
     disp('Done')
 end
-
-
 
 function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density,RhoB,InterpRes,g)   
     %To better calculate the APE, teh whole density profile is interpolated
@@ -182,34 +164,42 @@ function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Densit
     RhoBCell=cell(size(X,1),1);
     RhoBDiffTTempCell=cell(size(X,1),1);
        
-    RhoBDiffTTemp=diff(RhoB,1,2)./permute(repmat(diff(Time),1,size(ZC,1)),[2,1]);
-    RhoBDiffTTemp(:,end+1)=RhoBDiffTTemp(:,end);
+    RhoBDiffTTemp=diff(RhoB,1,3)./permute(repmat(diff(Time),1,size(X,1),size(ZC,1)),[2,3,1]);
+    RhoBDiffTTemp(:,:,end+1)=RhoBDiffTTemp(:,:,end);
     for i=1:size(X,1)
         %EPPrimeCell{i}=nan(size(ZC,1),size(Time,1));
         DensityCell{i}=squeeze(Density(i,:,:));
         ZCCell{i}=ZC;
-        RhoBCell{i}=RhoB;
+        RhoBCell{i}=squeeze(RhoB(i,:,:));
         ConversionTemporalCell{i}=nan(size(ZC,1),size(Time,1));
         IsopycnalDislocationCell{i}=nan(size(ZC,1),size(Time,1));
-        RhoBDiffTTempCell{i}=RhoBDiffTTemp;
+        RhoBDiffTTempCell{i}=squeeze(RhoBDiffTTemp(i,:,:));
     end  
     CreatedParallelPool = parallel.pool.DataQueue;	
     afterEach(CreatedParallelPool, @UpdateStatusDisp);	
     ProgressStatus=0;
-    disp('For the sake of numerical, the top and bottom 5 meters are dissmissed')
-    RangeLimit=50;
+    disp('For the sake of numerical, the top 5 meters are dissmissed')
+    RangeLimit=8;
     parfor i=1:size(X,1)
         ZCWorker=ZCCell{i};
         for k=1:size(Time,1)           
             RhoWorker=squeeze(DensityCell{i}(:,k));
             RhoBWorker=squeeze(RhoBCell{i}(:,k));
             RhoBDiffTTempWorker=RhoBDiffTTempCell{i}(:,k);
+            
             LastJIndex=find(RhoWorker*0==0,1,'last');
+            RhoWorker=RhoWorker(1:LastJIndex);
+            RhoBWorker=RhoBWorker(1:end);%RhoB is extended to the full ZC so that the bottom layers can be calculated more precisely
+            RhoBDiffTTempWorker=RhoBDiffTTempWorker(1:end);
+            ZCWorker=ZCWorker(1:end);
             for j=RangeLimit:LastJIndex%Sometimes the value of the Rho at top and bottom cells cannot be find in Rhob
-                if RhoWorker(j)==RhoBWorker(j)%sometimes the density is constant with depth, to avoid numerical fluctation of Rho in finding the equivalant in RhoB this criteria was enforced
+                if (abs(RhoWorker(j)-RhoBWorker(j))<0.001)%sometimes the density is constant with depth, to avoid numerical fluctation of Rho in finding the equivalant in RhoB this criteria was enforced
                     Dislocation=0;
                     ConversionTemporalCell{i}(j,k)=0;
                     %EPPrimeCell{i}(j,k)=0;
+                elseif (RhoWorker(j)<RhoBWorker(1) || RhoWorker(j)>RhoBWorker(end))%The density profile does not have this value
+                    Dislocation=0;
+                    ConversionTemporalCell{i}(j,k)=0;
                 else
                     [RhoBWorkerUnique,RhoBWorkerUniqueIndex]=unique(RhoBWorker);
                     Dislocation=ZCWorker(j)-interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');%if Dislocation<0 downwelling and if dislocation>0 upwelling                                  
@@ -217,7 +207,6 @@ function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Densit
                         TopBoundary=interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');
                         BotBoundary=ZCWorker(j);
                         ZCInterp=linspace(TopBoundary,BotBoundary,InterpRes);
-                        %RhoBInterp=interp1(ZCWorker,RhoBWorker,ZCInterp,'linear');
                         %EPPrimeCell{i}(j,k)=-g*trapz(-ZCInterp,RhoWorker(j)-RhoBInterp);
                         RhoBDiffTTempInterp=interp1(ZCWorker,RhoBDiffTTempWorker,ZCInterp,'linear');
                         ConversionTemporalCell{i}(j,k)=+g*trapz(-ZCInterp,RhoBDiffTTempInterp);                    
@@ -225,13 +214,15 @@ function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Densit
                         TopBoundary=ZCWorker(j);
                         BotBoundary=interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');
                         ZCInterp=linspace(TopBoundary,BotBoundary,InterpRes);
-                        %RhoBInterp=interp1(ZCWorker,RhoBWorker,ZCInterp,'linear');
                         %EPPrimeCell{i}(j,k)=+g*trapz(-ZCInterp,RhoWorker(j)-RhoBInterp);
                         RhoBDiffTTempInterp=interp1(ZCWorker,RhoBDiffTTempWorker,ZCInterp,'linear');
                         ConversionTemporalCell{i}(j,k)=-g*trapz(-ZCInterp,RhoBDiffTTempInterp);
                     end
-                    IsopycnalDislocationCell{i}(j,k)=Dislocation;
+                    if(isnan(Dislocation))
+                        disp('Error!!! Error in dislocation calculation. The density could not be found')
+                    end
                 end
+                IsopycnalDislocationCell{i}(j,k)=Dislocation;
             end
         end 
         send(CreatedParallelPool,i);
