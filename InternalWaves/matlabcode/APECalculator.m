@@ -6,116 +6,80 @@ clear all;
 close all;
 clc
 
+ntout=20;
+Nkmax=300;
+XSize=800;
+TimeProcessStartIndex=2389;
+TimeProcessEndIndex=2986;
+TimeStr=1;
+XProcessStartIndex=1;    
+XProcessEndIndex=800;
+XStr=1;
+DataPathRead='D:\VM\Test\iwaves\data';
+DataPathWrite='D:\';
+
+NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,XSize,...
+TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEndIndex,XStr)
+
 set(groot,'defaulttextinterpreter','latex');  
 set(groot, 'defaultAxesTickLabelInterpreter','latex');  
 set(groot, 'defaultLegendInterpreter','latex');  
 
-CaseNumberTotal=12;
-ConversionTimeVarientCell=cell(CaseNumberTotal,1);
-ConversionTimeVarient1Cell=cell(CaseNumberTotal,1);
-ConversionTemporalCell=cell(CaseNumberTotal,1);
-ConversionConventionalCell=cell(CaseNumberTotal,1);
+DataPath='D:\example.nc';
+InterpRes=50;
+TimeStartIndex=1;
+CountTimeIndex=Inf;
+TimeStr=1;
+XStartIndex=1;    
+XEndIndex=Inf;
+ZMaxIndex=Inf;
+g=9.8;
+Rho0=1000;%Setting the reference density
+RhoBTypeString='power';
 
-IsopycnalDislocationCell=cell(CaseNumberTotal,1);
-RhoBConventionalCell=cell(CaseNumberTotal,1);
-RhoBTimeVarientCell=cell(CaseNumberTotal,1);
-RhoPrimeConventionalCell=cell(CaseNumberTotal,1);
-RhoPrimeTimeVarientCell=cell(CaseNumberTotal,1);
-DensityCell=cell(CaseNumberTotal,1);
-WCell=cell(CaseNumberTotal,1);
+disp(strcat('Reading the NETCDF at',DataPath))
+X=ncread(DataPath,'xv',XStartIndex,XEndIndex);
+Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex,TimeStr);
+ZC=-ncread(DataPath,'z_r',1,ZMaxIndex);%I changed ZC and ZE sign to make it compatible with formulas
+Eta=ncread(DataPath,'eta',[XStartIndex,TimeStartIndex],[XEndIndex,CountTimeIndex],[1,TimeStr]);
+disp('Eta is done')
+Density=Rho0*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr])+Rho0;
+disp('Density is done')
 
-ZCCell=cell(CaseNumberTotal,1);
-TimeCell=cell(CaseNumberTotal,1);
-for i=8:8%CaseNumberTotal
-    DataPath=strcat('\\Engr668595d\WD2\APE3\case',num2str(i),'\InternalWaves\data\Result_0000.nc');
-    DataPath=strcat('D:\step\InternalWaves\data\Result_0000.nc');
-    InterpRes=50;
-    TimeStartIndex=5962-floor(44710/60*1);
-    TimeSTR=1;
-    [IsopycnalDislocationCell{i},ConversionTimeVarientCell{i},ConversionTimeVarient1Cell{i},...
-        ConversionTemporalCell{i},ConversionConventionalCell{i},...
-        ZCCell{i},TimeCell{i},RhoBConventionalCell{i},RhoBTimeVarientCell{i},...
-        RhoPrimeConventionalCell{i},RhoPrimeTimeVarientCell{i},WCell{i},DensityCell{i}]=...
-        ConversionCalculator(DataPath,InterpRes,TimeStartIndex,TimeSTR,i);
-        
-        figure;
-        hold on;
-        RangeLimit=50;
-        RangeIndex=find(squeeze(WCell{i}(1,:,1)*0==0),1,'last')-RangeLimit;
-        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionConventionalCell{i}(1,RangeLimit:RangeIndex,:)),1),'-','linewidth',3,'Color','black');
-        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTimeVarientCell{i}(1,RangeLimit:RangeIndex,:)),1),'-','linewidth',3,'Color','blue');
-        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTimeVarient1Cell{i}(1,RangeLimit:RangeIndex,:)),1),':','linewidth',1.5,'Color','blue');
-        plot(TimeCell{i}/3600,trapz(-ZCCell{i}(RangeLimit:RangeIndex),squeeze(ConversionTemporalCell{i}(1,RangeLimit:RangeIndex,:)),1),'--','linewidth',1.5,'Color','blue');
-        legend('Conventional Conversion','Time-Varient Net Conversion','Time-Varient Conversion Term','Time-Varient Temporal Term')
-        xlabel('Time (hr)','Interpreter','latex');
-        ylabel('Depth-integrated conversion rate');
-        grid on
-        set(gca,'fontsize',18);
-        set(gca,'FontWeight','bold');
-
-        figure;
-        hold on;
-        plot(trapz(TimeCell{i},squeeze(ConversionConventionalCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'-','linewidth',3,'Color','black');
-        plot(trapz(TimeCell{i},squeeze(ConversionTimeVarientCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'-','linewidth',3,'Color','blue');
-        plot(trapz(TimeCell{i},squeeze(ConversionTimeVarient1Cell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),':','linewidth',3,'Color','blue');
-        plot(trapz(TimeCell{i},squeeze(ConversionTemporalCell{i}(1,RangeLimit:RangeIndex,:)),2)/(TimeCell{i}(end)-TimeCell{i}(1)),ZCCell{i}(RangeLimit:RangeIndex),'--','linewidth',3,'Color','blue');
-        legend('Conventional Conversion','Time-Varient Net Conversion','Time-Varient Conversion Term','Time-Varient Temporal Term')
-        xlabel('Time-averaged conversion rate','Interpreter','latex');
-        ylabel('Depth (m)');
-        grid on
-        set(gca,'fontsize',18);
-        set(gca,'FontWeight','bold');
-end
-
-%save('APEResult.mat')
-
-function [IsopycnalDislocation,ConversionTimeVarient,ConversionTimeVarient1,...
-        ConversionTemporal,ConversionConventional,ZC,Time,RhoBConventional...
-        ,RhoBTimeVarient,RhoPrimeConventional,RhoPrimeTimeVarient,W,Density]=...
-        ConversionCalculator(DataPath,InterpRes,TimeStartIndex,TimeSTR,CaseNumber)
-    
-    XStartIndex=991;    
-    
-    g=9.8;
-    XEndIndex=2;
-    Rho0=1025;%Setting the reference density
-    ZMaxIndex=Inf;
-    %CountTimeIndex=floor(44710/60/TimeSTR*2);
-    CountTimeIndex=Inf;
-    disp(strcat('Reading the NETCDF at',DataPath))
-    X=ncread(DataPath,'xv',XStartIndex,XEndIndex);
-    Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex,TimeSTR);
-    ZC=-ncread(DataPath,'z_r',1,ZMaxIndex);%I changed ZC and ZE sign to make it compatible with formulas
-    Eta=ncread(DataPath,'eta',[XStartIndex,TimeStartIndex],[XEndIndex,CountTimeIndex],[1,TimeSTR]);
-    disp('Eta is done')
-    Density=1000*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeSTR])+1000;
-    disp('Density is done')
-   
-    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeSTR]);
+Temp=ncinfo(DataPath,'w');
+Temp=Temp.Size(2);
+if (Temp==size(ZC,1)+1)%NETCDF
+    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeStr]);
     W=movsum(W,2,2)/2;%Averaging the w over two horizontal edge to get the center value
     W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
-    disp('W is done')
-    
+elseif (Temp==size(ZC,1))%Non-NETCDF
+    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr]);
+else
+    disp('Error! The W formatting does not match.')
+    return;
+end
+disp('W is done')
 
-    ZCTemp=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+Density*0;
-    DepthTemp=repmat(nanmin(ZCTemp,[],2),1,size(ZC,1),1);
-    Epsilon=permute(repmat(squeeze(Eta(1,:)),size(X,1),1,size(ZC,1)),[1,3,2]);
-    Epsilon=Epsilon.*(1-ZCTemp./DepthTemp);  
-    
-    RhoBConventional=trapz(Time,Density,3)/(Time(end)-Time(1))-Rho0;
-    RhoBConventional=repmat(RhoBConventional,1,1,size(Time,1));   
-    RhoPrimeConventional=Density-Rho0-RhoBConventional;
-    
-    RhoBTimeVarient=nan(size(X,1),size(ZC,1),size(Time,1));
-    for i=1:size(X,1)
-        RhoBConvLocal=squeeze(RhoBConventional(i,:,1))';
-        LastJIndex=find(RhoBConvLocal*0==0,1,'last');
-        for j=1:LastJIndex
-            if(RhoBConvLocal(j)-RhoBConvLocal(1)>0.001)%Finding the mixed layer depth
-                FirstJIndex=j;
-                break;
-            end
+ZCTemp=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+Density*0;
+DepthTemp=repmat(nanmin(ZCTemp,[],2),1,size(ZC,1),1);
+Epsilon=permute(repmat(squeeze(Eta(1,:)),size(X,1),1,size(ZC,1)),[1,3,2]);
+Epsilon=Epsilon.*(1-ZCTemp./DepthTemp);  
+
+RhoBConventional=trapz(Time,Density,3)/(Time(end)-Time(1))-Rho0;
+RhoBConventional=repmat(RhoBConventional,1,1,size(Time,1));   
+RhoPrimeConventional=Density-Rho0-RhoBConventional;
+
+RhoBTimeVarient=nan(size(X,1),size(ZC,1),size(Time,1));
+for i=1:size(X,1)
+    RhoBConvLocal=squeeze(RhoBConventional(i,:,1))';
+    LastJIndex=find(RhoBConvLocal*0==0,1,'last');
+    for j=1:LastJIndex
+        if(RhoBConvLocal(j)-RhoBConvLocal(1)>0.001)%Finding the mixed layer depth
+            FirstJIndex=j;
+            break;
         end
+    end
+    if strcmp(RhoBTypeString,'power')
         F = @(RhoBCoe,RhoData)RhoBCoe(1)*RhoData.^RhoBCoe(2)+RhoBCoe(3);%The fitted profile is Density=a*ZC^b+c
         ZZZ0=[0.024*1000,0.0187,0];%Initial guess is based on the initial conditions
         options = optimoptions('lsqcurvefit','Display','off');
@@ -124,30 +88,87 @@ function [IsopycnalDislocation,ConversionTimeVarient,ConversionTimeVarient1,...
         RhoBFittedA=RhoBCoeff(1);
         RhoBFittedB=RhoBCoeff(2);
         RhoBFittedC=RhoBCoeff(3);
-        for j=1:size(ZC,1)
-            for k=1:size(Time,1)
-                if(j<FirstJIndex)
-                    RhoBTimeVarient(i,j,k)=RhoBConvLocal(j);
-                elseif(~isnan(Epsilon(i,j,k)))
-                    RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,j,k))^RhoBFittedB+RhoBFittedC;
-                else
-                    RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,LastJIndex,k))^RhoBFittedB+RhoBFittedC;
-                end
+    else
+        disp('Error! Please modify the RhoB function.')
+        return;
+    end
+    for j=1:size(ZC,1)
+        for k=1:size(Time,1)
+            if(j<FirstJIndex)
+                RhoBTimeVarient(i,j,k)=RhoBConvLocal(j);
+            elseif(~isnan(Epsilon(i,j,k)))
+                RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,j,k))^RhoBFittedB+RhoBFittedC;
+            else
+                RhoBTimeVarient(i,j,k)=RhoBFittedA*(-ZC(j)+Epsilon(i,LastJIndex,k))^RhoBFittedB+RhoBFittedC;
             end
         end
-    end 
-    
-    disp('NETCDF reading is compeleted')
-    disp('EPPrime calculation is started')
-    [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density-Rho0,RhoBTimeVarient,InterpRes,g);
-    disp('EPPrime calculation is done')      
+    end
+end 
 
-    RhoPrimeTimeVarient=Density-Rho0-RhoBTimeVarient;
-    ConversionTimeVarient1=RhoPrimeTimeVarient.*W*g;
-    ConversionTimeVarient=ConversionTimeVarient1+ConversionTemporal;  
-    ConversionConventional=RhoPrimeConventional*g.*W;  
-    disp('Done')
+disp('NETCDF reading is compeleted')
+disp('EPPrime calculation is started')
+[IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density-Rho0,RhoBTimeVarient,InterpRes,g);
+disp('EPPrime calculation is done')      
+
+RhoPrimeTimeVarient=Density-Rho0-RhoBTimeVarient;
+ConversionTimeVarient1=RhoPrimeTimeVarient.*W*g;
+ConversionTimeVarient=ConversionTimeVarient1+ConversionTemporal;  
+ConversionConventional=RhoPrimeConventional*g.*W;  
+disp('Done')
+
+
+
+
+figure;
+[xx,zz]=meshgrid(X,ZC);
+ConversionTimeVarientTimeAvr=trapz(Time,ConversionTimeVarient,3)/(Time(end)-Time(1));
+ConversionConventionalTimeAvr=trapz(Time,ConversionConventional,3)/(Time(end)-Time(1));
+ConversionTemporalTimeAvr=trapz(Time,ConversionTemporal,3)/(Time(end)-Time(1));
+ConversionTimeVarient1TimeAvr=trapz(Time,ConversionTimeVarient1,3)/(Time(end)-Time(1));
+
+subplot(1,2,1)
+pcolor(xx',zz',ConversionTimeVarientTimeAvr);
+shading flat;
+colorbar;
+caxis([-1e-6 10e-6]);
+
+subplot(1,2,2)
+pcolor(xx',zz',ConversionConventionalTimeAvr);
+shading flat;
+colorbar;
+caxis([-1e-6 10e-6]);
+
+ConversionTimeVarientTimeAvrDepthInt=ConversionTimeVarientTimeAvr;
+ConversionConventionalTimeAvrDepthInt=ConversionConventionalTimeAvr;
+ConversionTemporalTimeAvrDepthInt=ConversionTemporalTimeAvr;
+ConversionTimeVarient1TimeAvrDepthInt=ConversionTimeVarient1TimeAvr;
+for i=1:size(X,1)
+    for j=1:size(ZC,1)
+        if isnan(ConversionTimeVarientTimeAvrDepthInt(i,j))
+            ConversionTimeVarientTimeAvrDepthInt(i,j)=0;
+            ConversionConventionalTimeAvrDepthInt(i,j)=0;
+            ConversionTemporalTimeAvrDepthInt(i,j)=0;
+            ConversionTimeVarient1TimeAvrDepthInt(i,j)=0;
+        end
+    end
 end
+ConversionTimeVarientTimeAvrDepthInt=trapz(abs(ZC),ConversionTimeVarientTimeAvrDepthInt,2);
+ConversionConventionalTimeAvrDepthInt=trapz(abs(ZC),ConversionConventionalTimeAvrDepthInt,2);
+ConversionTemporalTimeAvrDepthInt=trapz(abs(ZC),ConversionTemporalTimeAvrDepthInt,2);
+ConversionTimeVarient1TimeAvrDepthInt=trapz(abs(ZC),ConversionTimeVarient1TimeAvrDepthInt,2);
+
+figure;hold on;
+plot(X,ConversionTimeVarientTimeAvrDepthInt);
+plot(X,ConversionConventionalTimeAvrDepthInt);
+legend('Time Varient','Conventional');
+
+figure;hold on;
+plot(X,ConversionTimeVarientTimeAvrDepthInt);
+plot(X,ConversionConventionalTimeAvrDepthInt);
+plot(X,ConversionTemporalTimeAvrDepthInt);
+plot(X,ConversionTimeVarient1TimeAvrDepthInt);
+legend('Time Varient','Conventional','Temporal','RhoPrimeGW');
+
 
 function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density,RhoB,InterpRes,g)   
     %To better calculate the APE, teh whole density profile is interpolated
