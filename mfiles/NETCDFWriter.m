@@ -21,6 +21,9 @@
 %	XProcessStartIndex: NETCDF start X index
 %	XProcessEndIndex: NETCDF end X index
 %   XStr: How often write X in NETCDF (see ncread help)
+%   TidalCycle: Number of tidal cycle from the end to process. If it is
+%   zero, it will use the TimeProcessStartIndex and TimeProcessEndIndex
+%   Omega: Wave frequency
 % 
 % Sorush Omidvar
 % University of Georgia
@@ -28,15 +31,19 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,XSize,...
-TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEndIndex,XStr)
+TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEndIndex,XStr,TidalCycle,Omega)
 
 	[~,~,Time] = plotsliceMultiCore('Time',DataPathRead,ntout);
+    if TidalCycle~=0
+        TimeProcessEndIndex=size(Time,1);
+        [~,TimeProcessStartIndex]=min(abs(Time(end)-2*pi/Omega*TidalCycle-Time));
+    end
 	Time=Time(TimeProcessStartIndex:TimeProcessEndIndex);
 
 	Salinity=nan(XSize,Nkmax,size(Time,1));
 	U=nan(XSize,Nkmax,size(Time,1));
 	W=nan(XSize,Nkmax,size(Time,1));
-	q=nan(XSize,Nkmax,size(Time,1));
+	%q=nan(XSize,Nkmax,size(Time,1));
 	Eta=nan(XSize,size(Time,1));
 	for k=1:size(Time,1)
 		[~,~,Eta(:,k)] = plotsliceMultiCore('h',DataPathRead,k+TimeProcessStartIndex);
@@ -44,10 +51,10 @@ TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEnd
 		Salinity(:,:,k)=Temp';
 		[~,~,Temp] = plotsliceMultiCore('u',DataPathRead,k+TimeProcessStartIndex);
 		U(:,:,k)=Temp';  
-		[~,~,Temp] = plotsliceMultiCore('w',DataPathRead,k+TimeProcessStartIndex);
+		[X,Z,Temp] = plotsliceMultiCore('w',DataPathRead,k+TimeProcessStartIndex);
 		W(:,:,k)=Temp';
-		[X,Z,Temp] = plotsliceMultiCore('q',DataPathRead,k+TimeProcessStartIndex);
-		q(:,:,k)=Temp';
+		%[X,Z,Temp] = plotsliceMultiCore('q',DataPathRead,k+TimeProcessStartIndex);
+		%q(:,:,k)=Temp';
 	end
 	clear Temp;
 	Density=Salinity;
@@ -60,7 +67,7 @@ TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEnd
 	Eta=Eta(XProcessStartIndex:XStr:XProcessEndIndex,1:TimeStr:end);
 	U=U(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
 	W=W(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
-	q=q(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
+	%q=q(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
 	Density=Density(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
 
 	ncid = netcdf.create(strcat(DataPathWrite,'example','.nc'),'64BIT_OFFSET');
@@ -76,7 +83,7 @@ TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEnd
 	Eta_ID = netcdf.defVar(ncid,'eta','double',[dimidX dimidTime]);
 	U_ID = netcdf.defVar(ncid,'uc','double',[dimidX dimidZC dimidTime]);
 	W_ID = netcdf.defVar(ncid,'w','double',[dimidX dimidZC dimidTime]);
-	q_ID = netcdf.defVar(ncid,'q','double',[dimidX dimidZC dimidTime]);
+	%q_ID = netcdf.defVar(ncid,'q','double',[dimidX dimidZC dimidTime]);
 	Density_ID = netcdf.defVar(ncid,'rho','double',[dimidX dimidZC dimidTime]);
 
 	netcdf.endDef(ncid);
@@ -88,7 +95,7 @@ TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEnd
 	netcdf.putVar(ncid,Eta_ID,Eta); 
 	netcdf.putVar(ncid,U_ID,U); 
 	netcdf.putVar(ncid,W_ID,W); 
-	netcdf.putVar(ncid,q_ID,q); 
+	%netcdf.putVar(ncid,q_ID,q); 
 	netcdf.putVar(ncid,Density_ID,Density); 
 
 	netcdf.close(ncid)
