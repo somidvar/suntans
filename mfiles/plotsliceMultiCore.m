@@ -30,7 +30,7 @@ function [x,z,data] = plotsliceMultiCore(PLOT,datadir,n)
   
   % cellcentered data contains the voronoi points and the depths
   % at those points.
-  fid=strcat(datadir,'\cells.dat');
+  fid=strcat(datadir,'cells.dat');
   fileID = fopen(fid,'r');
   cellcentereddata=fscanf(fileID,'%f %f %d %d %d %d %d %d');
   fclose(fileID);
@@ -38,7 +38,7 @@ function [x,z,data] = plotsliceMultiCore(PLOT,datadir,n)
       xv(counter) = cellcentereddata(1+(counter-1)*8);
       yv(counter) = cellcentereddata(2+(counter-1)*8);
   end
-  dz = load([datadir,'/vertspace.dat']);
+  dz = load([datadir,'vertspace.dat']);
   
   % Total number of cells in the horizontal Nc and vertical Nk
   Nc = length(xv);
@@ -55,23 +55,23 @@ function [x,z,data] = plotsliceMultiCore(PLOT,datadir,n)
   % Open up file descriptors for binary files
   switch(PLOT)
    case 'q'
-    file = [datadir,'\q.dat'];
+    file = [datadir,'q.dat'];
    case 's'
-    file = [datadir,'\s.dat'];    
+    file = [datadir,'s.dat'];    
    case 'T'
-    file = [datadir,'\T.dat'];    
+    file = [datadir,'T.dat'];    
    case {'u','w'}
-    file = [datadir,'\u.dat'];    
+    file = [datadir,'u.dat'];    
    case 's0'
-    file = [datadir,'\s0.dat'];    
+    file = [datadir,'s0.dat'];    
    case 'h'
-    file = [datadir,'\fs.dat'];    
+    file = [datadir,'fs.dat'];    
    case 'nut'
-    file = [datadir,'\nut.dat'];    
+    file = [datadir,'nut.dat'];    
    case 'kappat'
-    file = [datadir,'\kappat.dat'];    
+    file = [datadir,'kappat.dat'];    
    case 'Time'
-    file = [datadir,'\e.dat'];    
+    file = [datadir,'e.dat'];    
    otherwise
     fprintf('Unrecognized plot variable.\n');
     fprintf('Use one of ''q'',''s'',''u'',''w'',''s0'',''h'',''nut'',''kappat''.\n');

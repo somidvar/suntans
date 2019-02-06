@@ -6,71 +6,63 @@ clear all;
 close all;
 clc
 
+g=9.8;
+Rho0=1000;%Setting the reference density
+RhoBTypeString='power';
+InterpRes=100;
 ntout=20;
 Nkmax=200;
+NETCDFWriter=0;
 
-Omega=1.4026e-4;%M2 Tide
+%Omega=1.4026e-4;%M2 Tide
+Omega=7.29347e-5;%K1 Tide
 TidalCycle=4;
 TimeStr=1;
 TimeProcessStartIndex=nan;
 TimeProcessEndIndex=nan;
-
-XProcessStartIndex=1;    
-XProcessEndIndex=10000;
+XProcessStartIndex=7000;    
+XProcessEndIndex=8500;
 XStr=1;
-DataPathRead='D:\COPY\iwaves\data';
-DataPathWrite='D:\';
-DataPath='D:\example.nc';
-
-
-%DataPathRead='/scratch/omidvar/work-directory_0801/case5/iwaves/data';
-%DataPathWrite='/scratch/omidvar/work-directory_0801/';
-%DataPath='/scratch/omidvar/work-directory_0801/example.nc';
-
-NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,...
-TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,...
-XProcessEndIndex,XStr,TidalCycle,Omega)
-
-%set(groot,'defaulttextinterpreter','latex');  
-%set(groot, 'defaultAxesTickLabelInterpreter','latex');  
-%set(groot, 'defaultLegendInterpreter','latex');  
-
-
-InterpRes=100;
 TimeStartIndex=1;
 CountTimeIndex=Inf;
-TimeStr=1;
-XStartIndex=1;    
-XEndIndex=Inf;
 ZMaxIndex=Inf;
-g=9.8;
-Rho0=1000;%Setting the reference density
-RhoBTypeString='power';
 
-disp(strcat('Reading the NETCDF at',DataPath))
-X=ncread(DataPath,'xv',XStartIndex,XEndIndex);
-Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex,TimeStr);
-ZC=-ncread(DataPath,'z_r',1,ZMaxIndex);%I changed ZC and ZE sign to make it compatible with formulas
-Eta=ncread(DataPath,'eta',[XStartIndex,TimeStartIndex],[XEndIndex,CountTimeIndex],[1,TimeStr]);
-disp('Eta is done')
+%DataPathRead='D:\COPY\iwaves\data\';
+%DataPathWrite='D:\';
+%DataPath='D:\example.nc';
 
-Temp=ncinfo(DataPath,'w');
-Temp=Temp.Size(2);
-if (Temp==size(ZC,1)+1)%NETCDF
-    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeStr]);
+DataPathRead='/scratch/omidvar/work-directory_0801/case5/iwaves/data/';
+DataPathWrite='/scratch/omidvar/work-directory_0801/';
+DataPath='/scratch/omidvar/work-directory_0801/example.nc';
+
+set(groot,'defaulttextinterpreter','latex');  
+set(groot, 'defaultAxesTickLabelInterpreter','latex');  
+set(groot, 'defaultLegendInterpreter','latex');  
+
+if isempty(dir(strcat(DataPathRead,'*.nc')))
+	disp('No Input NETCDF was found')
+    [U,W,Density,q,Eta,Time,X,ZC]=NONNETCDFReader(DataPathRead,...
+        DataPathWrite,ntout,Nkmax,TimeProcessStartIndex,TimeProcessEndIndex,...
+        TimeStr,XProcessStartIndex,XProcessEndIndex,XStr,TidalCycle,Omega,...
+        NETCDFWriter,Rho0);
+else
+	disp('Input NETCDF was found')
+    disp(strcat('Reading the NETCDF at',DataPath))
+    X=ncread(DataPath,'xv',XProcessStartIndex,XProcessEndIndex);
+    Time=ncread(DataPath,'time',TimeStartIndex,CountTimeIndex,TimeStr);
+    ZC=-ncread(DataPath,'z_r',1,ZMaxIndex);%I changed ZC and ZE sign to make it compatible with formulas
+    Eta=ncread(DataPath,'eta',[XProcessStartIndex,TimeStartIndex],[XProcessEndIndex,CountTimeIndex],[1,TimeStr]);
+    disp('Eta is done')
+    Temp=ncinfo(DataPath,'w');
+    Temp=Temp.Size(2);
+    W=ncread(DataPath,'w',[XProcessStartIndex,1,TimeStartIndex],[XProcessEndIndex,ZMaxIndex+1,CountTimeIndex],[1,1,TimeStr]);
     W=movsum(W,2,2)/2;%Averaging the w over two horizontal edge to get the center value
     W(:,1,:)=[];%disregarding the first layer becaue for cell i movsum is summing i-1 and i
-    Density=Rho0*ncread(DataPath,'salt',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr])+Rho0;
-elseif (Temp==size(ZC,1))%Non-NETCDF
-    W=ncread(DataPath,'w',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr]);
-    Density=Rho0*ncread(DataPath,'rho',[XStartIndex,1,TimeStartIndex],[XEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr])+Rho0;
-else
-    disp('Error! The W formatting does not match.')
-    return;
+    disp('W is done')
+    Density=Rho0*ncread(DataPath,'rho',[XProcessStartIndex,1,TimeStartIndex],[XProcessEndIndex,ZMaxIndex,CountTimeIndex],[1,1,TimeStr]);
+    disp('Density is done')
 end
-disp('Density is done')
-disp('W is done')
-disp('NETCDF reading is compeleted')
+disp('DATA reading is compeleted')
 
 ZCTemp=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+Density*0;
 DepthTemp=repmat(nanmin(ZCTemp,[],2),1,size(ZC,1),1);
@@ -78,7 +70,7 @@ Epsilon=squeeze(Eta(floor(size(X,1)/2),:));
 Epsilon=permute(repmat(Epsilon,size(X,1),1,size(ZC,1)),[1,3,2]);
 Epsilon=Epsilon.*(1-ZCTemp./DepthTemp);  
 
-RhoBConventionalTemp=trapz(Time,Density,3)/(Time(end)-Time(1))-Rho0;
+RhoBConventionalTemp=trapz(Time,Density,3)/(Time(end)-Time(1));
 RhoBConventionalTemp=repmat(RhoBConventionalTemp,1,1,size(Time,1));   
 
 RhoBTimeVarient=nan(size(X,1),size(ZC,1),size(Time,1));
@@ -94,7 +86,7 @@ for i=1:size(X,1)
     end
     if strcmp(RhoBTypeString,'power')
         F = @(RhoBCoe,RhoData)RhoBCoe(1)*RhoData.^RhoBCoe(2)+RhoBCoe(3);%The fitted profile is Density=a*ZC^b+c
-        ZZZ0=[0.024*1000,0.0187,25];%Initial guess is based on the initial conditions
+        ZZZ0=[0.024*Rho0,0.0187,25];%Initial guess is based on the initial conditions
         options = optimoptions('lsqcurvefit','Display','off');
         [RhoBCoeff,~,~,~,~] = lsqcurvefit(F,ZZZ0,-ZC(FirstJIndex:LastJIndex),RhoBConvLocal(FirstJIndex:LastJIndex)...
             ,[],[],options); 
@@ -137,16 +129,16 @@ for i=1:size(X,1)
         disp('Error! Please modify the RhoB function.')
         return;
     end
-
+	disp(strcat(num2str(100*i/size(X,1)),'% of Interpolating is completed'))
 end 
 clear RhoBConventionalTemp;
 disp('RhoB has been fitted and corrected')
 disp('EPPrime calculation is started')
-[IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density-Rho0,RhoBTimeVarient,InterpRes,g);
+[IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density,RhoBTimeVarient,InterpRes,g);
 disp('EPPrime calculation is done')      
 
-RhoPrimeConventional=Density-Rho0-RhoBConventional;
-RhoPrimeTimeVarient=Density-Rho0-RhoBTimeVarient;
+RhoPrimeConventional=Density-RhoBConventional;
+RhoPrimeTimeVarient=Density-RhoBTimeVarient;
 ConversionTimeVarient1=RhoPrimeTimeVarient.*W*g;
 ConversionTimeVarient=ConversionTimeVarient1+ConversionTemporal;  
 ConversionConventional=RhoPrimeConventional*g.*W;  
@@ -242,18 +234,18 @@ function [IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Densit
         ConversionTemporalCell{i}=nan(size(ZC,1),size(Time,1));
         IsopycnalDislocationCell{i}=nan(size(ZC,1),size(Time,1));
         RhoBDiffTTempCell{i}=squeeze(RhoBDiffTTemp(i,:,:));
-    end  
-    CreatedParallelPool = parallel.pool.DataQueue;	
-    afterEach(CreatedParallelPool, @UpdateStatusDisp);	
-    ProgressStatus=0;
-    disp('For the sake of numerical, the top 5 meters are dissmissed')
-    RangeLimit=8;
+    end 
     CurrentParpool=gcp;
 	if (~isempty(CurrentParpool))
         delete(gcp('nocreate'));
     end
     numcores = feature('numcores');
 	parpool(numcores);
+    CreatedParallelPool = parallel.pool.DataQueue;	
+    afterEach(CreatedParallelPool, @UpdateStatusDisp);	
+    ProgressStatus=0;
+    disp('For the sake of numerical, the top 5 meters are dissmissed')
+    RangeLimit=8;
     parfor i=1:size(X,1)
         ZCWorker=ZCCell{i};
         for k=1:size(Time,1)           
