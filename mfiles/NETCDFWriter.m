@@ -14,7 +14,6 @@
 %	DataPathWrite: The location of writing netcdf file
 %	ntout: How often suntans write data
 %	Nkmax: Maximum vertical layer
-%	XSize: Number of Cells in X direction
 %	TimeProcessStartIndex: NETCDF start time index
 %	TimeProcessEndIndex: NETCDF end time index
 %   TimeStr: How often write Time in NETCDF (see ncread help)
@@ -30,7 +29,7 @@
 % Jan 2019
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,XSize,...
+function NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,...
 TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEndIndex,XStr,TidalCycle,Omega)
 
 	[~,~,Time] = plotsliceMultiCore('Time',DataPathRead,ntout);
@@ -38,58 +37,53 @@ TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,XProcessEnd
         TimeProcessEndIndex=size(Time,1);
         [~,TimeProcessStartIndex]=min(abs(Time(end)-2*pi/Omega*TidalCycle-Time));
     end
-	Time=Time(TimeProcessStartIndex:TimeProcessEndIndex);
+    Time=Time(TimeProcessStartIndex:TimeStr:TimeProcessEndIndex);
 
-	Salinity=nan(XSize,Nkmax,size(Time,1));
-	U=nan(XSize,Nkmax,size(Time,1));
-	W=nan(XSize,Nkmax,size(Time,1));
-	%q=nan(XSize,Nkmax,size(Time,1));
-	Eta=nan(XSize,size(Time,1));
-	for k=1:size(Time,1)
-		[~,~,Eta(:,k)] = plotsliceMultiCore('h',DataPathRead,k+TimeProcessStartIndex);
-		[~,~,Temp] = plotsliceMultiCore('s',DataPathRead,k+TimeProcessStartIndex);
-		Salinity(:,:,k)=Temp';
-		[~,~,Temp] = plotsliceMultiCore('u',DataPathRead,k+TimeProcessStartIndex);
-		U(:,:,k)=Temp';  
-		[X,Z,Temp] = plotsliceMultiCore('w',DataPathRead,k+TimeProcessStartIndex);
-		W(:,:,k)=Temp';
-		%[X,Z,Temp] = plotsliceMultiCore('q',DataPathRead,k+TimeProcessStartIndex);
-		%q(:,:,k)=Temp';
-	end
+    Density=nan(size(XProcessStartIndex:XStr:XProcessEndIndex,2),Nkmax,size(Time,1));
+    %U=nan(size(XProcessStartIndex:XStr:XProcessEndIndex,2),Nkmax,size(Time,1));
+    W=nan(size(XProcessStartIndex:XStr:XProcessEndIndex,2),Nkmax,size(Time,1));
+    %q=nan(size(XProcessStartIndex:XStr:XProcessEndIndex,2),Nkmax,size(Time,1));
+    Eta=nan(size(XProcessStartIndex:XStr:XProcessEndIndex,2),size(Time,1));
+    for k=1:size(Time,1)
+        [~,~,Temp] = plotsliceMultiCore('h',DataPathRead,1+(k-1)*TimeStr+TimeProcessStartIndex);
+        Eta(:,k)=Temp(XProcessStartIndex:XStr:XProcessEndIndex);
+        [~,~,Temp] = plotsliceMultiCore('s',DataPathRead,1+(k-1)*TimeStr+TimeProcessStartIndex);
+        Density(:,:,k)=Temp(:,XProcessStartIndex:XStr:XProcessEndIndex)';
+        %[~,~,Temp] = plotsliceMultiCore('u',DataPathRead,1+(k-1)*TimeStr+TimeProcessStartIndex);
+        %U(:,:,k)=Temp(:,XProcessStartIndex:XStr:XProcessEndIndex)';
+        [X,Z,Temp] = plotsliceMultiCore('w',DataPathRead,1+(k-1)*TimeStr+TimeProcessStartIndex);
+        W(:,:,k)=Temp(:,XProcessStartIndex:XStr:XProcessEndIndex)';
+        %[X,Z,Temp] = plotsliceMultiCore('q',DataPathRead,1+(k-1)*TimeStr+TimeProcessStartIndex);
+        %q(:,:,k)=Temp(:,XProcessStartIndex:XProcessEndIndex)';
+        disp(strcat(num2str(100*k/size(Time,1)),'% succeeded'))
+    end
 	clear Temp;
-	Density=Salinity;
-	clear Salinity;
+    Density=Rho0+Rho0*Density;
 
 	X=X(1,XProcessStartIndex:XStr:XProcessEndIndex);
 	X=X';
-	Z=-squeeze(Z(:,1));%To compatiblize with NETCDF formatting
-	Time=Time(1:TimeStr:end);
-	Eta=Eta(XProcessStartIndex:XStr:XProcessEndIndex,1:TimeStr:end);
-	U=U(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
-	W=W(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
-	%q=q(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
-	Density=Density(XProcessStartIndex:XStr:XProcessEndIndex,:,1:TimeStr:end);
+	ZC=-squeeze(Z(:,1));%To compatiblize with NETCDF formatting
 
 	ncid = netcdf.create(strcat(DataPathWrite,'example','.nc'),'64BIT_OFFSET');
 
 	dimidX = netcdf.defDim(ncid,'XDim',size(X,1)); 
-	dimidZC = netcdf.defDim(ncid,'ZCDim',size(Z,1)); 
+	dimidZC = netcdf.defDim(ncid,'ZCDim',size(ZC,1)); 
 	dimidTime = netcdf.defDim(ncid,'TimeDim',size(Time,1)); 
 
-	X_ID=netcdf.defVar(ncid,'xv','double',dimidX);
-	Z_ID=netcdf.defVar(ncid,'z_r','double',dimidZC);
-	Time_ID=netcdf.defVar(ncid,'time','double',dimidTime);
+	X_ID=netcdf.defVar(ncid,'xv','single',dimidX);
+	Z_ID=netcdf.defVar(ncid,'z_r','single',dimidZC);
+	Time_ID=netcdf.defVar(ncid,'time','single',dimidTime);
 
-	Eta_ID = netcdf.defVar(ncid,'eta','double',[dimidX dimidTime]);
-	U_ID = netcdf.defVar(ncid,'uc','double',[dimidX dimidZC dimidTime]);
-	W_ID = netcdf.defVar(ncid,'w','double',[dimidX dimidZC dimidTime]);
-	%q_ID = netcdf.defVar(ncid,'q','double',[dimidX dimidZC dimidTime]);
+	Eta_ID = netcdf.defVar(ncid,'eta','single',[dimidX dimidTime]);
+	U_ID = netcdf.defVar(ncid,'uc','single',[dimidX dimidZC dimidTime]);
+	W_ID = netcdf.defVar(ncid,'w','single',[dimidX dimidZC dimidTime]);
+	%q_ID = netcdf.defVar(ncid,'q','single',[dimidX dimidZC dimidTime]);
 	Density_ID = netcdf.defVar(ncid,'rho','double',[dimidX dimidZC dimidTime]);
 
 	netcdf.endDef(ncid);
 
 	netcdf.putVar(ncid,X_ID,X); 
-	netcdf.putVar(ncid,Z_ID,Z); 
+	netcdf.putVar(ncid,Z_ID,ZC); 
 	netcdf.putVar(ncid,Time_ID,Time); 
 
 	netcdf.putVar(ncid,Eta_ID,Eta); 

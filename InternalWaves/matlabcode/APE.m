@@ -7,8 +7,7 @@ close all;
 clc
 
 ntout=20;
-Nkmax=100;
-XSize=2000;
+Nkmax=200;
 
 Omega=1.4026e-4;%M2 Tide
 TidalCycle=4;
@@ -17,7 +16,7 @@ TimeProcessStartIndex=nan;
 TimeProcessEndIndex=nan;
 
 XProcessStartIndex=1;    
-XProcessEndIndex=2000;
+XProcessEndIndex=10000;
 XStr=1;
 DataPathRead='D:\COPY\iwaves\data';
 DataPathWrite='D:\';
@@ -28,7 +27,7 @@ DataPath='D:\example.nc';
 %DataPathWrite='/scratch/omidvar/work-directory_0801/';
 %DataPath='/scratch/omidvar/work-directory_0801/example.nc';
 
-NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,XSize,...
+NETCDFWriter(DataPathRead,DataPathWrite,ntout,Nkmax,...
 TimeProcessStartIndex,TimeProcessEndIndex,TimeStr,XProcessStartIndex,...
 XProcessEndIndex,XStr,TidalCycle,Omega)
 
