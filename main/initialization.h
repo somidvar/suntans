@@ -12,12 +12,10 @@
 #ifndef _initialization_h
 #define _initialization_h
 
-#include "phys.h"
-
 int GetDZ(REAL *dz, REAL depth, REAL localdepth, int Nkmax, int myproc);
 REAL ReturnDepth(REAL x, REAL y);
 REAL ReturnFreeSurface(REAL x, REAL y, REAL d);
-REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop);
+REAL ReturnSalinity(REAL x, REAL y, REAL z);
 REAL ReturnTemperature(REAL x, REAL y, REAL z, REAL depth);
 REAL ReturnHorizontalVelocity(REAL x, REAL y, REAL n1, REAL n2, REAL z);
 REAL ReturnSediment(REAL x, REAL y, REAL z, int sizeno);

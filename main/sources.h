@@ -25,6 +25,6 @@ REAL CBoundaryVelocity,MinDepthBoundaryVelocity,MaxDepthBoundaryVelocity;;//Adde
 void MomentumSource(REAL **usource, gridT *grid, physT *phys, propT *prop);
 void HeatSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT *met, int myproc, MPI_Comm comm);
 void SaltSource(REAL **A, REAL **B, gridT *grid, physT *phys, propT *prop, metT *met);
-void InitSponge(gridT *grid, int myproc, propT *prop);
+void InitSponge(gridT *grid, int myproc);
 
 #endif

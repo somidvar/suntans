@@ -80,10 +80,10 @@ static void StoreVariables(gridT *grid, physT *phys);
 static void NewCells(gridT *grid, physT *phys, propT *prop);
 static void WPredictor(gridT *grid, physT *phys, propT *prop,
     int myproc, int numprocs, MPI_Comm comm);
-inline void ComputeUC(REAL **ui, REAL **vi, physT *phys, gridT *grid, int myproc, interpolation interp);
+void ComputeUC(REAL **ui, REAL **vi, physT *phys, gridT *grid, int myproc, interpolation interp);
 static void ComputeUCPerot(REAL **u, REAL **uc, REAL **vc, gridT *grid);
 static void ComputeUCLSQ(REAL **u, REAL **uc, REAL **vc, gridT *grid, physT *phys);
-inline static void ComputeUCRT(REAL **ui, REAL **vi, physT *phys, gridT *grid, int myproc);
+static void ComputeUCRT(REAL **ui, REAL **vi, physT *phys, gridT *grid, int myproc);
 static void ComputeNodalVelocity(physT *phys, gridT *grid, interpolation interp, int myproc);
 static void  ComputeTangentialVelocity(physT *phys, gridT *grid, interpolation ninterp, interpolation tinterp,int myproc);
 static void  ComputeQuadraticInterp(REAL x, REAL y, int ic, int ik, REAL **uc, 
@@ -568,7 +568,7 @@ void InitializePhysicalVariables(gridT *grid, physT *phys, propT *prop, int mypr
     for(i=0;i<Nc;i++) {
       phys->h[i]=ReturnFreeSurface(grid->xv[i],grid->yv[i],grid->dv[i]);
       if(phys->h[i]<-grid->dv[i] + DRYCELLHEIGHT) 
-        phys->h[i]=-grid->dv[i] + DRYCELLHEIGHT;
+	phys->h[i]=-grid->dv[i] + DRYCELLHEIGHT;
     }
   }
 
@@ -610,8 +610,8 @@ void InitializePhysicalVariables(gridT *grid, physT *phys, propT *prop, int mypr
       z = 0;
       for(k=grid->ctop[i];k<grid->Nk[i];k++) {
         z-=grid->dz[k]/2;
-        phys->s[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],-z,prop);
-        phys->s0[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],-z,prop);
+        phys->s[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],z);
+        phys->s0[i][k]=ReturnSalinity(grid->xv[i],grid->yv[i],z);
         z-=grid->dz[k]/2;
       }
     }
@@ -1060,7 +1060,7 @@ void Solve(gridT *grid, physT *phys, propT *prop, int myproc, int numprocs, MPI_
   if(prop->laxWendroff && prop->nonlinear==2) LaxWendroff(grid,phys,prop,myproc,comm);
 
   // Initialize the Sponge Layer
-  InitSponge(grid,myproc,prop);//Enabled by ----Sorush Omidvar---- to initailize sponge layer
+  InitSponge(grid,myproc);
 
   
   // Initialise the meteorological forcing input fields
@@ -1293,12 +1293,14 @@ void Solve(gridT *grid, physT *phys, propT *prop, int myproc, int numprocs, MPI_
 
         // Send q to the boundary cells now that it has been updated
         ISendRecvCellData3D(phys->q,grid,myproc,comm);
-      }
+      } 
+      /* This code should not be here OBF
       else if(!(prop->interp == PEROT)) {
         // support quadratic interpolation work
         // Send/recv the horizontal velocity data for use with more complex interpolation
         ISendRecvEdgeData3D(phys->u,grid,myproc,comm);
-      }
+	}
+      */
       t_nonhydro+=Timer()-t0;
 
 
@@ -2936,6 +2938,7 @@ static void UPredictor(gridT *grid, physT *phys,
     }
   }
   theta=theta0;
+
   for(j=0;j<grid->Ne;j++) 
     for(k=grid->etop[j];k<grid->Nke[j];k++) 
       if(phys->utmp[j][k]!=phys->utmp[j][k]) {
@@ -4095,27 +4098,6 @@ void ReadProperties(propT **prop, gridT *grid, int myproc)
   (*prop)->ntout = (int)MPI_GetValue(DATAFILE,"ntout","ReadProperties",myproc);
   (*prop)->ntoutStore = (int)MPI_GetValue(DATAFILE,"ntoutStore","ReadProperties",myproc);
 
-  (*prop)->RadiationBoundary = MPI_GetValue(DATAFILE,"RadiationBoundary","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SpongeMean = MPI_GetValue(DATAFILE,"SpongeMean","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SpongeSTD = MPI_GetValue(DATAFILE,"SpongeSTD","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  
-  (*prop)->DiurnalTidePeriod = MPI_GetValue(DATAFILE,"DiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SemiDiurnalTidePeriod = MPI_GetValue(DATAFILE,"SemiDiurnalTidePeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->DiurnalWindPeriod = MPI_GetValue(DATAFILE,"DiurnalWindPeriod","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-  (*prop)->DiurnalTideU0 = MPI_GetValue(DATAFILE,"DiurnalTideU0","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SemiDiurnalTideU0 = MPI_GetValue(DATAFILE,"SemiDiurnalTideU0","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-
-  (*prop)->ASal = MPI_GetValue(DATAFILE,"ASal","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->BSal = MPI_GetValue(DATAFILE,"BSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->CSal = MPI_GetValue(DATAFILE,"CSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->DSal = MPI_GetValue(DATAFILE,"DSal","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SpongeCellLocationX = MPI_GetValue(DATAFILE,"SpongeCellLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SpongeCellLocationY = MPI_GetValue(DATAFILE,"SpongeCellLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-  (*prop)->SpongeEdgeLocationX = MPI_GetValue(DATAFILE,"SpongeEdgeLocationX","ReadProperties",myproc);//Added by ----Sorush Omidvar
-  (*prop)->SpongeEdgeLocationY = MPI_GetValue(DATAFILE,"SpongeEdgeLocationY","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-  
-  (*prop)->WindTimeLag = MPI_GetValue(DATAFILE,"WindTimeLag","ReadProperties",myproc);//Added by ----Sorush Omidvar  
-  
   if((*prop)->ntoutStore==0)
     (*prop)->ntoutStore=(*prop)->nsteps;
 
@@ -4477,7 +4459,8 @@ void ComputeUC(REAL **ui, REAL **vi, physT *phys, gridT *grid, int myproc, inter
     case LSQ:
       ComputeUCLSQ(phys->u,ui,vi,grid,phys);
       break;
- 
+    default:
+      break;
   }
 
 }

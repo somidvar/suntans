@@ -19,60 +19,6 @@
 */
 const int prettyplot_DEFAULT=0;
 
-//Added by ----Sorush Omidvar----
-const REAL DiurnalTidePeriod_DEFAULT=23.93*3600;
-const REAL SemiDiurnalTidePeriod_DEFAULT=12.42*3600;
-const REAL DiurnalWindPeriod_DEFAULT=24*3600;
-const REAL DiurnalTideU0_DEFAULT=0;
-const REAL SemiDiurnalTideU0_DEFAULT=0;
-
-//Added by ----Sorush Omidvar----default value for salinity function used by Omidvar and Woodson
-const REAL ASal_DEFAULT=0;
-const REAL BSal_DEFAULT=0;
-const REAL CSal_DEFAULT=0;
-const REAL DSal_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default value is 0 means there is no lag between tides and wind
-*/
-const REAL WindTimeLag_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default value is not a radiation boundary condition
-*/
-const int RadiationBoundary_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default value for formula exp((-Distance+SpongeMean)/SpongeSTD)
-*/
-const int SpongeMean_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default value for formula exp((-Distance+SpongeMean)/SpongeSTD)
-*/
-const int SpongeSTD_DEFAULT=0;
-
-
-/*Added by ----Sorush Omidvar----
-	default X value for calculation the distance in RampFactor (Xcell-XSponge)
-*/
-const REAL SpongeCellLocationX_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default Y value for calculation the distance in RampFactor (Ycell-XSponge)
-*/
-const REAL SpongeCellLocationY_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default X value for calculation the distance in RampFactor (Xedge-XSponge)
-*/
-const REAL SpongeEdgeLocationX_DEFAULT=0;
-
-/*Added by ----Sorush Omidvar----
-	default Y value for calculation the distance in RampFactor (Yedge-XSponge)
-*/
-const REAL SpongeEdgeLocationY_DEFAULT=0;
-
 /* linearFS:
    default value is for a nonlinear free surface, linearFS=0
 */
