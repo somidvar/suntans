@@ -55,6 +55,9 @@ valgrind: data
 
 clean:
 	rm -f *.o
+	rm -f log*.pbs.scm.out
+	rm -f IW-*.e*
+	rm -f IW-*.o*
 
 clobber: clean
 	rm -rf *~ \#*\# PI* $(EXEC) gmon.out data rundata/*~
