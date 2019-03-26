@@ -19,13 +19,13 @@ TimeStr=1;
 TimeProcessStartIndex=nan;
 TimeProcessEndIndex=nan;
 XProcessStartIndex=1;    
-XProcessEndIndex=1000;
+XProcessEndIndex=5000;
 XStr=1;
 TimeStartIndex=1;
 CountTimeIndex=Inf;
 ZMaxIndex=Inf;
 
-DataPathRead='/scratch/omidvar/work-directory_0801/FlatBathymetry/iwaves/data/';
+DataPathRead='/scratch/omidvar/work-directory_0801/Shallow/iwaves/data/';
 DataPathWrite='/scratch/omidvar/work-directory_0801/';
 DataPath='/scratch/omidvar/work-directory_0801/example.nc';
 
@@ -65,18 +65,17 @@ Eta=movmean(Eta,2,1);
 Density=movmean(Density,2,1);
 U=movmean(U,2,1);
 
-X=X(1:2:end);
-W=W(1:2:end,:,:);
-Eta=Eta(1:2:end,:);
-Density=Density(1:2:end,:,:);
-U=U(1:2:end,:,:);
+XVector=[1:5:4200,4250:1:5000];
 
-ZCTemp=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+Density*0;
-DepthTemp=repmat(nanmin(ZCTemp,[],2),1,size(ZC,1),1);
-Epsilon=squeeze(Eta(floor(size(X,1)/2),:));
-Epsilon=permute(repmat(Epsilon,size(X,1),1,size(ZC,1)),[1,3,2]);
-Epsilon=Epsilon.*(1-ZCTemp./DepthTemp);  
-clear DepthTemp ZCTemp;
+X=X(XVector);
+W=W(XVector,:,:);
+Eta=Eta(XVector,:);
+Density=Density(XVector,:,:);
+U=U(XVector,:,:);
+
+Epsilon=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3]);
+Epsilon=1-Epsilon/nanmin(Epsilon(:));
+Epsilon=Epsilon.*permute(repmat(Eta(floor(size(X,1)/3),:),size(X,1),1,size(ZC,1)),[1,3,2]);
 
 RhoBConventional=trapz(Time,Density,3)/(Time(end)-Time(1));
 
@@ -85,15 +84,15 @@ disp('EPPrime calculation is started')
 disp('EPPrime calculation is done')      
 RhoBConventional=repmat(RhoBConventional,1,1,size(Time,1));
 
-Depth=repmat(ZC,1,size(X,1))'+squeeze(W(:,:,1))*0;
-Depth=nanmin(Depth,[],2);
-DPlusZ=repmat(ZC,1,size(X,1))'+squeeze(W(:,:,1))*0;
-DPlusZ=DPlusZ-repmat(Depth,1,size(ZC,1));
-DPlusZ=repmat(DPlusZ,1,1,size(Time,1));
+DPlusZ=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+W*0;
+Depth=nanmin(DPlusZ,[],2);
+DPlusZ=DPlusZ-repmat(Depth,1,size(ZC,1),1);
 
 UBar=U;
 UBar(isnan(UBar))=0;
-UBar=repmat(trapz(-ZC,UBar,2),1,size(ZC,1),1)./-repmat(Depth,1,size(ZC,1),size(Time,1));
+UBar=repmat(trapz(-ZC,UBar,2),1,size(ZC,1),1);
+UBar=UBar./-repmat(Depth,1,size(ZC,1),1);
+UBar=UBar+0*W;
 WBar=-diff(DPlusZ.*UBar,1,1)./repmat(diff(X,1,1),1,size(ZC,1),size(Time,1));
 WBar(end+1,:,:)=WBar(end,:,:);
 
@@ -150,7 +149,6 @@ ConversionTemporalTimeAvrDepthInt=ConversionTemporalTimeAvr;
 ConversionTemporalTimeAvrDepthInt(isnan(ConversionTemporalTimeAvrDepthInt))=0;
 ConversionTemporalTimeAvrDepthInt=trapz(-ZC,ConversionTemporalTimeAvrDepthInt,2);
 
-
 ConversionConventionalWBar=single(ConversionConventionalWBar);
 ConversionTimeVarientWBar=single(ConversionTimeVarientWBar);
 ConversionTimeVarient1WBar=single(ConversionTimeVarient1WBar);
@@ -167,7 +165,7 @@ RhoPrimeTimeVarient=single(RhoPrimeTimeVarient);
 W=single(W);
 WBar=single(WBar);
 U=single(U);
-U=single(UBar);
+UBar=single(UBar);
 
 if ~contains(DataPathRead,'work-directory_0801')
 	save('D:\APEResult.mat','-v7.3');
