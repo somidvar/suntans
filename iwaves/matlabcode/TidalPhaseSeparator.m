@@ -16,6 +16,7 @@
 %	TideName: Name of each constutuents
 %	TideAmp: Amplitude of each constutuents
 %	TidePhase: Phase of each constutuents
+%	TideFrequency: Frequency of tide in cph
 %	Time: Time in the format of datenum
 %	Tide: Verified tide from NOAA
 %	FileAddressReader: Address of NOAA CSV file should be *.csv
@@ -29,19 +30,15 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [InitialPhase,TideSeparated,TideName,TideAmp,TidePhase,Time,Tide]=TidalPhaseSeparator(FileAddressReader,SNRThreshold,Latitude)
-    close all;
+function [InitialPhase,TideSeparated,TideName,TideAmp,TidePhase,TideFrequency,Time,Tide]=TidalPhaseSeparator(FileAddressReader,SNRThreshold,Latitude)
     clc
     FileAddressWriter=strfind(FileAddressReader,'\');
     FileAddressWriter=strcat(FileAddressReader(1:FileAddressWriter(end)),'T_TideResults.csv');
-    Results=table2array(readtable(FileAddressReader));
+    Results=table2cell(readtable(FileAddressReader));
     for k=1:size(Results,1)
-        Temp=strsplit(Results{k,1},'/');
-        Year=Temp{1};
-        Month=Temp{2};
-        Day=Temp{3};
-        Time(k)=datenum(strcat(Year,'/',Month,'/',Day,{' '},Results{k,2}));
-        Tide(k)=str2num(Results{k,5});
+        [Year,Month,Day]=ymd(Results{k,1});
+        Time(k)=datenum(strcat(num2str(Year),'/',num2str(Month),'/',num2str(Day),{' '},Results{k,2}));
+        Tide(k)=Results{k,5};
     end
     [Name,Frequency,tidecon,~]=t_tide(Tide,'start time',Time(1),'latitude',Latitude,'output',FileAddressWriter);
     Temporary=table2cell(readtable(FileAddressWriter,'HeaderLines',14));
@@ -52,18 +49,21 @@ function [InitialPhase,TideSeparated,TideName,TideAmp,TidePhase,Time,Tide]=Tidal
     TideAmp=[];
     TideName=[''];
     SNRNew=[];
+    TideFrequency=[];
     for counter=1:size(Temporary,1)
         if SNR(counter)>SNRThreshold
             TidePhase(end+1)=tidecon(counter,3);
             TideAmp(end+1)=tidecon(counter,1);
             TideName(end+1,:)=Name(counter,:);
             SNRNew(end+1)=SNR(counter);
+            TideFrequency(end+1)=Frequency(counter);
         end
     end
     [~,SortedVector]=sort(SNRNew,'descend');
     TidePhase=TidePhase(SortedVector);
     TideAmp=TideAmp(SortedVector);
     TideName=TideName(SortedVector,:);
+    TideFrequency=TideFrequency(SortedVector);
     SNRNew=SNRNew(SortedVector);
     TideSeparated=[];
     TideSeparated(:,end+1)=t_predic(Time,Name,Frequency,tidecon,'synthesis',SNRNew(1)-100);
@@ -75,5 +75,15 @@ function [InitialPhase,TideSeparated,TideName,TideAmp,TidePhase,Time,Tide]=Tidal
             TideSeparated(:,j)=TideSeparated(:,j)-TideSeparated(:,i-1);
         end
     end
-    InitialPhase=asind(TideSeparated(1,:));
+    InitialPhase=nan(size(SNRNew,2),1);
+    for i=1:size(SNRNew,2)
+        InitialPhase(i)=asind(TideSeparated(1,i)/max(TideSeparated(:,i)));
+        Temp=diff(squeeze(TideSeparated(:,i)));
+        Temp=Temp(1);
+        if (InitialPhase(i)>0 && Temp<0)
+            InitialPhase(i)=180-InitialPhase(i);
+        elseif (InitialPhase(i)<0 && Temp<0)
+            InitialPhase(i)=180+InitialPhase(i);
+        end
+    end
 end
