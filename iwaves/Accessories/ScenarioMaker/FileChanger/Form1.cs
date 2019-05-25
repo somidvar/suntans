@@ -15,17 +15,17 @@ namespace FileChanger
     public partial class Form1 : Form
     {
         const int TauCases = 5;
-        const int LagCases = 5;
-        const int PycnoclineCases = 5;
-        const int WaveAmplitudeCases = 4;
-        const int VersionSeries = 100000;
+        const int LagCases = 1;
+        const int PycnoclineCases = 7;
+        const int WaveAmplitudeCases = 1;
+        const int VersionSeries = 110045;
         int FileNumber;
         string MotherDirectory;
         public Form1()
         {
             FileNumber = TauCases * PycnoclineCases * WaveAmplitudeCases*LagCases;
             InitializeComponent();
-            MotherDirectory = @"D:\Test\suntans-10th";
+            MotherDirectory = @"D:\suntans-triangular";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
@@ -33,7 +33,7 @@ namespace FileChanger
             string[] Address = new string[FileNumber];
             string[] ExtensionNumber = new string[FileNumber];
             double Tau_T = -1000;
-            double NSteps = 3.63e5;
+            double NSteps = 104160;
             double DiurnalAmplitude = -1000;
             double SemiDiurnalAmplitude = -1000;
             double Pycnocline = -1000;
@@ -55,20 +55,43 @@ namespace FileChanger
                 switch (LagCounter %LagCases)
                 {
                     case 0:
-                        LagWind = 15 * 3600;
+                        LagWind = 157;
                         break;
                     case 1:
-                        LagWind = 18 * 3600;
+                        LagWind = 342;
                         break;
                     case 2:
-                        LagWind = 21 * 3600;
+                        LagWind = 12;
                         break;
                     case 3:
-                        LagWind = 24 * 3600;
+                        LagWind = 42;
                         break;
                     case 4:
-                        LagWind = 27 * 3600;
+                        LagWind = 72;
                         break;
+                    case 5:
+                        LagWind = 102;
+                        break;
+                    case 6:
+                        LagWind = 126;
+                        break;
+                        /*
+                    case 7:
+                        LagWind = 162;
+                        break;
+                    case 8:
+                        LagWind = 192;
+                        break;
+                    case 9:
+                        LagWind = 222;
+                        break;
+                    case 10:
+                        LagWind = 252;
+                        break;
+                    case 11:
+                        LagWind = 282;
+                        break;
+                        */
                     default:
                         break;
                 }
@@ -77,19 +100,19 @@ namespace FileChanger
                     switch (TauCounter % TauCases)
                     {
                         case 0:
-                            Tau_T = 0;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(0, 2) / 1000;
                             break;
                         case 1:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(1.5, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(1.5, 2) / 1000;
                             break;
                         case 2:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(3.0, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(3.0, 2) / 1000;
                             break;
                         case 3:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(4.5, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(4.5, 2) / 1000;
                             break;
                         case 4:
-                            Tau_T = 1.22 * 0.0012 * Math.Pow(6.0, 2) / 1025;
+                            Tau_T = 1.22 * 0.0012 * Math.Pow(6.0, 2) / 1000;
                             break;
                         default:
                             break;
@@ -99,19 +122,25 @@ namespace FileChanger
                         switch (PycnoclineCounter % PycnoclineCases)
                         {
                             case 0:
-                                Pycnocline = 10.0;
+                                Pycnocline = 5;
                                 break;
                             case 1:
-                                Pycnocline = 12.5;
+                                Pycnocline = 7.5;
                                 break;
                             case 2:
-                                Pycnocline = 15.0;
+                                Pycnocline = 10;
                                 break;
                             case 3:
-                                Pycnocline = 17.5;
+                                Pycnocline = 12.5;
                                 break;
                             case 4:
-                                Pycnocline = 20.0;
+                                Pycnocline = 15;
+                                break;
+                            case 5:
+                                Pycnocline = 17.5;
+                                break;
+                            case 6:
+                                Pycnocline = 20;
                                 break;
                             default:
                                 break;
@@ -123,8 +152,10 @@ namespace FileChanger
                             switch (WaveAmplitudeCounter % WaveAmplitudeCases)
                             {
                                 case 0:
-                                    DiurnalAmplitude = 0;
-                                    SemiDiurnalAmplitude = 0;
+                                    //DiurnalAmplitude = 0;
+                                    DiurnalAmplitude = 0.022;
+                                    SemiDiurnalAmplitude = 0.056;
+                                    //SemiDiurnalAmplitude = 0;
                                     break;
                                 case 1:
                                     DiurnalAmplitude = -0.1027;
@@ -145,8 +176,6 @@ namespace FileChanger
                             {
                                 if (Tau_T == 0 && DiurnalAmplitude == 0 && SemiDiurnalAmplitude == 0)//Removing cases without tide nor wind
                                     Directory.Delete(Address[FileCounter], true);
-                                else if (Tau_T==0 && LagWind!=15*3600)
-                                    Directory.Delete(Address[FileCounter], true);//If TauT is zero the it's meaningless to lag the wind!
                                 else
                                 {
                                     SUNTANSDATModifier(Address[FileCounter], Tau_T, NSteps, DiurnalAmplitude, SemiDiurnalAmplitude, Pycnocline, LagWind);
@@ -167,15 +196,16 @@ namespace FileChanger
         }
         public void SUNTANSDATModifier(string Address, double Tau_T, double NSteps, double DiurnalAmplitude, double SemiDiurnalAmplitude, double Pycnocline,double Lagwind)
         {
-            Address += "\\InternalWaves\\rundata\\suntans.dat";
+            Address += "\\iwaves\\rundata\\suntans.dat";
             string Context = string.Empty;
             int LineCounter = 0;
-            int TauTLine = 33;
-            int NStepLine = 37;
-            int DiurnalLine = 106;
-            int SemiDiurnalLine = 107;
-            int PycnoclineLine = 110;
-            int LagLine = 112;
+            int TauTLine = 67;
+            int NStepLine = 35;
+            int DiurnalLine = 63;
+            int SemiDiurnalLine = 62;
+            int PycnoclineLine = 66;
+            //int LagLine = 64;
+            int LagLine = 65;
             StreamReader Reader;
             Reader = new StreamReader(Address);
             while (!Reader.EndOfStream)
@@ -187,27 +217,28 @@ namespace FileChanger
                 }
                 else if (LineCounter == NStepLine)
                 {
-                    Context += string.Format("nsteps\t\t\t\t\t\t\t{0}\t\t\t# Number of steps",NSteps);
+                    Context += string.Format("nsteps\t\t\t\t{0}\t\t\t# Number of steps",NSteps);
                     Reader.ReadLine();
                 }
                 else if (LineCounter == DiurnalLine)
                 {
-                    Context += string.Format("DiurnalTideAmplitude\t\t\t{0}\t\t\t# Diurnal Tidal amplitude at sea-side for U Barotropic 0.004 is 0.1027",DiurnalAmplitude);
+                    Context += string.Format("K1TideAmplitude\t\t{0}\t\t\t# Diurnal Tidal amplitude at sea-side for U Barotropic 0.004 is 0.1027", DiurnalAmplitude);
                     Reader.ReadLine();
                 }
                 else if (LineCounter == SemiDiurnalLine)
                 {
-                    Context += string.Format("SemiDiurnalTideAmplitude\t\t{0}\t\t\t# Semi-Diurnal Tidal amplitude at sea-side for U Barotropic 0.006 is 0.1454",SemiDiurnalAmplitude);
+                    Context += string.Format("M2TideAmplitude\t\t{0}\t\t\t# Semi-Diurnal Tidal amplitude at sea-side for U Barotropic 0.006 is 0.1454", SemiDiurnalAmplitude);
                     Reader.ReadLine();
                 }
                 else if (LineCounter == PycnoclineLine)
                 {
-                    Context += string.Format("CSal\t\t\t\t\t\t\t{0}\t\t\t# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal", Pycnocline);
+                    Context += string.Format("PycnoclineDepth\t\t{0}\t\t\t# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal", Pycnocline);
                     Reader.ReadLine();
                 }
                 else if (LineCounter == LagLine)
                 {
-                    Context += string.Format("WindTimeLag\t\t\t\t\t\t{0}\t\t\t# The lag time between wind and tide in sec used by Omidvar and Woodson", Lagwind);
+                    //Context += string.Format("TidePhaseDifference\t{0}\t\t\t# The lag time between wind and tide in sec used by Omidvar and Woodson", Lagwind);
+                    Context += string.Format("WindPhaseDifference\t{0}\t\t\t# The lag time between wind and tide in sec used by Omidvar and Woodson", Lagwind);
                     Reader.ReadLine();
                 }
                 else
@@ -225,7 +256,7 @@ namespace FileChanger
         public void IWavesModifier(string Address)
         {
             string CaseNumber = Address.Substring(Address.LastIndexOf('-') + 1, 5);
-            Address += "\\InternalWaves\\iwaves_sub.sh";
+            Address += "\\iwaves\\iwaves_sub.sh";
             try
             {
                 StreamReader IWavesReader = new StreamReader(Address);

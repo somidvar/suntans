@@ -54,3 +54,12 @@ D:\github\suntans\InternalWaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\
 D:\github\suntans\InternalWaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.csproj.GenerateResource.Cache
 D:\github\suntans\InternalWaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.exe
 D:\github\suntans\InternalWaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.pdb
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\bin\Debug\FileChanger.exe.config
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\bin\Debug\FileChanger.exe
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\bin\Debug\FileChanger.pdb
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.csprojResolveAssemblyReference.cache
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.Form1.resources
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.Properties.Resources.resources
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.csproj.GenerateResource.Cache
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.exe
+D:\github\suntans\iwaves\Accessories\ScenarioMaker\FileChanger\obj\Debug\FileChanger.pdb
