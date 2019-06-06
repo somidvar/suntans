@@ -2,7 +2,7 @@ close all;
 set(groot,'defaulttextinterpreter','latex');  
 set(groot, 'defaultAxesTickLabelInterpreter','latex');  
 set(groot, 'defaultLegendInterpreter','latex');  
-cd D:\Results\;
+cd D:\Paper1Results\;
 
 %%
 %Fig 1: Schematic propagation and reflection of IW
@@ -74,7 +74,7 @@ saveas(FIG,'Schematic-IW-Reflection','epsc');
 clear all;
 clc;
 
-load('D:\Results\FlatBathymetryAPE','RhoBConventional','RhoBTimeVarient',...
+load('D:\Paper1Results\FlatBathymetryAPE','RhoBConventional','RhoBTimeVarient',...
     'RhoPrimeConventional','RhoPrimeTimeVarient','X','ZC','Time',...
     'ConversionConventionalW','ConversionTimeVarientW','Eta','WBar');
 XPOS=250;
@@ -138,7 +138,7 @@ set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.8 0.8]);
 text(0.1,0.45,'$d$','fontsize',24,'BackgroundColor', 'white');
-MyYLabel=ylabel({'$\overline{w}$';'$[10^{-4}$ $m.s^{-1}]$'},'fontsize',18);
+MyYLabel=ylabel({'$W$';'$[10^{-4}$ $m.s^{-1}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.10, 0.5, 0]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
@@ -151,7 +151,7 @@ set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -1.1 1.1]);
 text(0.1,0.75,'$e$','fontsize',24);
-MyYLabel=ylabel({'$g\overline{w}\Delta \rho_b$';'$[10^{-6}$ $W.m^{-3}]$'},'fontsize',18);
+MyYLabel=ylabel({'$gW\Delta \rho_b$';'$[10^{-6}$ $W.m^{-3}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.10, 0.5, 0]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
@@ -169,8 +169,9 @@ axis([0 3 -1.1 1.1]);
 xlabel('t/T $[cycle^{-1}]$','fontsize',18);
 text(0.1,0.70,'$f$','fontsize',24);
 MyYLabel=ylabel({'$C$';'$[10^{-6}$ $W.m^{-3}]$'},'fontsize',18);
-set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.10, 0.5, 0]);
-lgd=legend('TVBD','CBD','Orientation','horizontal',[335 700 .1 .1]);
+set(MyYLabel,'Units', 'Normalized', 'Position', [-0.10, 0.5, 0]);
+lgd=legend('TVBD','CBD','Orientation','horizontal');
+lgd.Position=[0.427 0.955 0.25 0.028];
 lgd.FontSize=16;
 
 savefig(FIG,'Flat');
@@ -181,12 +182,12 @@ saveas(FIG,'Flat','epsc');
 clear all;
 
 TimePos=120;
-load('D:\Results\ShallowAPE.mat','W','X','ZC');
+load('D:\Paper1Results\ShallowAPE.mat','W','X','ZC');
 WShallow=W;
 XShallow=X;
 ZCShallow=ZC;
 
-load('D:\Results\DeepShallowAPE.mat','W','X','ZC');
+load('D:\Paper1Results\DeepShallowAPE.mat','W','X','ZC');
 WDeep=W;
 XDeep=X;
 ZCDeep=ZC;
@@ -261,16 +262,16 @@ FIG.Color='white';
 fig = gcf;
 fig.InvertHardcopy = 'off';
 savefig(FIG,'W-Shallow-DeepModel');
-saveas(FIG,'W-Shallow-DeepModel','epsc');
+saveas(FIG,'W-Shallow-DeepModel','png');
 %%
 %Fig 4: Density stratification and N^2 for both models.
 clear all;
 
-load('D:\Results\ShallowAPE.mat','ZC','RhoBConventional');
+load('D:\Paper1Results\ShallowAPE.mat','ZC','RhoBConventional');
 ZCShallow=ZC;
 RhoBConventionalShallow=RhoBConventional;
 
-load('D:\Results\DeepShallowAPE.mat','ZC','RhoBConventional');
+load('D:\Paper1Results\DeepShallowAPE.mat','ZC','RhoBConventional');
 ZCDeep=ZC;
 RhoBConventionalDeep=RhoBConventional;
 
@@ -353,7 +354,7 @@ saveas(FIG,'DensityStratification','epsc');
 %X and Z (generation)
 clear all;
 
-load('D:\Results\ShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','WBar');
+load('D:\Paper1Results\ShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','WBar');
 
 XPOS=952;
 ZPOS=43;
@@ -402,7 +403,7 @@ set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -1.3 1.3]);
 text(0.1,0.8,'$c$','fontsize',24,'BackgroundColor', 'white');
-MyYLabel=ylabel({'$\overline{w}$';'$[10^{-3}$ $m.s^{-1}]$'},'fontsize',18);
+MyYLabel=ylabel({'$W$';'$[10^{-3}$ $m.s^{-1}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
@@ -415,7 +416,7 @@ set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.5 0.5]);
 text(0.1,0.35,'$d$','fontsize',24);
-MyYLabel=ylabel({'$g\overline{w}\Delta \rho_b$';'$[10^{-4}$ $W.m^{-3}]$'},'fontsize',18);
+MyYLabel=ylabel({'$gW\Delta \rho_b$';'$[10^{-4}$ $W.m^{-3}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
@@ -437,8 +438,7 @@ xlabel('t/T','fontsize',18);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' ',' ',' ','2',' ',' ',' ','2.5',' ',' ',' ','3'});
 
-
-load('D:\Results\DeepShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','WBar');
+load('D:\Paper1Results\DeepShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','WBar');
 
 XPOS=784;
 ZPOS=172;
@@ -508,7 +508,8 @@ set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' ',' ',' ','2',' ',' ',' ','2.5',' ',' ',' ','3'});
 text(0.1,0.90,'$j$','fontsize',24);
 xlabel('t/T','fontsize',18);
-lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','Orientation','horizontal',[600 680 20 .1]);
+lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','Orientation','horizontal');
+lgd.Position=[0.36 0.94 0.24 0.031];
 lgd.FontSize=16;
 savefig(FIG,'Conversion-generation-Shallow-Deep');
 saveas(FIG,'Conversion-generation-Shallow-Deep','epsc');
@@ -516,7 +517,7 @@ saveas(FIG,'Conversion-generation-Shallow-Deep','epsc');
 %Fig 6: Pcolor of conversion
 clear all;
 
-load('D:\Results\ShallowAPE.mat','X','ZC','ConversionConventionalTimeAvrWBar','ConversionTimeVarientTimeAvrWBar');
+load('D:\Paper1Results\ShallowAPE.mat','X','ZC','ConversionConventionalTimeAvrWBar','ConversionTimeVarientTimeAvrWBar');
 
 MapColorNumber=40;
 %Using MapColorBrightnessThreshold to distinct the colors from white
@@ -558,7 +559,7 @@ set(gca,'FontWeight','bold');
 text(5,-20,'$a$','fontsize',24);
 ylabel('$Z$ $[m]$','fontsize',18);
 set(gca,'Color','Black');
-text(0,-325,'C$ $[$10^{-5}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
+text(0,-330,'$\langle C \rangle$ [$10^{-5}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
 ylim([-305,0]);
 set(gca,'YTick',[-300:100:0]);
 AxesLineX=xlim;
@@ -591,7 +592,7 @@ line([AxesLineX(1),AxesLineX(1)],[AxesLineY(1),AxesLineY(2)],'Color','black');
 line([AxesLineX(2),AxesLineX(2)],[AxesLineY(1),AxesLineY(2)],'Color','black');
 FIG.Color='white';
 
-load('D:\Results\DeepDeepAPE.mat','X','ZC','ConversionConventionalTimeAvrWBar','ConversionTimeVarientTimeAvrWBar');
+load('D:\Paper1Results\DeepShallowAPE.mat','X','ZC','ConversionConventionalTimeAvrWBar','ConversionTimeVarientTimeAvrWBar');
 
 MargineTop=0.03;
 MargineBot=0.10;
@@ -606,7 +607,7 @@ pcolor(movmean(X/1000,5),ZC,movmean(1e5*ConversionConventionalTimeAvrWBar',5,2))
 colormap(CustomMap);
 MyColorbar=colorbar('Location','south','Position',[MargineLeft+0.12, MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber-SubplotSpac+0.05, 1-MargineLeft-MargineRight-0.12, SubplotSpac-0.06]);
 MyColorbar.TickLabelInterpreter='latex';
-text(0,-3250,'C$ $[$10^{-5}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
+text(0,-3300,'$\langle C \rangle$ [$10^{-5}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
 set(gca,'XTickLabel','');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
@@ -652,14 +653,14 @@ saveas(FIG,'ConversionTimeAvr-Shallow-Deep','epsc');
 %model
 clear all;
 
-load('D:\Results\ShallowAPE.mat','X','ConversionConventionalTimeAvrDepthIntWBar','ConversionTimeVarient1TimeAvrDepthIntWBar','ConversionTimeVarientTimeAvrDepthIntWBar','ConversionTemporalTimeAvrDepthInt');
+load('D:\Paper1Results\ShallowAPE.mat','X','ConversionConventionalTimeAvrDepthIntWBar','ConversionTimeVarient1TimeAvrDepthIntWBar','ConversionTimeVarientTimeAvrDepthIntWBar','ConversionTemporalTimeAvrDepthInt');
 XShallow=X;
 ConversionConventionalTimeAvrDepthIntWBarShallow=ConversionConventionalTimeAvrDepthIntWBar;
 ConversionTimeVarient1TimeAvrDepthIntWBarShallow=ConversionTimeVarient1TimeAvrDepthIntWBar;
 ConversionTimeVarientTimeAvrDepthIntWBarShallow=ConversionTimeVarientTimeAvrDepthIntWBar;
 ConversionTemporalTimeAvrDepthIntShallow=ConversionTemporalTimeAvrDepthInt;
 
-load('D:\Results\DeepShallowAPE.mat','X','ConversionConventionalTimeAvrDepthIntWBar','ConversionTimeVarient1TimeAvrDepthIntWBar','ConversionTimeVarientTimeAvrDepthIntWBar','ConversionTemporalTimeAvrDepthInt');
+load('D:\Paper1Results\DeepShallowAPE.mat','X','ConversionConventionalTimeAvrDepthIntWBar','ConversionTimeVarient1TimeAvrDepthIntWBar','ConversionTimeVarientTimeAvrDepthIntWBar','ConversionTemporalTimeAvrDepthInt');
 XDeep=X;
 ConversionConventionalTimeAvrDepthIntWBarDeep=ConversionConventionalTimeAvrDepthIntWBar;
 ConversionTimeVarient1TimeAvrDepthIntWBarDeep=ConversionTimeVarient1TimeAvrDepthIntWBar;
@@ -682,13 +683,14 @@ plot(movmean(XShallow/1000,MovmeanPtNumber),1e3*movmean(ConversionConventionalTi
 plot(movmean(XShallow/1000,MovmeanPtNumber),1e3*movmean(ConversionTimeVarientTimeAvrDepthIntWBarShallow,MovmeanPtNumber),'-','color',[0 113/255 188/255],'LineWidth',2);
 plot(0,0,':','color',[0 113/255 188/255],'LineWidth',2);
 plot(0,0,'--','color',[0 113/255 188/255],'LineWidth',2);
-lgd=legend('CBD','TVBD','$\rho''gw$','$IWxBTH$','Orientation','horizontal',[600 580 20 .1]);
+lgd=legend('CBD','TVBD','$\rho''gw$','$IWxBTH$','Orientation','horizontal');
+lgd.Position=[0.36 0.94 0.284 0.031];
 lgd.FontSize=16;
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 set(gca,'XTickLabel','');
 axis([0 145 -1 5.9]);
-MyYLabel=ylabel('$C$ $[10^{-3}$ $W.m^{-2}]$','fontsize',18);
+MyYLabel=ylabel('$\langle \overline{C} \rangle$ $[10^{-3}$ $W.m^{-2}]$','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.07, 0.5, 0]);
 text(5,5.2,'$a$','fontsize',24);
 
@@ -740,7 +742,7 @@ saveas(FIG,'ConversionTimeAvrDepthInt-Shallow-Deep','epsc');
 %Fig 8: TimeAvr UBar and WBar
 
 clear all;
-load('D:\Results\ShallowAPE.mat','X','ZC','UBar','WBar','Time');
+load('D:\Paper1Results\ShallowAPE.mat','X','ZC','UBar','WBar','Time');
 
 MapColorNumber=20;
 %Using MapColorBrightnessThreshold to distinct the colors from white
@@ -777,7 +779,7 @@ caxis([-1 1]);
 MyColorbar=colorbar('Location','northoutside');
 MyColorbarPos=MyColorbar.Position;
 MyColorbar.delete;
-MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.1 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.1 MyColorbarPos(4)]);
+MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.12 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.12 MyColorbarPos(4)]);
 colormap(SubplotLT,CustomMapT);
 MyColorbar.TickLabelInterpreter='latex';
 ylim([-305,0]);
@@ -788,7 +790,7 @@ set(gca,'FontWeight','bold');
 text(5,-20,'$a$','fontsize',24);
 ylabel('$Z$ $[m]$','fontsize',18);
 set(gca,'Color','Black');
-text(0,40,'$\bar{u}$ $[10^{-4}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
+text(0,40,'$\langle U \rangle$ $[10^{-4}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
 AxesLineX=xlim;
 AxesLineY=ylim;
 hold on;
@@ -820,11 +822,11 @@ CustomMapB(size(MapColors,2)+2:end,1)=1;
 SubplotCounter=1;
 SubplotLB=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 pcolor(X/1000,ZC,1e6*1/(Time(end)-Time(1))*movmean(trapz(Time,WBar,3)',10,2));shading flat;
-caxis([-4 4]);
+caxis([-3 3]);
 MyColorbar=colorbar('Location','northoutside');
 MyColorbarPos=MyColorbar.Position;
 MyColorbar.delete;
-MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.1 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.1 MyColorbarPos(4)]);
+MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.12 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.12 MyColorbarPos(4)]);
 colormap(SubplotLB,CustomMapB);
 MyColorbar.TickLabelInterpreter='latex';
 ylim([-305,0]);
@@ -834,7 +836,7 @@ set(gca,'FontWeight','bold');
 text(5,-20,'$b$','fontsize',24);
 ylabel('$Z$ $[m]$','fontsize',18);
 set(gca,'Color','Black');
-text(0,40,'$\bar{w}$ $[10^{-6}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
+text(0,40,'$\langle W \rangle$ $[10^{-6}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
 xlabel('Offshore Distance (km)','fontsize',18);
 set(gca,'Color','Black');
 AxesLineX=xlim;
@@ -846,7 +848,7 @@ line([AxesLineX(1),AxesLineX(1)],[AxesLineY(1),AxesLineY(2)],'Color','black');
 line([AxesLineX(2),AxesLineX(2)],[AxesLineY(1),AxesLineY(2)],'Color','black');
 FIG.Color='white';
 
-load('D:\Results\DeepDeepAPE.mat','X','ZC','UBar','WBar','Time');
+load('D:\Paper1Results\DeepShallowAPE.mat','X','ZC','UBar','WBar','Time');
 
 MargineTop=0.13;
 MargineBot=0.10;
@@ -862,7 +864,7 @@ caxis([-5 5]);
 MyColorbar=colorbar('Location','northoutside');
 MyColorbarPos=MyColorbar.Position;
 MyColorbar.delete;
-MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.1 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.1 MyColorbarPos(4)]);
+MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.12 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.12 MyColorbarPos(4)]);
 colormap(SubplotRT,CustomMapT);
 MyColorbar.TickLabelInterpreter='latex';
 ylim([-3050,0]);
@@ -873,7 +875,7 @@ set(gca,'FontWeight','bold');
 text(10,-200,'$c$','fontsize',24);
 ylabel('$Z$ $[m]$','fontsize',18);
 set(gca,'Color','Black');
-text(0,400,'$\bar{u}$ $[10^{-5}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
+text(0,400,'$\langle U \rangle$ $[10^{-5}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
 AxesLineX=xlim;
 AxesLineY=ylim;
 hold on;
@@ -886,11 +888,11 @@ FIG.Color='white';
 SubplotCounter=1;
 SubplotRB=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 pcolor(X/1000,ZC,1e6*1/(Time(end)-Time(1))*movmean(trapz(Time,WBar,3)',10,2));shading flat;
-caxis([-4 4]);
+caxis([-3 3]);
 MyColorbar=colorbar('Location','northoutside');
 MyColorbarPos=MyColorbar.Position;
 MyColorbar.delete;
-MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.1 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.1 MyColorbarPos(4)]);
+MyColorbar=colorbar('Location','south','Position',[MyColorbarPos(1)+0.12 MyColorbarPos(2)+0.09 MyColorbarPos(3)-0.12 MyColorbarPos(4)]);
 colormap(SubplotRB,CustomMapB);
 MyColorbar.TickLabelInterpreter='latex';
 ylim([-3050,0]);
@@ -900,7 +902,7 @@ set(gca,'FontWeight','bold');
 text(10,-200,'$d$','fontsize',24);
 ylabel('$Z$ $[m]$','fontsize',18);
 set(gca,'Color','Black');
-text(0,400,'$\bar{w}$ $[10^{-6}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
+text(0,400,'$\langle W \rangle$ $[10^{-6}$ $m.s^{-1}]$','Interpreter','latex','Fontsize',18);
 xlabel('Offshore Distance (km)','fontsize',18);
 set(gca,'Color','Black');
 AxesLineX=xlim;
@@ -921,7 +923,7 @@ saveas(FIG,'UBarWBar-Shallow-Deep','epsc');
 %X and Z (reflection)
 clear all;
 
-load('D:\Results\ShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','W','WBar','IsopycnalDislocation');
+load('D:\Paper1Results\ShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','W','WBar','IsopycnalDislocation');
 XPOS=607;
 ZPOS=22;
 WPrime=W-WBar;
@@ -996,7 +998,7 @@ set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
 xlabel('t/T','fontsize',18);
 
 
-load('D:\Results\DeepShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','W','WBar','IsopycnalDislocation');
+load('D:\Paper1Results\DeepShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','W','WBar','IsopycnalDislocation');
 
 XPOS=426;
 ZPOS=52;
@@ -1068,9 +1070,9 @@ box on;
 axis([0 3 -0.25 0.25]);
 text(0.1,0.18,'$h$','fontsize',24);
 xlabel('t/T','fontsize',18);
-lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','$\overline{w}$','$w''$','$\frac{\partial \delta}{\partial t}$');
+lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','$W$','$w''$','$\frac{\partial \delta}{\partial t}$');
 lgd.Orientation='horizontal';
-lgd.Position=[0.5 0.94 0.1 0.05];
+lgd.Position=[0.45 0.94 0.1 0.05];
 lgd.Interpreter='latex';
 lgd.FontSize=20;
 savefig(FIG,'Conversion-Reflection-Shallow-Deep');
