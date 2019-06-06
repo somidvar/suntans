@@ -16,7 +16,7 @@ namespace FileChanger
     {
         string MotherDirectory;
         const bool CaseChecker = false;
-        const int CaseNumber = 129;
+        const int CaseNumber = 147;
         public Form1()
         {
             InitializeComponent();
@@ -25,7 +25,8 @@ namespace FileChanger
         }
         public void ArgumentInitializer()
         {
-            StreamReader CSVParamaters = new StreamReader("D:\\Paper2Results\\Parameters.csv");
+
+            StreamReader CSVParamaters = new StreamReader("D:\\Parameters.csv");
             string CSVContent = CSVParamaters.ReadLine();
             double[] PycnoclineDepth, M2Amplitude, K1Amplitude, K1Phase, WindSpeed, WindPhase;
             PycnoclineDepth = new double[CaseNumber];
