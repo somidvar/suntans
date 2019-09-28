@@ -503,7 +503,7 @@ plot((Time-Time(1))*omega/2/pi,1e4*squeeze(ConversionTimeVarient1WBar(XPOS,ZPOS,
 plot((Time-Time(1))*omega/2/pi,1e4*squeeze(ConversionTemporal(XPOS,ZPOS,:)),'--','color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 -0.3 1.1]);
+axis([0 3 -0.3 1.3]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' ',' ',' ','2',' ',' ',' ','2.5',' ',' ',' ','3'});
 text(0.1,0.90,'$j$','fontsize',24);
@@ -1018,20 +1018,20 @@ subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(Subpl
 plot((Time-Time(1))*omega/2/pi,squeeze(RhoBTimeVarient(XPOS,ZPOS,:)-20),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 2.98 3.003]);
+axis([0 3 2.983 3.007]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
-text(0.1,2.999,'$e$','fontsize',24);
+text(0.1,3.0035,'$e$','fontsize',24);
 
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot((Time-Time(1))*omega/2/pi,1e2*squeeze(RhoPrimeTimeVarient(XPOS,ZPOS,:)),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 -1.5 1.5]);
+axis([0 3 -1.5 1.6]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
-text(0.1,1.2,'$f$','fontsize',24);
+text(0.1,1.3,'$f$','fontsize',24);
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -1067,8 +1067,8 @@ set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 box on;
-axis([0 3 -0.25 0.25]);
-text(0.1,0.18,'$h$','fontsize',24);
+axis([0 3 -0.28 0.28]);
+text(0.1,0.21,'$h$','fontsize',24);
 xlabel('t/T','fontsize',18);
 lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','$W$','$w''$','$\frac{\partial \delta}{\partial t}$');
 lgd.Orientation='horizontal';
@@ -1168,3 +1168,272 @@ saveas(FIG,'Conversion-Reflection-Shallow-Deep','epsc');
 % % fig.InvertHardcopy = 'off';
 % % savefig(FIG,'3-W-Shallow-DeepModel');
 % % saveas(FIG,'3-W-Shallow-DeepModel','epsc');
+
+%%
+%Fig 10: Bathymetry of IdleRidge case
+clear all;
+
+X=ncread('D:\Paper1Results\IdleRidgeInfo.nc','X');
+Y=ncread('D:\Paper1Results\IdleRidgeInfo.nc','Y');
+ZC=ncread('D:\Paper1Results\IdleRidgeInfo.nc','Z');
+Z3D=ncread('D:\Paper1Results\IdleRidgeInfo.nc','Density',[1,1,1,1],[Inf,Inf,Inf,1]);
+
+Z3D=Z3D*0+permute(repmat(ZC,1,size(X,1),size(Y,1)),[2,3,1]);
+Z3D=nanmin(Z3D,[],3);
+[xx,yy]=meshgrid(X,Y);
+
+
+XPOS=floor(size(X,1)/2);
+YPOS=floor(size(Y,1)/2)
+
+FIG=figure('position',[100 50 1600 950]);
+MargineTop=0.07;
+MargineBot=0.08;
+MargineLeft=0.10;
+MargineRight=0.55;
+SubplotSpac=0.02;
+SubplotNumber=1;
+
+SubplotCounter=1;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+surf(xx/1000,yy/1000,Z3D');
+shading flat;
+MyColorbar=colorbar('Location','east','Position',[MargineRight-0.065, MargineBot, 0.015, 1-MargineBot-MargineTop]);
+caxis([-3000 -300]);
+MyColorbar.Ticks=[-3000:250:-500,-300];
+MyColorbar.TickLabelInterpreter='latex';
+view(-30,15);
+set(gca,'fontsize',16);
+set(gca,'FontWeight','bold');
+set(gca,'XTick',[0:100:600]);
+set(gca,'YTick',[0:20:100]);
+text(50,100,-250,'$a$','fontsize',24);
+MyYLabel=zlabel('Depth [m]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.2, 0.5, 0]);
+xlabel('X [km]','fontsize',18);
+set(get(gca,'xlabel'),'rotation',15);
+ylabel('Y [km]','fontsize',18);
+set(get(gca,'ylabel'),'rotation',-40);
+
+MargineTop=0.07;
+MargineBot=0.08;
+MargineLeft=0.55;
+MargineRight=0.10;
+SubplotSpac=0.10;
+SubplotNumber=2;
+
+SubplotCounter=2;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+plot(Y/1000,movmean(Z3D(XPOS,:),5),'LineWidth',2,'color','black');
+axis([0 100 -3000 0]);
+set(gca,'YAxisLocation','right');
+set(gca,'fontsize',16);
+set(gca,'FontWeight','bold');
+text(5,-250,'$b$','fontsize',24);
+MyYLabel=ylabel('Depth [m]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [+1.15, 0.5, 0]);
+xlabel('Y [km]','fontsize',18);
+
+SubplotCounter=1;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+plot(X/1000,Z3D(:,YPOS),'LineWidth',2,'color','black');
+set(gca,'fontsize',16);
+set(gca,'FontWeight','bold');
+axis([0 600 -3000 0]);
+set(gca,'XTick',[0:100:600]);
+set(gca,'YAxisLocation','right');
+text(30,-250,'$c$','fontsize',24);
+MyYLabel=ylabel('Depth [m]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [+1.15, 0.5, 0]);
+xlabel('X [km]','fontsize',18);
+
+savefig(FIG,'IdleRige-Bathymetry');
+saveas(FIG,'IdleRige-Bathymetry','epsc');
+
+
+clf
+Longitude=ncread('D:\Paper1Results\southern_calif_crm_v1.nc','x');
+Latitude=ncread('D:\Paper1Results\southern_calif_crm_v1.nc','y');
+Bathymetry=ncread('D:\Paper1Results\southern_calif_crm_v1.nc','z');
+
+Bathymetry=Bathymetry(Longitude>-122.9 & Longitude<-122.5,Latitude>35.5 & Latitude<35.9);
+Longitude=Longitude(Longitude>-122.9 & Longitude<-122.5);
+Latitude=Latitude(Latitude>35.5 & Latitude<35.9);
+
+DataTimeZone = utmzone(mean(Latitude,'omitnan'),mean(Longitude,'omitnan'))
+utmstruct = defaultm('utm'); 
+utmstruct.zone = DataTimeZone;  
+utmstruct.geoid = wgs84Ellipsoid;
+utmstruct = defaultm(utmstruct);
+[X,Y] = mfwdtran(utmstruct,Latitude,Longitude);
+
+surf(X,Y,movmean(movmean(Bathymetry,5,1),5,2)')
+%%
+%Fig 11: Conversion of IdleRidge
+close all;
+
+YPOS=59;
+MapColorNumber=40;
+%Using MapColorBrightnessThreshold to distinct the colors from white
+MapColorBrightnessThreshold=0.5;
+%MapColors=logspace(0,MapColorBrightnessThreshold,MapColorNumber);
+MapColors=cumsum(5*0.95.^(1:MapColorNumber));
+MapColors=MapColors-min(MapColors);
+MapColors=MapColors/(max(MapColors))/1.2;
+%Adding white color to the map
+CustomMap=zeros(2*size(MapColors,2)+1,3);
+CustomMap(1:size(MapColors,2),1)=MapColors;
+CustomMap(1:size(MapColors,2),2)=MapColors;
+CustomMap(1:size(MapColors,2),3)=1;
+CustomMap(size(MapColors,2)+1,1)=1;
+CustomMap(size(MapColors,2)+1,2)=1;
+CustomMap(size(MapColors,2)+1,3)=1;
+CustomMap(size(MapColors,2)+2:end,3)=fliplr(MapColors);
+CustomMap(size(MapColors,2)+2:end,2)=fliplr(MapColors);
+CustomMap(size(MapColors,2)+2:end,1)=1;
+
+
+FIG=figure('position',[100 50 1600 950]);
+MargineTop=0.04;
+MargineBot=0.08;
+MargineLeft=0.10;
+MargineRight=0.47;
+SubplotSpac=0.06;
+SubplotNumber=3;
+
+SubplotCounter=3;
+BottomTemp=MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber;
+subplot('Position',[MargineLeft,BottomTemp,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionConventionalTimeAvrWBar(:,YPOS,:)),3,1)');
+set(gca,'fontsize',16);
+shading flat;
+colormap(CustomMap);
+MyColorbar=colorbar('Location','south','Position',[MargineLeft+0.13,BottomTemp-0.03,1-MargineLeft-0.02-0.13,0.02]);
+caxis([-6 6]);
+MyColorbar.Ticks=-6:2:6;
+MyColorbar.TickLabelInterpreter='latex';
+text(10,-3300,'$\langle C \rangle$ $[10^{-5} W. m^{-3}]$','Interpreter','latex','Fontsize',18);
+set(gca,'XTick',[0:100:600]);
+set(gca,'XTickLabel','');
+set(gca,'YTick',[-3000:500:0]);
+text(30,-250,'$a$','fontsize',24);
+MyYLabel=ylabel('Depth [m]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
+set(gca,'Color','Black');
+AxesLineX=xlim;
+AxesLineY=ylim;
+hold on;
+line([AxesLineX(1),AxesLineX(2)],[AxesLineY(1),AxesLineY(1)],'Color','black');
+line([AxesLineX(1),AxesLineX(2)],[AxesLineY(2),AxesLineY(2)],'Color','black');
+line([AxesLineX(1),AxesLineX(1)],[AxesLineY(1),AxesLineY(2)],'Color','black');
+line([AxesLineX(2),AxesLineX(2)],[AxesLineY(1),AxesLineY(2)],'Color','black');
+FIG.Color='white';
+set(gca,'layer','top');
+grid on;
+grid off;
+set(gca,'FontWeight','bold');
+
+
+SubplotCounter=2;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+plot(X/1000,ConversionTimeVarientTimeAvrDepthIntWBar(:,YPOS),'color',[0 113/255 188/255],'LineWidth',2);
+set(gca,'fontsize',16);
+hold on;
+plot(X/1000,ConversionConventionalTimeAvrDepthIntWBar(:,YPOS),'color',[216/255 82/255 24/255],'LineWidth',2);
+axis([0 600 -.012 0.045]);
+set(gca,'XTick',[0:100:600]);
+set(gca,'XTickLabel','');
+set(gca,'YTick',[-0.01:0.01:0.04]);
+text(30,0.04,'$c$','fontsize',24);
+MyYLabel=ylabel('C [$W.m^{-2}$]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
+legend('TVBD','CBD','fontsize',18);
+set(gca,'FontWeight','bold');
+
+SubplotCounter=1;
+BottomTemp=MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber;
+subplot('Position',[MargineLeft,BottomTemp,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+pcolor(X/1000,Y/1000,1e2*movmean(movmean(ConversionConventionalTimeAvrDepthIntWBar,2,1),2,2)');
+set(gca,'fontsize',16);
+shading flat;
+xlim([0 600]);
+MyColorbar=colorbar('Location','north','AxisLocation','in','Position',[MargineLeft+0.13,BottomTemp+0.285,1-MargineLeft-0.02-0.13,0.02]);
+caxis([-6 +6]);
+MyColorbar.Ticks=-6:2:6;
+MyColorbar.TickLabelInterpreter='latex';
+text(10,56,'$\langle \bar{C} \rangle$ [$10^{-2}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
+
+set(gca,'XTick',[0:100:600]);
+text(30,95,'$e$','fontsize',24);
+MyYLabel=ylabel('Y [km]','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
+xlabel('X [km]','fontsize',18);
+set(gca,'layer','top');
+grid on;
+grid off;
+set(gca,'FontWeight','bold');
+
+MargineLeft=0.55;
+MargineRight=0.02;
+
+SubplotCounter=3;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionTimeVarientTimeAvrWBar(:,YPOS,:)),3,1)');
+set(gca,'fontsize',16);
+shading flat;
+colormap(CustomMap);
+caxis([-6 +6]);
+set(gca,'XTick',[0:100:600]);
+set(gca,'XTickLabel','');
+set(gca,'YTick',[-3000:500:0]);
+set(gca,'YTickLabel','');
+text(30,-250,'$b$','fontsize',24);
+set(gca,'Color','Black');
+AxesLineX=xlim;
+AxesLineY=ylim;
+hold on;
+line([AxesLineX(1),AxesLineX(2)],[AxesLineY(1),AxesLineY(1)],'Color','black');
+line([AxesLineX(1),AxesLineX(2)],[AxesLineY(2),AxesLineY(2)],'Color','black');
+line([AxesLineX(1),AxesLineX(1)],[AxesLineY(1),AxesLineY(2)],'Color','black');
+line([AxesLineX(2),AxesLineX(2)],[AxesLineY(1),AxesLineY(2)],'Color','black');
+FIG.Color='white';
+set(gca,'layer','top');
+grid on;
+grid off;
+set(gca,'FontWeight','bold');
+
+SubplotCounter=2;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+plot(X/1000,ConversionTimeVarient1TimeAvrDepthIntWBar(:,YPOS),':','color',[0 113/255 188/255],'LineWidth',2);
+hold on;
+plot(X/1000,ConversionTemporalTimeAvrDepthInt(:,YPOS),'--','color',[0 113/255 188/255],'LineWidth',2);
+axis([0 600 -0.012 0.045]);
+set(gca,'fontsize',16);
+set(gca,'XTick',[0:100:600]);
+set(gca,'XTickLabel','');
+set(gca,'YTick',[-0.01:0.01:0.04]);
+set(gca,'YTickLabel','');
+text(30,0.04,'$d$','fontsize',24);
+legend('$\rho'' g W$','IW$x$BTH','fontsize',18);
+box on;
+set(gca,'FontWeight','bold');
+
+SubplotCounter=1;
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+pcolor(X/1000,Y/1000,1e2*movmean(movmean(ConversionTimeVarientTimeAvrDepthIntWBar,2,1),2,2)');
+caxis([-6 +6]);
+xlim([0 600]);
+shading flat;
+set(gca,'fontsize',16);
+set(gca,'XTick',[0:100:600]);
+set(gca,'YTickLabel','');
+text(30,95,'$f$','fontsize',24);
+xlabel('X [km]','fontsize',18);
+set(gca,'layer','top');
+grid on;
+grid off;
+set(gca,'FontWeight','bold');
+fig = gcf;
+fig.InvertHardcopy = 'off';
+savefig(FIG,'IdleRige-Conversion');
+saveas(FIG,'IdleRige-Conversion','epsc');
