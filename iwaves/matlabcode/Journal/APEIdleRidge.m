@@ -104,9 +104,9 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 	disp('Writing Density in the NETCDF')
 	netcdf.putVar(ncid,Density_ID,Density); 
 	
-	Epsilon=permute(repmat(ZC,1,size(X,1),size(Y,1),size(Time,1)),[2,3,1,4]);
-	Epsilon=1-Epsilon/nanmin(Epsilon(:));
-	Epsilon=Epsilon.*permute(repmat(Eta(floor(size(X,1)/3),floor(size(Y,1)/2),:),size(X,1),size(Y,1),1,size(ZC,1)),[1,2,4,3]);
+	Gamma=permute(repmat(ZC,1,size(X,1),size(Y,1),size(Time,1)),[2,3,1,4]);
+	Gamma=1-Gamma/nanmin(Gamma(:));
+	Gamma=Gamma.*permute(repmat(Eta(floor(size(X,1)/3),floor(size(Y,1)/2),:),size(X,1),size(Y,1),1,size(ZC,1)),[1,2,4,3]);
 
 	RhoBConventional=Density;
 	RhoBConventional(isnan(RhoBConventional))=0;
@@ -127,14 +127,14 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 		disp(strcat('Progress at=',num2str(j*100/size(Y,1)),'%'))
 		[RhoBTimeVarientTemp,~,ConversionTemporalTemp]=EPCalculator(X,ZC,Time,...
 			squeeze(Density(:,j,:,:)),squeeze(RhoBConventional(:,j,:))...
-			,squeeze(Epsilon(:,j,:,:)),InterpRes,g);
+			,squeeze(Gamma(:,j,:,:)),InterpRes,g);
 		RhoBTimeVarient(:,j,:,:)=RhoBTimeVarientTemp;
 		ConversionTemporal(:,j,:,:)=ConversionTemporalTemp;
 		disp('EPPrime calculation is done')      
 	end
 	disp('TVBD calculation is done')      
 	
-	clear ConversionTemporalTemp RhoBTimeVarientTemp Epsilon;
+	clear ConversionTemporalTemp RhoBTimeVarientTemp Gamma;
 	ConversionTemporal=single(ConversionTemporal);
 	RhoBTimeVarient=single(RhoBTimeVarient);
 	
@@ -250,7 +250,7 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 	netcdf.close(ncid);
 end
 
-function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density,RhoBConventional,Epsilon,InterpRes,g)   
+function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(X,ZC,Time,Density,RhoBConventional,Gamma,InterpRes,g)   
     %To better calculate the APE, the whole density profile is interpolated
     %at each time step for each X. The  the displacement of isopycanls was
     %calculated. After that, the resolution was reduced to the normal. This
@@ -265,7 +265,7 @@ function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(
     LastJIndexCell=cell(size(X,1),1);
     ZCCell=cell(size(X,1),1);
     ZCUniqueCell=cell(size(X,1),1);
-    EpsilonCell=cell(size(X,1),1);
+    GammaCell=cell(size(X,1),1);
     
     for i=1:size(X,1)
         LastJIndexCell{i}=find(RhoBConventional(i,:)*0==0,1,'last');
@@ -275,7 +275,7 @@ function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(
         ZCUniqueCell{i}=ZC(RhoBConventionalUniqueIndex);
         ZCCell{i}=ZC;
         RhoBTimeVarientCell{i}=nan(size(ZC,1),size(Time,1));
-        EpsilonCell{i}=squeeze(Epsilon(i,:,:));
+        GammaCell{i}=squeeze(Gamma(i,:,:));
     end
     
     CreatedParallelPool = parallel.pool.DataQueue;	
@@ -287,11 +287,11 @@ function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(
         LastJIndexWorker=LastJIndexCell{i};
         ZCWorker=ZCCell{i};
         ZCUniqueWorker=ZCUniqueCell{i};
-        EpsilonWorker=EpsilonCell{i};
+        GammaWorker=GammaCell{i};
         for j=RangeLimit:LastJIndexWorker
             for k=1:size(Time,1)
                 TempInterp=interp1(ZCUniqueWorker,RhoBConventionalWorker,...
-                    ZCWorker(j)-EpsilonWorker(j,k),'linear','extrap');
+                    ZCWorker(j)-GammaWorker(j,k),'linear','extrap');
                 RhoBTimeVarientCell{i}(j,k)=TempInterp;
             end
         end

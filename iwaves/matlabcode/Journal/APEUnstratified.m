@@ -73,9 +73,9 @@ Eta=Eta(XVector,:);
 Density=Density(XVector,:,:);
 U=U(XVector,:,:);
 
-Epsilon=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3]);
-Epsilon=1-Epsilon/nanmin(Epsilon(:));
-Epsilon=Epsilon.*permute(repmat(Eta(floor(size(X,1)/3),:),size(X,1),1,size(ZC,1)),[1,3,2]);
+Gamma=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3]);
+Gamma=1-Gamma/nanmin(Gamma(:));
+Gamma=Gamma.*permute(repmat(Eta(floor(size(X,1)/3),:),size(X,1),1,size(ZC,1)),[1,3,2]);
 
 DPlusZ=permute(repmat(ZC,1,size(X,1),size(Time,1)),[2,1,3])+W*0;
 Depth=nanmin(DPlusZ,[],2);
@@ -91,7 +91,7 @@ WBar(end+1,:,:)=WBar(end,:,:);
 
 clear DPlusZ Depth;
 
-Epsilon=single(Epsilon);
+Gamma=single(Gamma);
 Eta=single(Eta);
 W=single(W);
 WBar=single(WBar);
