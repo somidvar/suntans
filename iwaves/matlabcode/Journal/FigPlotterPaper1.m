@@ -262,7 +262,7 @@ FIG.Color='white';
 fig = gcf;
 fig.InvertHardcopy = 'off';
 savefig(FIG,'W-Shallow-DeepModel');
-saveas(FIG,'W-Shallow-DeepModel','png');
+saveas(FIG,'W-Shallow-DeepModel','epsc');
 %%
 %Fig 4: Density stratification and N^2 for both models.
 clear all;
@@ -375,7 +375,9 @@ hold on;
 plot((Time-Time(1))*omega/2/pi,squeeze(RhoBConventional(XPOS,ZPOS,:)-20),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 2.31 2.33]);
+axis([0 3 2.308 2.333]);
+set(gca,'YTick',[2.31:0.01:2.33]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,2.328,'$a$','fontsize',24);
@@ -390,6 +392,8 @@ plot((Time-Time(1))*omega/2/pi,100*squeeze(RhoPrimeConventional(XPOS,ZPOS,:)),'L
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -3.9 +3.9]);
+set(gca,'YTick',[-3:3:3]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,2.8,'$b$','fontsize',24);
@@ -402,6 +406,8 @@ plot((Time-Time(1))*omega/2/pi,1e3*squeeze(WBar(XPOS,ZPOS,:)),'LineWidth',2,'Col
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -1.3 1.3]);
+set(gca,'YTick',[-1:1:1]);
+set(gca,'YMinorTick','on');
 text(0.1,0.8,'$c$','fontsize',24,'BackgroundColor', 'white');
 MyYLabel=ylabel({'$W$';'$[10^{-3}$ $m.s^{-1}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
@@ -414,7 +420,9 @@ C_BT=(RhoBTimeVarient-RhoBConventional)*9.8.*WBar;
 plot((Time-Time(1))*omega/2/pi,1e4*squeeze(C_BT(XPOS,ZPOS,:)),'LineWidth',2,'Color','black');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 -0.5 0.5]);
+axis([0 3 -0.55 0.55]);
+set(gca,'YTick',[-0.5:0.5:0.5]);
+set(gca,'YMinorTick','on');
 text(0.1,0.35,'$d$','fontsize',24);
 MyYLabel=ylabel({'$gW\Delta \rho_b$';'$[10^{-4}$ $W.m^{-3}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
@@ -430,7 +438,8 @@ plot((Time-Time(1))*omega/2/pi,1e4*squeeze(ConversionTimeVarient1WBar(XPOS,ZPOS,
 plot((Time-Time(1))*omega/2/pi,1e4*squeeze(ConversionTemporal(XPOS,ZPOS,:)),'--','color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 -1 3.5]);
+axis([0 3 -1 3.9]);
+set(gca,'YTick',[0:1:4]);
 text(0.1,3,'$e$','fontsize',24);
 MyYLabel=ylabel({'$C$';'$[10^{-4}$ $W.m^{-3}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
@@ -457,7 +466,9 @@ hold on;
 plot((Time-Time(1))*omega/2/pi,squeeze(RhoBConventional(XPOS,ZPOS,:)-20),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([0 3 4.1325 4.137]);
+axis([0 3 4.133 4.1372]);
+set(gca,'YTick',[4.133:0.002:4.137]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,4.1365,'$f$','fontsize',24);
@@ -470,6 +481,7 @@ plot((Time-Time(1))*omega/2/pi,1e2*squeeze(RhoPrimeConventional(XPOS,ZPOS,:)),'L
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.8 0.8]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,0.6,'$g$','fontsize',24);
@@ -480,6 +492,7 @@ plot((Time-Time(1))*omega/2/pi,1e3*squeeze(WBar(XPOS,ZPOS,:)),'LineWidth',2,'Col
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -2 2]);
+set(gca,'YMinorTick','on');
 text(0.1,1.30,'$h$','fontsize',24,'BackgroundColor', 'white');
 set(gca,'XTickLabel','');
 
@@ -490,6 +503,7 @@ plot((Time-Time(1))*omega/2/pi,1e4*squeeze(C_BT(XPOS,ZPOS,:)),'LineWidth',2,'Col
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.22 0.22]);
+set(gca,'YMinorTick','on');
 text(0.1,0.15,'$i$','fontsize',24);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
@@ -504,6 +518,7 @@ plot((Time-Time(1))*omega/2/pi,1e4*squeeze(ConversionTemporal(XPOS,ZPOS,:)),'--'
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.3 1.3]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' ',' ',' ','2',' ',' ',' ','2.5',' ',' ',' ','3'});
 text(0.1,0.90,'$j$','fontsize',24);
@@ -942,9 +957,14 @@ SubplotNumber=4;
 SubplotCounter=4;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot((Time-Time(1))*omega/2/pi,squeeze(RhoBTimeVarient(XPOS,ZPOS,:)-20),'LineWidth',2);
+hold on;
+plot((Time-Time(1))*omega/2/pi,squeeze(RhoBConventional(XPOS,ZPOS,:)-20),'LineWidth',2);
+
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 1.785 1.830]);
+set(gca,'YTick',[1.79:0.02:1.83]);
+set(gca,'YMinorTick','on')
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,1.824,'$a$','fontsize',24);
@@ -954,9 +974,13 @@ set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot((Time-Time(1))*omega/2/pi,100*squeeze(RhoPrimeTimeVarient(XPOS,ZPOS,:)),'LineWidth',2);
+hold on;
+plot((Time-Time(1))*omega/2/pi,100*squeeze(RhoPrimeConventional(XPOS,ZPOS,:)),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -3.9 +3.9]);
+set(gca,'YTick',[-3:3:3]);
+set(gca,'YMinorTick','on')
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,2.8,'$b$','fontsize',24);
@@ -970,6 +994,7 @@ plot((Time-Time(1))*omega/2/pi,1e4*squeeze(WBar(XPOS,ZPOS,:)),'LineWidth',2,'col
 plot((Time-Time(1))*omega/2/pi,1e4*squeeze(WPrime(XPOS,ZPOS,:)),'LineWidth',2,'color','black','LineStyle','--');
 plot((Time-Time(1))*omega/2/pi,1e4*DiffDeltaDiffT,'LineWidth',2,'color','black','LineStyle',':');
 axis([0 3 -1.5 1.5]);
+set(gca,'YMinorTick','on');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 MyYLabel=ylabel({'$Vertical$ $velocity$';'$[10^{-4}$ $m.s^{-1}]$'},'fontsize',18);
@@ -992,11 +1017,11 @@ set(gca,'XTickLabel',{'0',' ',' ',' ','0.5',' ',' ',' ','1',' ',' ',' ','1.5',' 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -0.25 0.25]);
+set(gca,'YMinorTick','on')
 text(0.1,0.18,'$d$','fontsize',24);
 MyYLabel=ylabel({'$C$';'$[10^{-4}$ $W.m^{-3}]$'},'fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.15, 0.5, 0]);
 xlabel('t/T','fontsize',18);
-
 
 load('D:\Paper1Results\DeepShallowAPE.mat','Time','X','ZC','RhoBConventional','RhoPrimeConventional','RhoBTimeVarient','RhoPrimeTimeVarient','ConversionConventionalWBar','ConversionTimeVarientWBar','ConversionTimeVarient1WBar','ConversionTemporal','W','WBar','IsopycnalDislocation');
 
@@ -1016,9 +1041,13 @@ SubplotNumber=4;
 SubplotCounter=4;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot((Time-Time(1))*omega/2/pi,squeeze(RhoBTimeVarient(XPOS,ZPOS,:)-20),'LineWidth',2);
+hold on;
+plot((Time-Time(1))*omega/2/pi,squeeze(RhoBConventional(XPOS,ZPOS,:)-20),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 2.983 3.007]);
+set(gca,'YMinorTick','on');
+set(gca,'YTick',[2.98:0.01:3.010]);
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
 text(0.1,3.0035,'$e$','fontsize',24);
@@ -1026,12 +1055,16 @@ text(0.1,3.0035,'$e$','fontsize',24);
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot((Time-Time(1))*omega/2/pi,1e2*squeeze(RhoPrimeTimeVarient(XPOS,ZPOS,:)),'LineWidth',2);
+hold on;
+plot((Time-Time(1))*omega/2/pi,1e2*squeeze(RhoPrimeConventional(XPOS,ZPOS,:)),'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 axis([0 3 -1.5 1.6]);
+set(gca,'YTick',[-1:1:1]);
+set(gca,'YMinorTick','on');
 set(gca,'XTick',[0:0.125:3]);
 set(gca,'XTickLabel','');
-text(0.1,1.3,'$f$','fontsize',24);
+text(0.1,1.2,'$f$','fontsize',24,'BackgroundColor', 'white');
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -1042,6 +1075,8 @@ plot((Time-Time(1))*omega/2/pi,1e4*DiffDeltaDiffT,'LineWidth',2,'color','black',
 axis([0 3 -3 3]);
 set(gca,'fontsize',16);
 axis([0 3 -3 3]);
+set(gca,'YTick',[-2:2:2]);
+set(gca,'YMinorTick','on');
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 text(0.1,2.2,'$g$','fontsize',24,'BackgroundColor', 'white');
@@ -1068,7 +1103,9 @@ set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 box on;
 axis([0 3 -0.28 0.28]);
-text(0.1,0.21,'$h$','fontsize',24);
+set(gca,'YTick',[-0.2:0.2:0.2]);
+set(gca,'YMinorTick','on');
+text(0.1,0.19,'$h$','fontsize',24,'BackgroundColor','white');
 xlabel('t/T','fontsize',18);
 lgd=legend('TVBD','CBD','$\rho''gw$','$IWxBTH$','$W$','$w''$','$\frac{\partial \delta}{\partial t}$');
 lgd.Orientation='horizontal';
@@ -1077,6 +1114,7 @@ lgd.Interpreter='latex';
 lgd.FontSize=20;
 savefig(FIG,'Conversion-Reflection-Shallow-Deep');
 saveas(FIG,'Conversion-Reflection-Shallow-Deep','epsc');
+
 % %%
 % %Fig 10: Phase of Rho' and W'
 % clear all;
@@ -1182,7 +1220,6 @@ Z3D=Z3D*0+permute(repmat(ZC,1,size(X,1),size(Y,1)),[2,3,1]);
 Z3D=nanmin(Z3D,[],3);
 [xx,yy]=meshgrid(X,Y);
 
-
 XPOS=floor(size(X,1)/2);
 YPOS=floor(size(Y,1)/2)
 
@@ -1250,7 +1287,6 @@ xlabel('X [km]','fontsize',18);
 savefig(FIG,'IdleRige-Bathymetry');
 saveas(FIG,'IdleRige-Bathymetry','epsc');
 
-
 clf
 Longitude=ncread('D:\Paper1Results\southern_calif_crm_v1.nc','x');
 Latitude=ncread('D:\Paper1Results\southern_calif_crm_v1.nc','y');
@@ -1270,7 +1306,99 @@ utmstruct = defaultm(utmstruct);
 surf(X,Y,movmean(movmean(Bathymetry,5,1),5,2)')
 %%
 %Fig 11: Conversion of IdleRidge
-close all;
+clear all;
+MovingPointAvrNumber=2;
+
+ConversionConventionalTimeAvrDepthIntWBar1=ncread('APEIdleRidge-1.nc','ConversionConventionalTimeAvrDepthIntWBar');
+ConversionConventionalTimeAvrDepthIntWBar2=ncread('APEIdleRidge-2.nc','ConversionConventionalTimeAvrDepthIntWBar');
+ConversionConventionalTimeAvrDepthIntWBar3=ncread('APEIdleRidge-3.nc','ConversionConventionalTimeAvrDepthIntWBar');
+ConversionConventionalTimeAvrDepthIntWBar4=ncread('APEIdleRidge-4.nc','ConversionConventionalTimeAvrDepthIntWBar');
+ConversionConventionalTimeAvrDepthIntWBar=[ConversionConventionalTimeAvrDepthIntWBar1,ConversionConventionalTimeAvrDepthIntWBar2,ConversionConventionalTimeAvrDepthIntWBar3,ConversionConventionalTimeAvrDepthIntWBar4];
+clear ConversionConventionalTimeAvrDepthIntWBar4...
+    ConversionConventionalTimeAvrDepthIntWBar3 ...
+    ConversionConventionalTimeAvrDepthIntWBar2 ...
+    ConversionConventionalTimeAvrDepthIntWBar1;
+
+ConversionConventionalTimeAvrWBar1=ncread('APEIdleRidge-1.nc','ConversionConventionalTimeAvrWBar');
+ConversionConventionalTimeAvrWBar2=ncread('APEIdleRidge-2.nc','ConversionConventionalTimeAvrWBar');
+ConversionConventionalTimeAvrWBar3=ncread('APEIdleRidge-3.nc','ConversionConventionalTimeAvrWBar');
+ConversionConventionalTimeAvrWBar4=ncread('APEIdleRidge-4.nc','ConversionConventionalTimeAvrWBar');
+ConversionConventionalTimeAvrWBar=[ConversionConventionalTimeAvrWBar1,ConversionConventionalTimeAvrWBar2,ConversionConventionalTimeAvrWBar3,ConversionConventionalTimeAvrWBar4];
+clear ConversionConventionalTimeAvrWBar1 ...
+    ConversionConventionalTimeAvrWBar2 ...
+    ConversionConventionalTimeAvrWBar3 ...
+    ConversionConventionalTimeAvrWBar4;
+
+ConversionTimeVarient1TimeAvrDepthIntWBar1=ncread('APEIdleRidge-1.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
+ConversionTimeVarient1TimeAvrDepthIntWBar2=ncread('APEIdleRidge-2.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
+ConversionTimeVarient1TimeAvrDepthIntWBar3=ncread('APEIdleRidge-3.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
+ConversionTimeVarient1TimeAvrDepthIntWBar4=ncread('APEIdleRidge-4.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
+ConversionTimeVarient1TimeAvrDepthIntWBar=[ConversionTimeVarient1TimeAvrDepthIntWBar1,ConversionTimeVarient1TimeAvrDepthIntWBar2,ConversionTimeVarient1TimeAvrDepthIntWBar3,ConversionTimeVarient1TimeAvrDepthIntWBar4];
+clear ConversionTimeVarient1TimeAvrDepthIntWBar1...
+    ConversionTimeVarient1TimeAvrDepthIntWBar2 ...
+    ConversionTimeVarient1TimeAvrDepthIntWBar3 ...
+    ConversionTimeVarient1TimeAvrDepthIntWBar4;
+
+ConversionTemporalTimeAvrDepthInt1=ncread('APEIdleRidge-1.nc','ConversionTemporalTimeAvrDepthInt');
+ConversionTemporalTimeAvrDepthInt2=ncread('APEIdleRidge-2.nc','ConversionTemporalTimeAvrDepthInt');
+ConversionTemporalTimeAvrDepthInt3=ncread('APEIdleRidge-3.nc','ConversionTemporalTimeAvrDepthInt');
+ConversionTemporalTimeAvrDepthInt4=ncread('APEIdleRidge-4.nc','ConversionTemporalTimeAvrDepthInt');
+ConversionTemporalTimeAvrDepthInt=[ConversionTemporalTimeAvrDepthInt1,ConversionTemporalTimeAvrDepthInt2,ConversionTemporalTimeAvrDepthInt3,ConversionTemporalTimeAvrDepthInt4];
+clear ConversionTemporalTimeAvrDepthInt1...
+    ConversionTemporalTimeAvrDepthInt2 ...
+    ConversionTemporalTimeAvrDepthInt3 ...
+    ConversionTemporalTimeAvrDepthInt4;
+
+ConversionTimeVarient1TimeAvrWBar1=ncread('APEIdleRidge-1.nc','ConversionTimeVarient1TimeAvrWBar');
+ConversionTimeVarient1TimeAvrWBar2=ncread('APEIdleRidge-2.nc','ConversionTimeVarient1TimeAvrWBar');
+ConversionTimeVarient1TimeAvrWBar3=ncread('APEIdleRidge-3.nc','ConversionTimeVarient1TimeAvrWBar');
+ConversionTimeVarient1TimeAvrWBar4=ncread('APEIdleRidge-4.nc','ConversionTimeVarient1TimeAvrWBar');
+ConversionTimeVarient1TimeAvrWBar=[ConversionTimeVarient1TimeAvrWBar1,ConversionTimeVarient1TimeAvrWBar2,ConversionTimeVarient1TimeAvrWBar3,ConversionTimeVarient1TimeAvrWBar4];
+clear ConversionTimeVarient1TimeAvrWBar1...
+    ConversionTimeVarient1TimeAvrWBar2 ...
+    ConversionTimeVarient1TimeAvrWBar3 ...
+    ConversionTimeVarient1TimeAvrWBar4;
+
+ConversionTemporalTimeAvr1=ncread('APEIdleRidge-1.nc','ConversionTemporalTimeAvr');
+ConversionTemporalTimeAvr2=ncread('APEIdleRidge-2.nc','ConversionTemporalTimeAvr');
+ConversionTemporalTimeAvr3=ncread('APEIdleRidge-3.nc','ConversionTemporalTimeAvr');
+ConversionTemporalTimeAvr4=ncread('APEIdleRidge-4.nc','ConversionTemporalTimeAvr');
+ConversionTemporalTimeAvr=[ConversionTemporalTimeAvr1,ConversionTemporalTimeAvr2,ConversionTemporalTimeAvr3,ConversionTemporalTimeAvr4];
+clear ConversionTemporalTimeAvr1...
+    ConversionTemporalTimeAvr2 ...
+    ConversionTemporalTimeAvr3 ...
+    ConversionTemporalTimeAvr4;
+
+Y1=ncread('APEIdleRidge-1.nc','Y');
+Y2=ncread('APEIdleRidge-2.nc','Y');
+Y3=ncread('APEIdleRidge-3.nc','Y');
+Y4=ncread('APEIdleRidge-4.nc','Y');
+Y=[Y1;Y2;Y3;Y4];
+clear Y1 Y2 Y3 Y4;
+
+ZC=ncread('APEIdleRidge-4.nc','Z');
+X=ncread('APEIdleRidge-1.nc','X');
+
+ConversionConventionalTimeAvrDepthIntWBar=movmean(ConversionConventionalTimeAvrDepthIntWBar,MovingPointAvrNumber,1);
+ConversionConventionalTimeAvrDepthIntWBar=movmean(ConversionConventionalTimeAvrDepthIntWBar,MovingPointAvrNumber,2);
+
+ConversionConventionalTimeAvrWBar=movmean(ConversionConventionalTimeAvrWBar,MovingPointAvrNumber,1);
+ConversionConventionalTimeAvrWBar=movmean(ConversionConventionalTimeAvrWBar,MovingPointAvrNumber,2);
+
+ConversionTemporalTimeAvrDepthInt=movmean(ConversionTemporalTimeAvrDepthInt,MovingPointAvrNumber,1);
+ConversionTemporalTimeAvrDepthInt=movmean(ConversionTemporalTimeAvrDepthInt,MovingPointAvrNumber,2);
+
+ConversionTimeVarient1TimeAvrDepthIntWBar=movmean(ConversionTimeVarient1TimeAvrDepthIntWBar,MovingPointAvrNumber,1);
+ConversionTimeVarient1TimeAvrDepthIntWBar=movmean(ConversionTimeVarient1TimeAvrDepthIntWBar,MovingPointAvrNumber,2);
+
+ConversionTemporalTimeAvr=movmean(ConversionTemporalTimeAvr,MovingPointAvrNumber,1);
+ConversionTemporalTimeAvr=movmean(ConversionTemporalTimeAvr,MovingPointAvrNumber,2);
+
+ConversionTimeVarient1TimeAvrWBar=movmean(ConversionTimeVarient1TimeAvrWBar,MovingPointAvrNumber,1);
+ConversionTimeVarient1TimeAvrWBar=movmean(ConversionTimeVarient1TimeAvrWBar,MovingPointAvrNumber,2);
+
+ConversionTimeVarientTimeAvrWBar=ConversionTimeVarient1TimeAvrWBar+ConversionTemporalTimeAvr;
+ConversionTimeVarientTimeAvrDepthIntWBar=ConversionTimeVarient1TimeAvrDepthIntWBar+ConversionTemporalTimeAvrDepthInt;
 
 YPOS=59;
 MapColorNumber=40;
@@ -1304,7 +1432,7 @@ SubplotNumber=3;
 SubplotCounter=3;
 BottomTemp=MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber;
 subplot('Position',[MargineLeft,BottomTemp,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionConventionalTimeAvrWBar(:,YPOS,:)),3,1)');
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionTimeVarientTimeAvrWBar(:,YPOS,:)),3,1)');
 set(gca,'fontsize',16);
 shading flat;
 colormap(CustomMap);
@@ -1333,18 +1461,18 @@ grid on;
 grid off;
 set(gca,'FontWeight','bold');
 
-
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 plot(X/1000,ConversionTimeVarientTimeAvrDepthIntWBar(:,YPOS),'color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 hold on;
 plot(X/1000,ConversionConventionalTimeAvrDepthIntWBar(:,YPOS),'color',[216/255 82/255 24/255],'LineWidth',2);
-axis([0 600 -.012 0.045]);
+axis([0 600 -.012 0.065]);
 set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
-set(gca,'YTick',[-0.01:0.01:0.04]);
-text(30,0.04,'$c$','fontsize',24);
+set(gca,'YMinorTick','on');
+set(gca,'YTick',[-0.01:0.02:0.06]);
+text(30,0.057,'$c$','fontsize',24);
 MyYLabel=ylabel('C [$W.m^{-2}$]','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
 legend('TVBD','CBD','fontsize',18);
@@ -1361,16 +1489,21 @@ MyColorbar=colorbar('Location','north','AxisLocation','in','Position',[MargineLe
 caxis([-6 +6]);
 MyColorbar.Ticks=-6:2:6;
 MyColorbar.TickLabelInterpreter='latex';
-text(10,56,'$\langle \bar{C} \rangle$ [$10^{-2}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
+text(10,114,'$\langle \bar{C} \rangle$ [$10^{-2}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
 
 set(gca,'XTick',[0:100:600]);
-text(30,95,'$e$','fontsize',24);
+text(30,88,'$e$','fontsize',24);
 MyYLabel=ylabel('Y [km]','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
 xlabel('X [km]','fontsize',18);
 set(gca,'layer','top');
 grid on;
 grid off;
+hold on;
+Depth=permute(repmat(ZC,1,size(X,1),size(Y,1)),[2,3,1]);
+Depth=Depth+ConversionConventionalTimeAvrWBar*0;
+Depth=nanmin(Depth,[],3);
+contour(X/1000,Y/1000,Depth',[-300 -500 -1000 -2000 -2900],'color',[0.5 0.5 0.5],'LineWidth',1.5,'LineStyle','-');
 set(gca,'FontWeight','bold');
 
 MargineLeft=0.55;
@@ -1378,7 +1511,7 @@ MargineRight=0.02;
 
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionTimeVarientTimeAvrWBar(:,YPOS,:)),3,1)');
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionConventionalTimeAvrWBar(:,YPOS,:)),3,1)');
 set(gca,'fontsize',16);
 shading flat;
 colormap(CustomMap);
@@ -1407,13 +1540,14 @@ subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(Subpl
 plot(X/1000,ConversionTimeVarient1TimeAvrDepthIntWBar(:,YPOS),':','color',[0 113/255 188/255],'LineWidth',2);
 hold on;
 plot(X/1000,ConversionTemporalTimeAvrDepthInt(:,YPOS),'--','color',[0 113/255 188/255],'LineWidth',2);
-axis([0 600 -0.012 0.045]);
+axis([0 600 -0.012 0.065]);
 set(gca,'fontsize',16);
 set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
-set(gca,'YTick',[-0.01:0.01:0.04]);
+set(gca,'YMinorTick','on');
+set(gca,'YTick',[-0.01:0.02:0.06]);
 set(gca,'YTickLabel','');
-text(30,0.04,'$d$','fontsize',24);
+text(30,0.057,'$d$','fontsize',24);
 legend('$\rho'' g W$','IW$x$BTH','fontsize',18);
 box on;
 set(gca,'FontWeight','bold');
@@ -1427,11 +1561,16 @@ shading flat;
 set(gca,'fontsize',16);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTickLabel','');
-text(30,95,'$f$','fontsize',24);
+text(30,88,'$f$','fontsize',24);
 xlabel('X [km]','fontsize',18);
 set(gca,'layer','top');
 grid on;
 grid off;
+hold on;
+Depth=permute(repmat(ZC,1,size(X,1),size(Y,1)),[2,3,1]);
+Depth=Depth+ConversionConventionalTimeAvrWBar*0;
+Depth=nanmin(Depth,[],3);
+contour(X/1000,Y/1000,Depth',[-300 -500 -1000 -2000 -2900],'color',[0.5 0.5 0.5],'LineWidth',1.5,'LineStyle','-');
 set(gca,'FontWeight','bold');
 fig = gcf;
 fig.InvertHardcopy = 'off';
