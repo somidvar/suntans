@@ -299,7 +299,9 @@ function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(
                 else
                     [RhoBWorkerUnique,RhoBWorkerUniqueIndex]=unique(RhoBTimeVarientWorker);
                     Dislocation=ZCWorker(j)-interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');%if Dislocation<0 downwelling and if dislocation>0 upwelling                                  
-                    if Dislocation<0%Downwelling
+                    if Dislocation==0
+                        ConversionTemporalCell{i}(j,k)=0;	                    
+                    elseif Dislocation<0%Downwelling
                         TopBoundary=interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');
                         BotBoundary=ZCWorker(j);
                         ZCInterp=linspace(TopBoundary,BotBoundary,InterpRes);

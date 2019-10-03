@@ -9,7 +9,8 @@ clc;
 g=9.8;
 Rho0=1000;%Setting the reference density
 InterpRes=100;
-DataPath='/scratch/omidvar/work-directory_0801/IdleRidgeInfoCorrect.nc';
+DataPath='/scratch/omidvar/work-directory_0801/IdleRidgeInfo.nc';
+
 YRange=1:30;
 Part=1;
 ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
@@ -333,7 +334,9 @@ function [RhoBTimeVarient,IsopycnalDislocation,ConversionTemporal]=EPCalculator(
                 else
                     [RhoBWorkerUnique,RhoBWorkerUniqueIndex]=unique(RhoBTimeVarientWorker);
                     Dislocation=ZCWorker(j)-interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');%if Dislocation<0 downwelling and if dislocation>0 upwelling                                  
-                    if Dislocation<0%Downwelling
+                    if Dislocation==0
+                        ConversionTemporalCell{i}(j,k)=0;					
+                    elseif Dislocation<0%Downwelling
                         TopBoundary=interp1(RhoBWorkerUnique,ZCWorker(RhoBWorkerUniqueIndex),RhoWorker(j),'linear');
                         BotBoundary=ZCWorker(j);
                         ZCInterp=linspace(TopBoundary,BotBoundary,InterpRes);
