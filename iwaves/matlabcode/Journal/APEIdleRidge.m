@@ -11,21 +11,22 @@ Rho0=1000;%Setting the reference density
 InterpRes=100;
 DataPath='/scratch/omidvar/work-directory_0801/IdleRidgeInfo.nc';
 
-YRange=1:30;
+%To avoid any boundary effect on the each piece, there are overlaps in file 1, 2, 3 and 4.
+YRange=1:40;
 Part=1;
 ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
 
-YRange=31:60;
-Part=2;
-ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
+%YRange=31:70;
+%Part=2;
+%ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
 
-YRange=61:90;
-Part=3;
-ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
+%YRange=61:100;
+%Part=3;
+%ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
 
-YRange=91:118;
-Part=4;
-ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
+% YRange=91:118;
+% Part=4;
+% ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g);
 
 function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 	disp(strcat('Reading the NETCDF at',DataPath))
@@ -42,11 +43,9 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 	Density=Density(:,YRange,:,:);
 	Eta=Eta(:,YRange,:);
 
-	X=movmean(X,2);
 	Density=movmean(Density,2,1);
 	Eta=movmean(Eta,2,1);
 
-	Y=movmean(Y,2);
 	Density=movmean(Density,2,2);
 	Eta=movmean(Eta,2,2);
 	
@@ -109,10 +108,7 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 	Gamma=1-Gamma/nanmin(Gamma(:));
 	Gamma=Gamma.*permute(repmat(Eta(floor(size(X,1)/3),floor(size(Y,1)/2),:),size(X,1),size(Y,1),1,size(ZC,1)),[1,2,4,3]);
 
-	RhoBConventional=Density;
-	RhoBConventional(isnan(RhoBConventional))=0;
-	RhoBConventional=trapz(Time,RhoBConventional,4)/(Time(end)-Time(1));
-	RhoBConventional(RhoBConventional==0)=nan;
+	RhoBConventional=nanmean(Density,4);
 
 	RhoBTimeVarient=nan(size(X,1),size(Y,1),size(ZC,1),size(Time,1));
 	ConversionTemporal=nan(size(X,1),size(Y,1),size(ZC,1),size(Time,1));
@@ -195,8 +191,10 @@ function ConversionPartCalculator(YRange,Part,DataPath,InterpRes,Rho0,g)
 
 	WBar1=-diff(DPlusZ.*UBar,1,1)./repmat(diff(X,1,1),1,size(Y,1),size(ZC,1),size(Time,1));
 	WBar1(end+1,:,:,:)=WBar1(end,:,:,:);
+	clear UBar;
 	WBar2=-diff(DPlusZ.*VBar,1,2)./permute(repmat(diff(Y,1,1),1,size(X,1),size(ZC,1),size(Time,1)),[2,1,3,4]);
 	WBar2(:,end+1,:,:)=WBar2(:,end,:,:);
+	clear VBar;
 	disp('WBar calculation is done')      
 	clear DPlusZ;
 	WBar2=WBar1+WBar2;
