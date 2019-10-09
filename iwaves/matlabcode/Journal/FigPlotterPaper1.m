@@ -218,7 +218,7 @@ SubplotNumber=2;
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(movmean(XShallow/1000,10),ZCShallow,1e3*movmean(squeeze(WShallow(:,:,TimePos)),10,1)');shading flat;colorbar;caxis([-3.2e-1 3.2e-1]);
+pcolor(XShallow/1000,ZCShallow,1e3*movmean(squeeze(WShallow(:,:,TimePos)),20,1)');shading flat;colorbar;caxis([-3.2e-1 3.2e-1]);
 colormap(CustomMap);
 MyColorbar= colorbar;
 MyColorbar.TickLabelInterpreter='latex';
@@ -564,7 +564,7 @@ SubplotNumber=2;
 
 SubplotCounter=2;
 sorush=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(movmean(X/1000,5),ZC,movmean(1e5*ConversionConventionalTimeAvrWBar',5,2));shading flat;caxis([-12 12]);
+pcolor(X/1000,ZC,movmean(1e5*ConversionConventionalTimeAvrWBar',5,2));shading flat;caxis([-12 12]);
 colormap(CustomMap);
 MyColorbar=colorbar('Location','south','Position',[MargineLeft+0.12, MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber-SubplotSpac+0.05, 1-MargineLeft-MargineRight-0.12, SubplotSpac-0.06]);
 MyColorbar.TickLabelInterpreter='latex';
@@ -588,7 +588,7 @@ FIG.Color='white';
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(movmean(X/1000,5),ZC,movmean(1e5*ConversionTimeVarientTimeAvrWBar',5,2));shading flat;caxis([-12 12]);
+pcolor(X/1000,ZC,movmean(1e5*ConversionTimeVarientTimeAvrWBar',5,2));shading flat;caxis([-12 12]);
 colormap(CustomMap);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
@@ -618,7 +618,7 @@ SubplotNumber=2;
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(movmean(X/1000,5),ZC,movmean(1e5*ConversionConventionalTimeAvrWBar',5,2));shading flat;caxis([-5 5]);
+pcolor(X/1000,ZC,movmean(1e5*ConversionConventionalTimeAvrWBar',5,2));shading flat;caxis([-5 5]);
 colormap(CustomMap);
 MyColorbar=colorbar('Location','south','Position',[MargineLeft+0.12, MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber-SubplotSpac+0.05, 1-MargineLeft-MargineRight-0.12, SubplotSpac-0.06]);
 MyColorbar.TickLabelInterpreter='latex';
@@ -641,7 +641,7 @@ FIG.Color='white';
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(movmean(X/1000,5),ZC,movmean(1e5*ConversionTimeVarientTimeAvrWBar',5,2));shading flat;caxis([-5 5]);
+pcolor(X/1000,ZC,movmean(1e5*ConversionTimeVarientTimeAvrWBar',5,2));shading flat;caxis([-5 5]);
 colormap(CustomMap);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
@@ -694,8 +694,8 @@ MovmeanPtNumber=5;
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-plot(movmean(XShallow/1000,MovmeanPtNumber),1e3*movmean(ConversionConventionalTimeAvrDepthIntWBarShallow,MovmeanPtNumber),'-','color',[216/255 82/255 24/255],'LineWidth',2);
-plot(movmean(XShallow/1000,MovmeanPtNumber),1e3*movmean(ConversionTimeVarientTimeAvrDepthIntWBarShallow,MovmeanPtNumber),'-','color',[0 113/255 188/255],'LineWidth',2);
+plot(XShallow/1000,1e3*movmean(ConversionConventionalTimeAvrDepthIntWBarShallow,MovmeanPtNumber),'-','color',[216/255 82/255 24/255],'LineWidth',2);
+plot(XShallow/1000,1e3*movmean(ConversionTimeVarientTimeAvrDepthIntWBarShallow,MovmeanPtNumber),'-','color',[0 113/255 188/255],'LineWidth',2);
 plot(0,0,':','color',[0 113/255 188/255],'LineWidth',2);
 plot(0,0,'--','color',[0 113/255 188/255],'LineWidth',2);
 lgd=legend('CBD','TVBD','$\rho''gw$','$IWxBTH$','Orientation','horizontal');
@@ -712,8 +712,8 @@ text(5,5.2,'$a$','fontsize',24);
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-plot(movmean(XShallow,MovmeanPtNumber)/1000,1e3*movmean(ConversionTimeVarient1TimeAvrDepthIntWBarShallow,MovmeanPtNumber),':','color',[0 113/255 188/255],'LineWidth',2);
-plot(movmean(XShallow,MovmeanPtNumber)/1000,1e3*movmean(ConversionTemporalTimeAvrDepthIntShallow,MovmeanPtNumber),'--','color',[0 113/255 188/255],'LineWidth',2);
+plot(XShallow/1000,1e3*movmean(ConversionTimeVarient1TimeAvrDepthIntWBarShallow,MovmeanPtNumber),':','color',[0 113/255 188/255],'LineWidth',2);
+plot(XShallow/1000,1e3*movmean(ConversionTemporalTimeAvrDepthIntShallow,MovmeanPtNumber),'--','color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 xlabel('Offshore Distance [km]','fontsize',18);
@@ -733,8 +733,8 @@ MovmeanPtNumber=5;
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-plot(movmean(XDeep/1000,MovmeanPtNumber),1e3*movmean(ConversionConventionalTimeAvrDepthIntWBarDeep,MovmeanPtNumber),'-','color',[216/255 82/255 24/255],'LineWidth',2);
-plot(movmean(XDeep/1000,MovmeanPtNumber),1e3*movmean(ConversionTimeVarientTimeAvrDepthIntWBarDeep,MovmeanPtNumber),'-','color',[0 113/255 188/255],'LineWidth',2);
+plot(XDeep/1000,1e3*movmean(ConversionConventionalTimeAvrDepthIntWBarDeep,MovmeanPtNumber),'-','color',[216/255 82/255 24/255],'LineWidth',2);
+plot(XDeep/1000,1e3*movmean(ConversionTimeVarientTimeAvrDepthIntWBarDeep,MovmeanPtNumber),'-','color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 set(gca,'XTickLabel','');
@@ -744,8 +744,8 @@ axis([0 375 -3 16]);
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-plot(movmean(XDeep/1000,MovmeanPtNumber),1e3*movmean(ConversionTimeVarient1TimeAvrDepthIntWBarDeep,MovmeanPtNumber),':','color',[0 113/255 188/255],'LineWidth',2);
-plot(movmean(XDeep/1000,MovmeanPtNumber),1e3*movmean(ConversionTemporalTimeAvrDepthIntDeep,MovmeanPtNumber),'--','color',[0 113/255 188/255],'LineWidth',2);
+plot(XDeep/1000,1e3*movmean(ConversionTimeVarient1TimeAvrDepthIntWBarDeep,MovmeanPtNumber),':','color',[0 113/255 188/255],'LineWidth',2);
+plot(XDeep/1000,1e3*movmean(ConversionTemporalTimeAvrDepthIntDeep,MovmeanPtNumber),'--','color',[0 113/255 188/255],'LineWidth',2);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 xlabel('Offshore Distance [km]','fontsize',18);
@@ -1307,12 +1307,18 @@ surf(X,Y,movmean(movmean(Bathymetry,5,1),5,2)')
 %%
 %Fig 11: Conversion of IdleRidge
 clear all;
-MovingPointAvrNumber=2;
+MovingPointAvrNumber=4;
 
 ConversionConventionalTimeAvrDepthIntWBar1=ncread('APEIdleRidge-1.nc','ConversionConventionalTimeAvrDepthIntWBar');
 ConversionConventionalTimeAvrDepthIntWBar2=ncread('APEIdleRidge-2.nc','ConversionConventionalTimeAvrDepthIntWBar');
 ConversionConventionalTimeAvrDepthIntWBar3=ncread('APEIdleRidge-3.nc','ConversionConventionalTimeAvrDepthIntWBar');
 ConversionConventionalTimeAvrDepthIntWBar4=ncread('APEIdleRidge-4.nc','ConversionConventionalTimeAvrDepthIntWBar');
+
+ConversionConventionalTimeAvrDepthIntWBar1=ConversionConventionalTimeAvrDepthIntWBar1(:,1:35);
+ConversionConventionalTimeAvrDepthIntWBar2=ConversionConventionalTimeAvrDepthIntWBar2(:,6:35);
+ConversionConventionalTimeAvrDepthIntWBar3=ConversionConventionalTimeAvrDepthIntWBar3(:,6:35);
+ConversionConventionalTimeAvrDepthIntWBar4=ConversionConventionalTimeAvrDepthIntWBar4(:,6:end);
+
 ConversionConventionalTimeAvrDepthIntWBar=[ConversionConventionalTimeAvrDepthIntWBar1,ConversionConventionalTimeAvrDepthIntWBar2,ConversionConventionalTimeAvrDepthIntWBar3,ConversionConventionalTimeAvrDepthIntWBar4];
 clear ConversionConventionalTimeAvrDepthIntWBar4...
     ConversionConventionalTimeAvrDepthIntWBar3 ...
@@ -1323,6 +1329,12 @@ ConversionConventionalTimeAvrWBar1=ncread('APEIdleRidge-1.nc','ConversionConvent
 ConversionConventionalTimeAvrWBar2=ncread('APEIdleRidge-2.nc','ConversionConventionalTimeAvrWBar');
 ConversionConventionalTimeAvrWBar3=ncread('APEIdleRidge-3.nc','ConversionConventionalTimeAvrWBar');
 ConversionConventionalTimeAvrWBar4=ncread('APEIdleRidge-4.nc','ConversionConventionalTimeAvrWBar');
+
+ConversionConventionalTimeAvrWBar1=ConversionConventionalTimeAvrWBar1(:,1:35,:);
+ConversionConventionalTimeAvrWBar2=ConversionConventionalTimeAvrWBar2(:,6:35,:);
+ConversionConventionalTimeAvrWBar3=ConversionConventionalTimeAvrWBar3(:,6:35,:);
+ConversionConventionalTimeAvrWBar4=ConversionConventionalTimeAvrWBar4(:,6:end,:);
+
 ConversionConventionalTimeAvrWBar=[ConversionConventionalTimeAvrWBar1,ConversionConventionalTimeAvrWBar2,ConversionConventionalTimeAvrWBar3,ConversionConventionalTimeAvrWBar4];
 clear ConversionConventionalTimeAvrWBar1 ...
     ConversionConventionalTimeAvrWBar2 ...
@@ -1333,6 +1345,12 @@ ConversionTimeVarient1TimeAvrDepthIntWBar1=ncread('APEIdleRidge-1.nc','Conversio
 ConversionTimeVarient1TimeAvrDepthIntWBar2=ncread('APEIdleRidge-2.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
 ConversionTimeVarient1TimeAvrDepthIntWBar3=ncread('APEIdleRidge-3.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
 ConversionTimeVarient1TimeAvrDepthIntWBar4=ncread('APEIdleRidge-4.nc','ConversionTimeVarient1TimeAvrDepthIntWBar');
+
+ConversionTimeVarient1TimeAvrDepthIntWBar1=ConversionTimeVarient1TimeAvrDepthIntWBar1(:,1:35);
+ConversionTimeVarient1TimeAvrDepthIntWBar2=ConversionTimeVarient1TimeAvrDepthIntWBar2(:,6:35);
+ConversionTimeVarient1TimeAvrDepthIntWBar3=ConversionTimeVarient1TimeAvrDepthIntWBar3(:,6:35);
+ConversionTimeVarient1TimeAvrDepthIntWBar4=ConversionTimeVarient1TimeAvrDepthIntWBar4(:,6:end);
+
 ConversionTimeVarient1TimeAvrDepthIntWBar=[ConversionTimeVarient1TimeAvrDepthIntWBar1,ConversionTimeVarient1TimeAvrDepthIntWBar2,ConversionTimeVarient1TimeAvrDepthIntWBar3,ConversionTimeVarient1TimeAvrDepthIntWBar4];
 clear ConversionTimeVarient1TimeAvrDepthIntWBar1...
     ConversionTimeVarient1TimeAvrDepthIntWBar2 ...
@@ -1343,6 +1361,12 @@ ConversionTemporalTimeAvrDepthInt1=ncread('APEIdleRidge-1.nc','ConversionTempora
 ConversionTemporalTimeAvrDepthInt2=ncread('APEIdleRidge-2.nc','ConversionTemporalTimeAvrDepthInt');
 ConversionTemporalTimeAvrDepthInt3=ncread('APEIdleRidge-3.nc','ConversionTemporalTimeAvrDepthInt');
 ConversionTemporalTimeAvrDepthInt4=ncread('APEIdleRidge-4.nc','ConversionTemporalTimeAvrDepthInt');
+
+ConversionTemporalTimeAvrDepthInt1=ConversionTemporalTimeAvrDepthInt1(:,1:35);
+ConversionTemporalTimeAvrDepthInt2=ConversionTemporalTimeAvrDepthInt2(:,6:35);
+ConversionTemporalTimeAvrDepthInt3=ConversionTemporalTimeAvrDepthInt3(:,6:35);
+ConversionTemporalTimeAvrDepthInt4=ConversionTemporalTimeAvrDepthInt4(:,6:end);
+
 ConversionTemporalTimeAvrDepthInt=[ConversionTemporalTimeAvrDepthInt1,ConversionTemporalTimeAvrDepthInt2,ConversionTemporalTimeAvrDepthInt3,ConversionTemporalTimeAvrDepthInt4];
 clear ConversionTemporalTimeAvrDepthInt1...
     ConversionTemporalTimeAvrDepthInt2 ...
@@ -1353,6 +1377,12 @@ ConversionTimeVarient1TimeAvrWBar1=ncread('APEIdleRidge-1.nc','ConversionTimeVar
 ConversionTimeVarient1TimeAvrWBar2=ncread('APEIdleRidge-2.nc','ConversionTimeVarient1TimeAvrWBar');
 ConversionTimeVarient1TimeAvrWBar3=ncread('APEIdleRidge-3.nc','ConversionTimeVarient1TimeAvrWBar');
 ConversionTimeVarient1TimeAvrWBar4=ncread('APEIdleRidge-4.nc','ConversionTimeVarient1TimeAvrWBar');
+
+ConversionTimeVarient1TimeAvrWBar1=ConversionTimeVarient1TimeAvrWBar1(:,1:35,:);
+ConversionTimeVarient1TimeAvrWBar2=ConversionTimeVarient1TimeAvrWBar2(:,6:35,:);
+ConversionTimeVarient1TimeAvrWBar3=ConversionTimeVarient1TimeAvrWBar3(:,6:35,:);
+ConversionTimeVarient1TimeAvrWBar4=ConversionTimeVarient1TimeAvrWBar4(:,6:end,:);
+
 ConversionTimeVarient1TimeAvrWBar=[ConversionTimeVarient1TimeAvrWBar1,ConversionTimeVarient1TimeAvrWBar2,ConversionTimeVarient1TimeAvrWBar3,ConversionTimeVarient1TimeAvrWBar4];
 clear ConversionTimeVarient1TimeAvrWBar1...
     ConversionTimeVarient1TimeAvrWBar2 ...
@@ -1363,6 +1393,12 @@ ConversionTemporalTimeAvr1=ncread('APEIdleRidge-1.nc','ConversionTemporalTimeAvr
 ConversionTemporalTimeAvr2=ncread('APEIdleRidge-2.nc','ConversionTemporalTimeAvr');
 ConversionTemporalTimeAvr3=ncread('APEIdleRidge-3.nc','ConversionTemporalTimeAvr');
 ConversionTemporalTimeAvr4=ncread('APEIdleRidge-4.nc','ConversionTemporalTimeAvr');
+
+ConversionTemporalTimeAvr1=ConversionTemporalTimeAvr1(:,1:35,:);
+ConversionTemporalTimeAvr2=ConversionTemporalTimeAvr2(:,6:35,:);
+ConversionTemporalTimeAvr3=ConversionTemporalTimeAvr3(:,6:35,:);
+ConversionTemporalTimeAvr4=ConversionTemporalTimeAvr4(:,6:end,:);
+
 ConversionTemporalTimeAvr=[ConversionTemporalTimeAvr1,ConversionTemporalTimeAvr2,ConversionTemporalTimeAvr3,ConversionTemporalTimeAvr4];
 clear ConversionTemporalTimeAvr1...
     ConversionTemporalTimeAvr2 ...
@@ -1373,7 +1409,8 @@ Y1=ncread('APEIdleRidge-1.nc','Y');
 Y2=ncread('APEIdleRidge-2.nc','Y');
 Y3=ncread('APEIdleRidge-3.nc','Y');
 Y4=ncread('APEIdleRidge-4.nc','Y');
-Y=[Y1;Y2;Y3;Y4];
+
+Y=[Y1(1:35);Y2(6:35);Y3(6:35);Y4(6:end)];
 clear Y1 Y2 Y3 Y4;
 
 ZC=ncread('APEIdleRidge-4.nc','Z');
@@ -1432,19 +1469,20 @@ SubplotNumber=3;
 SubplotCounter=3;
 BottomTemp=MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber;
 subplot('Position',[MargineLeft,BottomTemp,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionTimeVarientTimeAvrWBar(:,YPOS,:)),3,1)');
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionConventionalTimeAvrWBar(:,YPOS,:)),3,1)');
 set(gca,'fontsize',16);
 shading flat;
 colormap(CustomMap);
 MyColorbar=colorbar('Location','south','Position',[MargineLeft+0.13,BottomTemp-0.03,1-MargineLeft-0.02-0.13,0.02]);
 caxis([-6 6]);
+xlim([50 550]);
 MyColorbar.Ticks=-6:2:6;
 MyColorbar.TickLabelInterpreter='latex';
-text(10,-3300,'$\langle C \rangle$ $[10^{-5} W. m^{-3}]$','Interpreter','latex','Fontsize',18);
+text(50,-3300,'$\langle C \rangle$ $[10^{-5} W. m^{-2}]$','Interpreter','latex','Fontsize',18);
 set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
 set(gca,'YTick',[-3000:500:0]);
-text(30,-250,'$a$','fontsize',24);
+text(60,-250,'$a$','fontsize',24);
 MyYLabel=ylabel('Depth [m]','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
 set(gca,'Color','Black');
@@ -1467,12 +1505,12 @@ plot(X/1000,ConversionTimeVarientTimeAvrDepthIntWBar(:,YPOS),'color',[0 113/255 
 set(gca,'fontsize',16);
 hold on;
 plot(X/1000,ConversionConventionalTimeAvrDepthIntWBar(:,YPOS),'color',[216/255 82/255 24/255],'LineWidth',2);
-axis([0 600 -.012 0.065]);
+axis([50 550 -.025 0.095]);
 set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
 set(gca,'YMinorTick','on');
-set(gca,'YTick',[-0.01:0.02:0.06]);
-text(30,0.057,'$c$','fontsize',24);
+set(gca,'YTick',[-0.02:0.02:0.09]);
+text(60,0.085,'$c$','fontsize',24);
 MyYLabel=ylabel('C [$W.m^{-2}$]','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
 legend('TVBD','CBD','fontsize',18);
@@ -1484,15 +1522,16 @@ subplot('Position',[MargineLeft,BottomTemp,1-MargineLeft-MargineRight,(1-(Margin
 pcolor(X/1000,Y/1000,1e2*movmean(movmean(ConversionConventionalTimeAvrDepthIntWBar,2,1),2,2)');
 set(gca,'fontsize',16);
 shading flat;
-xlim([0 600]);
+axis([50 550 10 90]);
+xlim([50 550]);
 MyColorbar=colorbar('Location','north','AxisLocation','in','Position',[MargineLeft+0.13,BottomTemp+0.285,1-MargineLeft-0.02-0.13,0.02]);
 caxis([-6 +6]);
 MyColorbar.Ticks=-6:2:6;
 MyColorbar.TickLabelInterpreter='latex';
-text(10,114,'$\langle \bar{C} \rangle$ [$10^{-2}$ $W.m^{-3}$]','Interpreter','latex','Fontsize',18);
+text(50,102,'$\langle \bar{C} \rangle$ [$10^{-2}$ $W.m^{-2}$]','Interpreter','latex','Fontsize',18);
 
 set(gca,'XTick',[0:100:600]);
-text(30,88,'$e$','fontsize',24);
+text(60,80,'$e$','fontsize',24);
 MyYLabel=ylabel('Y [km]','fontsize',18);
 set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.13, 0.5, 0]);
 xlabel('X [km]','fontsize',18);
@@ -1511,7 +1550,8 @@ MargineRight=0.02;
 
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionConventionalTimeAvrWBar(:,YPOS,:)),3,1)');
+pcolor(X/1000,ZC,1e5*movmean(squeeze(ConversionTimeVarientTimeAvrWBar(:,YPOS,:)),3,1)');
+xlim([50 550]);
 set(gca,'fontsize',16);
 shading flat;
 colormap(CustomMap);
@@ -1520,7 +1560,7 @@ set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
 set(gca,'YTick',[-3000:500:0]);
 set(gca,'YTickLabel','');
-text(30,-250,'$b$','fontsize',24);
+text(60,-250,'$b$','fontsize',24);
 set(gca,'Color','Black');
 AxesLineX=xlim;
 AxesLineY=ylim;
@@ -1540,14 +1580,14 @@ subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(Subpl
 plot(X/1000,ConversionTimeVarient1TimeAvrDepthIntWBar(:,YPOS),':','color',[0 113/255 188/255],'LineWidth',2);
 hold on;
 plot(X/1000,ConversionTemporalTimeAvrDepthInt(:,YPOS),'--','color',[0 113/255 188/255],'LineWidth',2);
-axis([0 600 -0.012 0.065]);
+axis([50 550 -0.025 0.095]);
 set(gca,'fontsize',16);
 set(gca,'XTick',[0:100:600]);
 set(gca,'XTickLabel','');
 set(gca,'YMinorTick','on');
-set(gca,'YTick',[-0.01:0.02:0.06]);
+set(gca,'YTick',[-0.02:0.02:0.09]);
 set(gca,'YTickLabel','');
-text(30,0.057,'$d$','fontsize',24);
+text(60,0.085,'$d$','fontsize',24);
 legend('$\rho'' g W$','IW$x$BTH','fontsize',18);
 box on;
 set(gca,'FontWeight','bold');
@@ -1556,12 +1596,12 @@ SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 pcolor(X/1000,Y/1000,1e2*movmean(movmean(ConversionTimeVarientTimeAvrDepthIntWBar,2,1),2,2)');
 caxis([-6 +6]);
-xlim([0 600]);
+axis([50 550 10 90]);
 shading flat;
 set(gca,'fontsize',16);
 set(gca,'XTick',[0:100:600]);
 set(gca,'YTickLabel','');
-text(30,88,'$f$','fontsize',24);
+text(60,80,'$f$','fontsize',24);
 xlabel('X [km]','fontsize',18);
 set(gca,'layer','top');
 grid on;
