@@ -26,7 +26,7 @@ SUN = $(SUNTANSHOME)/sun
 datadir = data
 INCLUDES = -I$(SUNTANSHOME) $(MPIINC) $(PARMETISINC)
 DEFS = $(MPIDEF)
-NUMPROCS = 240
+NUMPROCS = 192
 
 all:	data
 

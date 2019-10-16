@@ -223,7 +223,7 @@ void InitSponge(gridT *grid, int myproc) {
 
 	REAL SpongeXCenterLocationLeft,SpongeXCenterLocationRight, SpongeYCenterLocation;
 	
-	REAL SpongeUpCenter=100e3-98e3;
+	REAL SpongeUpCenter=100e3-2e3;
 	REAL SpongeDownCenter=2e3;
 	REAL SpongeLeftCenter=30e3;
 	REAL SpongeRightCenter=600e3-30e3;
@@ -249,12 +249,13 @@ void InitSponge(gridT *grid, int myproc) {
 	{
 		REAL SpongeLeft=fabs(SpongeLeftCenter-grid->xe[EdgeCounter])/800;
 		REAL SpongeRight=fabs(SpongeRightCenter-grid->xe[EdgeCounter])/800;
-		REAL SpongeUp=fabs(SpongeUpCenter-grid->ye[EdgeCounter])/800;
-		REAL SpongeDown=fabs(SpongeDownCenter-grid->ye[EdgeCounter])/800;
+		//REAL SpongeUp=fabs(SpongeUpCenter-grid->ye[EdgeCounter])/800;
+		//REAL SpongeDown=fabs(SpongeDownCenter-grid->ye[EdgeCounter])/800;
 		
-		REAL SpongeTemp1=fmin(SpongeLeft,SpongeRight);
-		REAL SpongeTemp2=fmin(SpongeUp,SpongeDown);
-		SpongeEdgeDistance[EdgeCounter]=fmin(SpongeTemp1,SpongeTemp2);
+		//REAL SpongeTemp1=fmin(SpongeLeft,SpongeRight);
+		//REAL SpongeTemp2=fmin(SpongeUp,SpongeDown);
+		//SpongeEdgeDistance[EdgeCounter]=fmin(SpongeTemp1,SpongeTemp2);
+		SpongeEdgeDistance[EdgeCounter]=fmin(SpongeLeft,SpongeRight);
 	}
 	//Added by ----Sorush Omidvar----. Initializing sponge cell and edge distance for each cells and edges. end 
 }
