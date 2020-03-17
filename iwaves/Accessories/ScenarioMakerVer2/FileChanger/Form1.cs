@@ -16,7 +16,7 @@ namespace FileChanger
     {
         string MotherDirectory;
         const bool CaseChecker = false;
-        const int CaseNumber = 481;
+        const int CaseNumber = 513;
         public Form1()
         {
             InitializeComponent();
