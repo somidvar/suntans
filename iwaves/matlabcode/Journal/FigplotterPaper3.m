@@ -186,7 +186,7 @@ FIG=figure('position',[100 50 800 800]);
 CaseCell=cell(8,1);
 counter=1;
 for i=[240:246,82]
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(i+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(i+110000),'.mat');
     CaseCell{counter}=load(Address,'X','ZC','Density','RhoBConventional','U','UBar','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     CaseCell{counter}.U=CaseCell{counter}.U(:,:,end-600:end);
     CaseCell{counter}.UBar=CaseCell{counter}.UBar(:,:,end-600:end);
@@ -455,7 +455,7 @@ for counter=51:-1:45
     set(gca, 'Color', 0.5*[1 1 1]);
     hold on;
 
-    Address=strcat('G:\Paper2-NewSet\Result-1100',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-1100',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     
@@ -502,7 +502,7 @@ for counter=58:-1:52
     set(gca, 'Color', 0.5*[1 1 1]);
     hold on;
 
-    Address=strcat('G:\Paper2-NewSet\Result-1100',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-1100',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     
@@ -546,7 +546,7 @@ for counter=65:-1:59
     set(gca, 'Color', 0.5*[1 1 1]);
     hold on;
 
-    Address=strcat('G:\Paper2-NewSet\Result-1100',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-1100',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     
@@ -590,7 +590,7 @@ for counter=72:-1:66
     set(gca, 'Color', 0.5*[1 1 1]);
     hold on;
 
-    Address=strcat('G:\Paper2-NewSet\Result-1100',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-1100',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     
@@ -634,7 +634,7 @@ for counter=79:-1:73
     set(gca, 'Color', 0.5*[1 1 1]);
     hold on;
 
-    Address=strcat('G:\Paper2-NewSet\Result-1100',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-1100',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     
@@ -701,7 +701,7 @@ TimeIndex=540;
 CaseNumber=1;
 Data=cell(4,1);
 for counter=[110026 110021 110023]
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(counter),'.mat');
     Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','W','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar');
     Data{CaseNumber}.ConversionConventionalWBar=Data{CaseNumber}.ConversionConventionalWBar(:,:,TimeRange:end);
     Data{CaseNumber}.Eta=Data{CaseNumber}.Eta(:,TimeRange:end);
@@ -712,7 +712,7 @@ for counter=[110026 110021 110023]
     CaseNumber=CaseNumber+1;
 end
 
-Address=strcat('G:\Paper2-NewSet\Result-',num2str(110088),'.mat');
+Address=strcat('G:\Paper2and3\Result-',num2str(110088),'.mat');
 Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','W','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar');
 Data{CaseNumber}.W=Data{CaseNumber}.W(:,:,TimeRange-86:end-86);
 Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange-86:end-86);
@@ -1061,7 +1061,7 @@ TimeIndex=540;
 CaseNumber=1;
 Data=cell(4,1);
 for counter=[110009 110007 110008 110081]
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(counter),'.mat');
     Data{CaseNumber}=load(Address,'W','WBar','Eta','RhoPrimeConventional','U','ConversionConventionalWBar','ConversionConventionalTimeAvrWBar');
     Data{CaseNumber}.W=Data{CaseNumber}.W(:,:,TimeRange:end);
     Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange:end);
@@ -1364,13 +1364,13 @@ subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(Subpl
 hold on;
 box on;
 
-plot(100*squeeze(Data{1}.W(XIndex,:,387)),ZC,'LineWidth',2);
-plot(100*squeeze(Data{2}.W(XIndex,:,411)),ZC,'LineWidth',2);
-plot(100*squeeze(Data{3}.W(XIndex,:,435)),ZC,'LineWidth',2);
-plot(100*squeeze(Data{4}.W(XIndex,:,412)),ZC,'LineWidth',2);
+plot(1000*squeeze(Data{1}.W(XIndex,:,387)),ZC,'LineWidth',2);
+plot(1000*squeeze(Data{2}.W(XIndex,:,411)),ZC,'LineWidth',2);
+plot(1000*squeeze(Data{3}.W(XIndex,:,435)),ZC,'LineWidth',2);
+plot(1000*squeeze(Data{4}.W(XIndex,:,412)),ZC,'LineWidth',2);
 line([0 0],[-12 -1],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
 
-axis([-0.25 0.01 -12 -1]);
+axis([-2.5 0.1 -12 -1]);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
 MyAxe.YAxis.TickValues=[-11,-9:3:-1];
@@ -1379,8 +1379,8 @@ MyAxe.YAxis.TickLabels='';
 MyAxe.YAxisLocation='right';
 
 MyAxe.XAxis.MinorTick='on';
-MyAxe.XAxis.TickValues=-0.2:0.1:-0;
-MyAxe.XAxis.MinorTickValues=-0.25:0.025:0;
+MyAxe.XAxis.TickValues=-2:1:0;
+MyAxe.XAxis.MinorTickValues=-2.5:0.25:0;
 
 MyAxe.YAxis.TickLength=[0.02 0.02];
 MyAxe.XAxis.TickLength=[0.02 0.02];
@@ -1391,10 +1391,10 @@ MyYLabel=ylabel({'$z$ $[m]$'},'fontsize',20);
 LabelPos=MyYLabel.Position;
 MyYLabel.Position=[LabelPos(1)+0.01 LabelPos(2)];
 
-MyLabel=xlabel('$w$ $[m$ $s^{-1}]$','fontsize',18);
+MyLabel=xlabel('$w$ $[mm$ $s^{-1}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
-text(0.25,-1.7,'$h$','fontsize',24,'Color','black');
+text(-2,-1.7,'$h$','fontsize',24,'Color','black');
 
 savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindStructureM2');
 saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindStructureM2','epsc');
@@ -1419,7 +1419,7 @@ ZIndex=33;
 TimeRange=3156;
 TimeIndex=540;
 
-Address=strcat('G:\Paper2-NewSet\Result-',num2str(110483),'.mat');
+Address=strcat('G:\Paper2and3\Result-',num2str(110483),'.mat');
 load(Address,'WBar','Eta','RhoPrimeConventional','U','W','ConversionConventionalWBar');
 W=W(:,:,TimeRange:end);
 WBar=WBar(:,:,TimeRange:end);
@@ -1706,14 +1706,14 @@ subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(Subpl
 hold on;
 box on;
 
-plot(100*squeeze(W(XIndex,:,TimeIndex1)),ZC,'LineWidth',2);
-plot(100*squeeze(W(XIndex,:,TimeIndex2)),ZC,'LineWidth',2);
-plot(100*squeeze(W(XIndex,:,TimeIndex3)),ZC,'LineWidth',2);
-plot(100*squeeze(W(XIndex,:,TimeIndex4)),ZC,'LineWidth',2);
+plot(1000*squeeze(W(XIndex,:,TimeIndex1)),ZC,'LineWidth',2);
+plot(1000*squeeze(W(XIndex,:,TimeIndex2)),ZC,'LineWidth',2);
+plot(1000*squeeze(W(XIndex,:,TimeIndex3)),ZC,'LineWidth',2);
+plot(1000*squeeze(W(XIndex,:,TimeIndex4)),ZC,'LineWidth',2);
 
 line([0 0],[-12 -1],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
 
-axis([-0.06 0.03 -12 -1]);
+axis([-0.6 0.3 -12 -1]);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
 MyAxe.YAxis.TickValues=[-11,-9:3:-1];
@@ -1722,8 +1722,8 @@ MyAxe.YAxis.TickLabels='';
 MyAxe.YAxisLocation='right';
 
 MyAxe.XAxis.MinorTick='on';
-MyAxe.XAxis.TickValues=-0.04:0.04:0.01;
-MyAxe.XAxis.MinorTickValues=-0.06:0.01:0.03;
+MyAxe.XAxis.TickValues=-0.4:0.4:0.1;
+MyAxe.XAxis.MinorTickValues=-0.6:0.1:0.3;
 
 MyAxe.YAxis.TickLength=[0.02 0.02];
 MyAxe.XAxis.TickLength=[0.02 0.02];
@@ -1734,10 +1734,10 @@ MyYLabel=ylabel({'$z$ $[m]$'},'fontsize',20);
 LabelPos=MyYLabel.Position;
 MyYLabel.Position=[LabelPos(1)+0.1 LabelPos(2)];
 
-MyLabel=xlabel('$w$ $[m$ $s^{-1}]$','fontsize',18);
+MyLabel=xlabel('$w$ $[mm$ $s^{-1}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
-text(-0.05,-1.7,'$h$','fontsize',24,'Color','black');
+text(-0.5,-1.7,'$h$','fontsize',24,'Color','black');
 
 savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindStructureDetails');
 saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindStructureDetails','epsc');
@@ -1757,7 +1757,7 @@ ZIndex=33;
 TimeRange=3156;
 TimeIndex=540;
 
-Address=strcat('G:\Paper2-NewSet\Result-',num2str(110483),'.mat');
+Address=strcat('G:\Paper2and3\Result-',num2str(110483),'.mat');
 load(Address,'WBar','Eta','RhoPrimeConventional','U','W','ConversionConventionalWBar');
 W=W(:,:,TimeRange:end);
 WBar=WBar(:,:,TimeRange:end);
@@ -1842,7 +1842,7 @@ hold on;
 box on;
 set(gca,'layer','top')
 
-pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex1))');
+pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex2))');
 shading flat;
 caxis([-3 3]);
 axis([42 45.2 -70 -1]);
@@ -1878,7 +1878,7 @@ hold on;
 box on;
 set(gca,'layer','top')
 
-pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex1))');
+pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex3))');
 shading flat;
 caxis([-3 3]);
 axis([42 45.2 -70 -1]);
@@ -1914,7 +1914,7 @@ hold on;
 box on;
 set(gca,'layer','top')
 
-pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex1))');
+pcolor(X(200:end)/1000,ZC,100*squeeze(U(200:end,:,TimeIndex4))');
 shading flat;
 caxis([-3 3]);
 axis([42 45.2 -70 -1]);
@@ -2137,13 +2137,13 @@ SubplotNumber=3;
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110000.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 7.5 meter
+load('G:\Paper2and3\Result-110000.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 7.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=147:158%M2K1 7.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2180,13 +2180,13 @@ text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background'
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110094.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 12.5 meter
+load('G:\Paper2and3\Result-110094.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 12.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=209:220%M2K1 12.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2219,13 +2219,13 @@ text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background'
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110101.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 17.5 meter
+load('G:\Paper2and3\Result-110101.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2K1 17.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=395:406%M2K1 17.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2266,13 +2266,13 @@ SubplotNumber=3;
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110088.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 7.5 meter
+load('G:\Paper2and3\Result-110088.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 7.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,-1]
     CaseNumber=[];
     CaseValue=[];
     for i=33:44%K1 7.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2305,13 +2305,13 @@ text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background'
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110090.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 12.5 meter
+load('G:\Paper2and3\Result-110090.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 12.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=185:196%K1 12.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2344,13 +2344,13 @@ text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background'
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110092.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 17.5 meter
+load('G:\Paper2and3\Result-110092.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%K1 17.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=371:382%K1 17.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*12+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*12+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2395,13 +2395,13 @@ SubplotNumber=3;
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110081.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 7.5 meter
+load('G:\Paper2and3\Result-110081.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 7.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,-1]
     CaseNumber=[];
     CaseValue=[];
     for i=14:20%M2 7.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*7+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*7+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2436,13 +2436,13 @@ text(20,0.2,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background'
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110083.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 12.5 meter
+load('G:\Paper2and3\Result-110083.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 12.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=171:177%M2 12.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*7+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*7+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2475,13 +2475,13 @@ text(20,0.06,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
-load('G:\Paper2-NewSet\Result-110085.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 17.5 meter
+load('G:\Paper2and3\Result-110085.mat','X','ConversionConventionalTimeAvrDepthIntWBar');%M2 17.5 meter
 Baseline=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
 for j=[0,1]
     CaseNumber=[];
     CaseValue=[];
     for i=357:363%M2 17.5 m and 3 to 6 wind
-        Address=strcat('G:\Paper2-NewSet\Result-',num2str(j*7+i+110000),'.mat');
+        Address=strcat('G:\Paper2and3\Result-',num2str(j*7+i+110000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
@@ -2538,7 +2538,7 @@ RowCounter=1;
 ColumnCounter=1;
 K1=nan(6,1);
 for j=88:93
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     K1(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2548,7 +2548,7 @@ RowCounter=1;
 ColumnCounter=1;
 M2=nan(6,1);
 for j=81:86
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     M2(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2558,7 +2558,7 @@ RowCounter=1;
 ColumnCounter=1;
 K1Wind6=nan(6,12);
 for j=[21:32,259:270,197:208,321:332,383:394,445:456]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     K1Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     ColumnCounter=ColumnCounter+1;
@@ -2572,7 +2572,7 @@ RowCounter=1;
 ColumnCounter=1;
 M2Wind6=nan(6,7);
 for j=[7:13,240:246,178:184,302:308,364:370,426:432]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     M2Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     ColumnCounter=ColumnCounter+1;
@@ -2586,7 +2586,7 @@ RowCounter=1;
 ColumnCounter=1;
 M2K1Wind6=nan(6,12);
 for j=[159:170,283:294,221:232,345:356,407:418,469:480]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     M2K1Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     ColumnCounter=ColumnCounter+1;
@@ -2600,7 +2600,7 @@ RowCounter=1;
 ColumnCounter=1;
 M2K1=nan(6,1);
 for j=[46:51]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     M2K1(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2610,7 +2610,7 @@ RowCounter=1;
 ColumnCounter=1;
 Wind6=nan(6,1);
 for j=[483:488]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     Wind6(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2857,7 +2857,7 @@ MyColor=[ 0.85 0.325 0.098;...%red
 RowCounter=1;
 TideEspecialWind6=nan(12,1);
 for j=489:500
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     TideEspecialWind6(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2866,7 +2866,7 @@ end
 RowCounter=1;
 K1Wind6=nan(12,1);
 for j=197:208
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     K1Wind6(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2875,7 +2875,7 @@ end
 RowCounter=1;
 M2Wind6=nan(7,1);
 for j=178:184
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(j+110000),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(j+110000),'.mat');
     load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
     M2Wind6(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
     RowCounter=RowCounter+1;
@@ -2939,7 +2939,7 @@ FIG=figure('position',[100 300 1000 600]);
 CaseNumber=1;
 Data=cell(2,1);
 for counter=[110021 110025]
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(counter),'.mat');
     Data{CaseNumber}=load(Address,'Density','U');
     load(Address,'X','ZC','Time');
     Data{CaseNumber}.N=-9.8/1024*diff(Data{CaseNumber}.Density,1,2)./diff(permute(repmat(ZC,1,742,4019),[2,1,3]),1,2);
@@ -2966,7 +2966,7 @@ WindOmega=2*pi/WindPeriod;
 
 PlotLgd=[];
 for counter=110021:2:110032
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(counter),'.mat');
+    Address=strcat('G:\Paper2and3\Result-',num2str(counter),'.mat');
     load(Address,'ZC','X','ConversionConventionalTimeAvrDepthIntWBar','ConversionConventionalTimeAvrWBar');
     ConversionConventionalTimeAvrDepthIntWBar=movmean(ConversionConventionalTimeAvrDepthIntWBar,2);
     FittingFunction=fit(X,ConversionConventionalTimeAvrDepthIntWBar,'smoothingspline'); 
@@ -3143,27 +3143,27 @@ saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Pape
 %Figure 12- Looking at the UPrime Time series and cyclic pattern of
 %wind-tide phase lag
 close all;
-clear all;
+%clear all;
 clc;
 
 FIG=figure('position',[100 50 800 800]); 
 
-CaseCell=cell(5,1);
-counter=1;
-for i=[48:7:76]
-    Address=strcat('G:\Paper2-NewSet\Result-',num2str(i+110000),'.mat');
-    CaseCell{counter}=load(Address,'X','ZC','WBar','ConversionConventionalWBar','RhoPrimeConventional','U','UBar','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    CaseCell{counter}.U=CaseCell{counter}.U(:,:,end-600:end-150);
-    CaseCell{counter}.UBar=CaseCell{counter}.UBar(:,:,end-600:end-150);
-    CaseCell{counter}.UPrime=CaseCell{counter}.U-CaseCell{counter}.UBar;
-    CaseCell{counter}.WBar=CaseCell{counter}.WBar(:,:,end-600:end-150); 
-    CaseCell{counter}.ConversionConventionalWBar=CaseCell{counter}.ConversionConventionalWBar(:,:,end-600:end-150);
-    CaseCell{counter}.RhoPrimeConventional=CaseCell{counter}.RhoPrimeConventional(:,:,end-600:end-150);
-    load(Address,'Time','ZC','X','Eta');
-    Time=Time(end-600:end-150);
-    Eta=Eta(:,end-600:end-150);
-    counter=counter+1;
-end
+% CaseCell=cell(5,1);
+% counter=1;
+% for i=[48:7:76]
+%     Address=strcat('G:\Paper2and3\Result-',num2str(i+110000),'.mat');
+%     CaseCell{counter}=load(Address,'X','ZC','WBar','ConversionConventionalWBar','RhoPrimeConventional','U','UBar','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     CaseCell{counter}.U=CaseCell{counter}.U(:,:,end-600:end-150);
+%     CaseCell{counter}.UBar=CaseCell{counter}.UBar(:,:,end-600:end-150);
+%     CaseCell{counter}.UPrime=CaseCell{counter}.U-CaseCell{counter}.UBar;
+%     CaseCell{counter}.WBar=CaseCell{counter}.WBar(:,:,end-600:end-150); 
+%     CaseCell{counter}.ConversionConventionalWBar=CaseCell{counter}.ConversionConventionalWBar(:,:,end-600:end-150);
+%     CaseCell{counter}.RhoPrimeConventional=CaseCell{counter}.RhoPrimeConventional(:,:,end-600:end-150);
+%     load(Address,'Time','ZC','X','Eta');
+%     Time=Time(end-600:end-150);
+%     Eta=Eta(:,end-600:end-150);
+%     counter=counter+1;
+% end
 
 WindOmega=2*pi/24/3600;
 WindPeriod=24*3600;
@@ -3240,9 +3240,9 @@ SubplotCounter=5;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
 box on;
-plot(Time(1:450)/3600,1000*squeeze(CaseCell{1}.WBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
+plot(Time(1:450)/3600,1000*squeeze(CaseCell{1}.WBar(475,25,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
 for counter=2:5
-    plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.WBar(475,34,1:450)),'LineWidth',2,'LineStyle','-','Color',MyColor(counter,:));
+    plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.WBar(475,25,1:450)),'LineWidth',2,'LineStyle','-','Color',MyColor(counter,:));
 end
 line([384 421],[0 0],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
 axis([384 421 -1.5 1.2]);
@@ -3264,16 +3264,16 @@ MyLabel=ylabel({'$W$';'[$mm$ $s^{-1}$]'},'fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1)-1.7 LabelPos(2)];
 
-text(385,-0.8,'$b$','fontsize',24,'Color','black');
+text(385,-0.9,'$b$','fontsize',24,'Color','black');
 
 SubplotCounter=4;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
 box on;
 PlotLegend=[];
-plot(Time(1:450)/3600,squeeze(CaseCell{1}.UBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
+plot(Time(1:450)/3600,squeeze(CaseCell{1}.UBar(475,25,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
 for counter=2:5
-    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UBar(475,34,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
+    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UBar(475,25,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
 end
 line([384 421],[0 0],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
 axis([384 421 -0.05 0.04]);
@@ -3295,24 +3295,24 @@ MyLabel=ylabel({'$U$';'[$m$ $s^{-1}$]'},'fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)];
 
-text(385,-0.025,'$c$','fontsize',24,'Color','black');
+text(385,-0.03,'$c$','fontsize',24,'Color','black');
 
 SubplotCounter=3;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
 box on;
 PlotLegend=[];
-plot(Time(1:450)/3600,squeeze(CaseCell{1}.UPrime(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
+plot(Time(1:450)/3600,squeeze(CaseCell{1}.UPrime(475,25,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
 for counter=2:5
-    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UPrime(475,34,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
+    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UPrime(475,25,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
 end
 line([384 421],[0 0],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
-axis([384 421 -0.03 0.02]);
+axis([384 421 -0.01 0.01]);
 set(gca,'fontsize',16);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.TickValues=-0.02:0.02:0;
-MyAxe.YAxis.MinorTickValues=-0.03:0.005:0.02;
+MyAxe.YAxis.TickValues=-0.008:0.008:0.008;
+MyAxe.YAxis.MinorTickValues=-0.008:0.004:0.008;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.TickValues=390:10:410;
@@ -3326,23 +3326,23 @@ MyLabel=ylabel({'$u''$'; '[$m$ $s^{-1}$]'},'fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)];
 
-text(385,-0.023,'$d$','fontsize',24,'Color','black');
+text(385,-0.006,'$d$','fontsize',24,'Color','black');
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
 box on;
-plot(Time(1:450)/3600,squeeze(CaseCell{1}.RhoPrimeConventional(475,34-12,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
+plot(Time(1:450)/3600,squeeze(CaseCell{1}.RhoPrimeConventional(475,25,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
 for counter=2:5
-    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.RhoPrimeConventional(475,34,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
+    plot(Time(1:450)/3600,squeeze(CaseCell{counter}.RhoPrimeConventional(475,25,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
 end
 line([384 421],[0 0],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
-axis([384 421 -0.25 0.5]);
+axis([384 421 -0.1 0.25]);
 set(gca,'fontsize',16);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.TickValues=-0:0.3:0.3;
-MyAxe.YAxis.MinorTickValues=-0.2:0.10:0.50;
+MyAxe.YAxis.TickValues=-0:0.2:0.2;
+MyAxe.YAxis.MinorTickValues=-0.1:0.05:0.25;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.TickValues=390:10:410;
@@ -3362,23 +3362,23 @@ lgd.FontSize=14;
 LGDPositio=lgd.Position;
 lgd.Position=[LGDPositio(1) LGDPositio(2)+0.61 LGDPositio(3) LGDPositio(4)];
 
-text(385,-0.1,'$e$','fontsize',24,'Color','black');
+text(385,-0.05,'$e$','fontsize',24,'Color','black');
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
 hold on;
 box on;
-plot(Time(1:450)/3600,1000*squeeze(CaseCell{1}.ConversionConventionalWBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
+plot(Time(1:450)/3600,1000*squeeze(CaseCell{1}.ConversionConventionalWBar(475,25,1:450)),'LineWidth',3,'LineStyle',':','color',MyColor(1,:));
 for counter=2:5
-    plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.ConversionConventionalWBar(475,34,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
+    plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.ConversionConventionalWBar(475,25,1:450)),'LineWidth',2,'LineStyle','-','color',MyColor(counter,:));
 end
 line([384 421],[0 0],'LineWidth',0.5,'LineStyle','-','Color',0.7*[1 1 1]);
-axis([384 421 -1.5 4.5]);
+axis([384 421 -1 1.7]);
 set(gca,'fontsize',16);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.TickValues=0:2:4;
-MyAxe.YAxis.MinorTickValues=-1.5:0.5:4.5;
+MyAxe.YAxis.TickValues=0:1:1;
+MyAxe.YAxis.MinorTickValues=-0.5:0.5:1.5;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.TickValues=390:10:410;
@@ -3399,275 +3399,3 @@ MyLabel.Position=[LabelPos(1) LabelPos(2)-0.01];
 
 savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindSpeedM2K1');
 saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindSpeedM2K1','epsc');
-
-
-% %%
-% %Figure 3- Looking at the UPrime Time series and cyclic pattern of
-% %wind-tide phase lag
-% close all;
-% %clear all;
-% clc;
-% 
-% FIG=figure('position',[100 50 800 800]); 
-% 
-% CaseCell=cell(8,1);
-% counter=1;
-% for i=[7:13,81]
-%     Address=strcat('G:\Paper2-NewSet\Result-',num2str(i+110000),'.mat');
-%     CaseCell{counter}=load(Address,'X','ZC','WBar','ConversionConventionalWBar','RhoPrimeConventional','U','UBar','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-%     CaseCell{counter}.U=CaseCell{counter}.U(:,:,end-600:end-150);
-%     CaseCell{counter}.UBar=CaseCell{counter}.UBar(:,:,end-600:end-150);
-%     CaseCell{counter}.UPrime=CaseCell{counter}.U-CaseCell{counter}.UBar;
-%     CaseCell{counter}.WBar=CaseCell{counter}.WBar(:,:,end-600:end-150); 
-%     CaseCell{counter}.ConversionConventionalWBar=CaseCell{counter}.ConversionConventionalWBar(:,:,end-600:end-150);
-%     CaseCell{counter}.RhoPrimeConventional=CaseCell{counter}.RhoPrimeConventional(:,:,end-600:end-150);
-%     load(Address,'Time','ZC','X','Eta');
-%     Time=Time(end-600:end-150);
-%     Eta=Eta(:,end-600:end-150);
-%     counter=counter+1;
-% end
-% 
-% WindOmega=2*pi/24/3600;
-% WindPeriod=24*3600;
-% 
-% InitialPhase=[-48,18,12,42,72,102,126];
-% MyColor=[0.00 0.45 0.74;...
-%         0.85 0.33 0.10;...
-%         0.93 0.63 0.13;...
-%         0.49 0.18 0.56;...
-%         0.47 0.67 0.19;...
-%         0.30 0.75 0.93;...
-%         0.64 0.08 0.18];
-% 
-% MargineTop=0.02;
-% MargineBot=0.10;
-% MargineLeft=0.15;
-% MargineRight=0.12;
-% SubplotSpac=0.005;
-% SubplotNumber=6;
-% 
-% SubplotCounter=6;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,6*(1+sin(WindOmega*(Time(1:450)-(360-InitialPhase(counter))*WindPeriod/360)))/2,'LineWidth',2,'LineStyle','-','color',MyColor(counter,:),'Marker', 'none');
-% end
-% axis([384 421 -0.4 6.4]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=0:3:6;
-% MyAxe.YAxis.MinorTickValues=0:1:6;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'XS Wind'; '[$m.s^{-1}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1)-2 LabelPos(2)];
-% 
-% text(385,0.5,'$a$','fontsize',24,'Color','black');
-% 
-% yyaxis right;
-% plot(Time(1:450)/3600,squeeze(Eta(10,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% 
-% axis([384 421 -0.6 0.6]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis(2).MinorTick='on';
-% MyAxe.YAxis(2).TickValues=-0.4:0.4:0.4;
-% MyAxe.YAxis(2).MinorTickValues=-0.6:0.1:0.6;
-% MyAxe.YAxis(2).Color=0.4*[1 1 1];
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis(2).TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel('SSH [$m$]','fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1) LabelPos(2)];
-% 
-% SubplotCounter=5;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UPrime(475,34,1:450)),'LineWidth',2,'LineStyle','-');
-% end
-% plot(Time(1:450)/3600,squeeze(CaseCell{8}.UPrime(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% axis([384 421 -0.03 0.02]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=-0.02:0.02:0;
-% MyAxe.YAxis.MinorTickValues=-0.03:0.005:0.02;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'$u''$'; '[$m.s^{-1}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1) LabelPos(2)];
-% 
-% text(385,-0.023,'$b$','fontsize',24,'Color','black');
-% 
-% SubplotCounter=4;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,squeeze(CaseCell{counter}.RhoPrimeConventional(475,34,1:450)),'LineWidth',2,'LineStyle','-');
-% end
-% plot(Time(1:450)/3600,squeeze(CaseCell{8}.RhoPrimeConventional(475,34-12,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% axis([384 421 -0.33 0.33]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=-0.2:0.2:0.2;
-% MyAxe.YAxis.MinorTickValues=-0.30:0.05:0.30;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'$\rho''$';'[$kg.m^{-3}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1)-0.6 LabelPos(2)];
-% 
-% lgd=legend('$312^\circ$','$342^\circ$','$12^\circ$','$42^\circ$','$72^\circ$','$102^\circ$','$126^\circ$','NW','Orientation','vertical','Location','northeastoutside');
-% lgd.FontSize=14;
-% LGDPositio=lgd.Position;
-% lgd.Position=[LGDPositio(1)+0.113 LGDPositio(2)+0.131 LGDPositio(3) LGDPositio(4)];
-% 
-% text(385,-0.22,'$c$','fontsize',24,'Color','black');
-% 
-% SubplotCounter=3;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.WBar(475,34,1:450)),'LineWidth',2,'LineStyle','-');
-% end
-% plot(Time(1:450)/3600,1000*squeeze(CaseCell{8}.WBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% axis([384 421 -1.2 1.2]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=-0.8:0.8:0.8;
-% MyAxe.YAxis.MinorTickValues=-1:0.2:1;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'$W$';'[$mm.s^{-1}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1)-0.5 LabelPos(2)];
-% 
-% text(385,-0.8,'$d$','fontsize',24,'Color','black');
-% 
-% SubplotCounter=2;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,1000*squeeze(CaseCell{counter}.ConversionConventionalWBar(475,34,1:450)),'LineWidth',2,'LineStyle','-');
-% end
-% plot(Time(1:450)/3600,1000*squeeze(CaseCell{8}.ConversionConventionalWBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% axis([384 421 -3 3]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=-2:2:2;
-% MyAxe.YAxis.MinorTickValues=-2.5:0.5:2.5;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% MyAxe.XAxis.TickLabels='';
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'$C$';'[$mW.m^{-3}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1)-1.4 LabelPos(2)];
-% 
-% lgd=legend(num2str(1000*CaseCell{1}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{2}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{3}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{4}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{5}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{6}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{7}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     num2str(1000*CaseCell{8}.ConversionConventionalTimeAvrWBar(475,34),2),...
-%     'Orientation','vertical','Location','eastoutside');
-% lgd.FontSize=14;
-% LGDPositio=lgd.Position;
-% lgd.Position=[LGDPositio(1)+0.11 LGDPositio(2)-0.017 LGDPositio(3) LGDPositio(4)];
-% 
-% text(385,-2,'$e$','fontsize',24,'Color','black');
-% 
-% SubplotCounter=1;
-% subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-% hold on;
-% box on;
-% PlotLegend=[];
-% for counter=1:7
-%     plot(Time(1:450)/3600,squeeze(CaseCell{counter}.UBar(475,34,1:450)),'LineWidth',2,'LineStyle','-');
-% end
-% plot(Time(1:450)/3600,squeeze(CaseCell{8}.UBar(475,34,1:450)),'LineWidth',3,'LineStyle',':','color',0.4*[1 1 1]);
-% axis([384 421 -0.04 0.04]);
-% set(gca,'fontsize',16);
-% MyAxe=gca;
-% MyAxe.YAxis.MinorTick='on';
-% MyAxe.YAxis.TickValues=-0.03:0.03:0.03;
-% MyAxe.YAxis.MinorTickValues=-0.04:0.005:0.04;
-% 
-% MyAxe.XAxis.MinorTick='on';
-% MyAxe.XAxis.TickValues=390:10:410;
-% MyAxe.XAxis.MinorTickValues=-384:421;
-% 
-% MyAxe.YAxis.TickLength=[0.015 0.03];
-% MyAxe.XAxis.TickLength=[0.015 0.03];
-% 
-% MyLabel=ylabel({'$U$';'[$m.s^{-1}$]'},'fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1)+0.3 LabelPos(2)];
-% 
-% MyLabel=xlabel('Time [Hour]','fontsize',18);
-% LabelPos=MyLabel.Position;
-% MyLabel.Position=[LabelPos(1) LabelPos(2)-0.01];
-% 
-% text(385,-0.025,'$f$','fontsize',24,'Color','black');
-% 
-% savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindTimeSeries');
-% saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindTimeSeries','epsc');

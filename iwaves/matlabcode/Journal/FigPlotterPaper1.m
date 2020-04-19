@@ -618,7 +618,6 @@ Myaxis=gca;
 Myaxis.XAxis.MinorTick='on';
 Myaxis.XAxis.MinorTickValues=0:0.125:3;
 Myaxis.XAxis.TickValues=0.5:1:2.5;
-set(gca,'XTickLabel','');
 
 Myaxis.YAxis.MinorTick='on';
 Myaxis.YAxis.MinorTickValues=-2.5:2.5:14;
