@@ -125,6 +125,8 @@ AX.GridAlpha=0.5;
 
 MargineLeft=0.12;
 MargineRight=0.05;
+%MargineLeft=0.12;
+%MargineRight=0.45;
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -135,7 +137,7 @@ plot(Time,movmean(North,6*5),'color',0.5*[1 1 1],'LineWidth',1,'LineStyle','-');
 line([152 182],[0 0],'color',0.4*[1 1 1],'LineWidth',0.05);
 box on;
 set(gca,'fontsize',16);
-axis([152 182 -4 8]);
+axis([152 182 -4 7]);
 MyYLabel=ylabel('Wind Speed $[m$ $s^{-1}]$','fontsize',18);
 LabelPos=MyYLabel.Position;
 MyYLabel.Position=[LabelPos(1)-1 LabelPos(2)];
@@ -156,17 +158,178 @@ MyAxe.XAxis.MinorTickValues=152:182;
 MyAxe.YAxis.TickLength=[0.02 0.03];
 MyAxe.XAxis.TickLength=[0.02 0.03];
 
-text(153.1,6.5,'$c$','Interpreter','latex','Fontsize',24);
-text(170,25.5,'$b$','Interpreter','latex','Fontsize',24);
+text(153.1,6,'$c$','Interpreter','latex','Fontsize',24);
+text(170,23.2,'$b$','Interpreter','latex','Fontsize',24);
 set(gca,'FontWeight','bold');
 
 lgd=legend('East-West','North-South','Orientation','horizontal','Location','northeastoutside');
-lgd.FontSize=16;
+lgd.FontSize=14;
 LGDPositio=lgd.Position;
-lgd.Position=[LGDPositio(1) LGDPositio(2)+0.07 LGDPositio(3) LGDPositio(4)];
-
+lgd.Position=[LGDPositio(1) LGDPositio(2)+0.05 LGDPositio(3) LGDPositio(4)];
 savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindRecords');
 saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\WindRecords','epsc');
+%%
+%Figure 2- Bathymetry and Density
+clc;
+%clear all;
+close all;
+
+FIG=figure('position',[100 50 800 600]); 
+
+MargineTop=0.15;
+MargineBot=0.15;
+MargineLeft=0.05;
+MargineRight=1-MargineLeft-0.31;
+SubplotSpac=0.0;
+SubplotNumber=1;
+
+SubplotCounter=1;
+%load('G:\Paper2and3\Result-110080.mat','X','RhoBConventional','ZC');
+subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+set(gca,'FontWeight','bold');
+x1 = squeeze(nanmean(RhoBConventional(200,:,:),3)+1000);
+y1 = ZC;
+x2=movmean(sqrt(abs(-9.8/1000*diff(squeeze(RhoBConventional(5,:,1)))./diff(ZC)')),5);
+y2=ZC(1:end-1);
+line(x1,y1,'Color','black','LineStyle','-','LineWidth',2);
+ylim([-75 0]);
+ax1 = gca; % current axes
+ax1.XLim=([1024.5 1025.5]);
+set(ax1,'XTick',[1024.6:0.1:1025.4]);
+MyTickLabel=get(ax1,'XTickLabel');
+FinalTickLabel=strings(size(MyTickLabel,1),1);
+FinalTickLabel(1:4:end,:)=MyTickLabel(1:4:end,:);
+set(ax1,'XTickLabel',FinalTickLabel);
+
+ax1.YAxis.MinorTick='on';
+ax1.YAxis.TickValues=-70:10:0;
+ax1.YAxis.MinorTickValues=-75:2.5:-5;
+set(gca,'YTickLabel','');
+
+ax1.XColor = [0 0 0];
+ax1.YColor = 'black';
+set(gca,'fontsize',16);
+
+ax1_pos = ax1.Position; % position of first axes
+ax2 = axes('Position',ax1_pos,'XAxisLocation','top','YAxisLocation','right','Color','none');
+ax2.XLim=([-0.005 0.045]);
+set(ax2,'XTick',[0:0.005:0.04]);
+MyTickLabel=get(ax2,'XTickLabel');
+FinalTickLabel=strings(size(MyTickLabel,1),1);
+FinalTickLabel(1:2:end,:)=MyTickLabel(1:2:end,:);
+set(ax2,'XTickLabel',FinalTickLabel);
+ax2.XColor=[0.4 0.4 0.4];
+
+ax2.YAxis.MinorTick='on';
+ax2.YAxis.TickValues=-70:10:0;
+ax2.YAxis.MinorTickValues=-75:2.5:-5;
+
+line(x2,y2,'Parent',ax2,'Color',[0.5 0.5 0.5],'LineStyle','-','LineWidth',2);
+ylim([-75 0]);
+set(gca,'fontsize',16);
+%MyYLabel=ylabel('z $[m]$','fontsize',18);
+%set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.42, 0.5, 0]);
+text(0.008,-86,'$\rho_b$ $[kg.m^{-3}]$','Interpreter','latex','Fontsize',18);
+text(0.015,10,'$N$ $[s^{-1}]$','Color',[0.5 0.5 0.5],'Interpreter','latex','Fontsize',18);
+text(0.002,-6,'$a$','fontsize',24);
+
+line(0,0,'Color','black','LineStyle','-','LineWidth',2);
+set(gca,'FontWeight','bold');
+
+
+ax1.YAxis.TickLength=[0.02 0.03];
+ax2.YAxis.TickLength=[0.02 0.03];
+ax1.XAxis.TickLength=[0.02 0.03];
+ax2.XAxis.TickLength=[0.02 0.03];
+
+MargineRight=0.14;
+MargineLeft=1-MargineRight-0.31;
+
+
+SubplotCounter=1;
+subplot2=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+RightMargine=5000;
+DomainLength=50000;
+XFine=0:10:DomainLength;
+XFine=XFine';
+Bathymetry=nan(size(XFine,1),1);
+for i=1:size(XFine,1)
+	if(XFine(i)>DomainLength-(1+RightMargine))
+		Bathymetry(i)=5;
+    elseif(XFine(i)>DomainLength-(300+RightMargine))
+		p1 = -1.4433e-05;
+		p2 = -0.012306;
+		p3 = -4.8887;
+		Bathymetry(i)=-(p1*(DomainLength-XFine(i)-RightMargine)^2+p2*(DomainLength-XFine(i)-RightMargine)^1+p3);
+    elseif(XFine(i)>DomainLength-(825+RightMargine))
+		p1 = 8.5851e-08;
+		p2 = -0.00016189;
+		p3 = 0.031162;
+		p4 = -7.1766;
+		Bathymetry(i)=-(p1*(DomainLength-XFine(i)-RightMargine)^3+p2* (DomainLength-XFine(i)-RightMargine)^2+p3*(DomainLength-XFine(i)-RightMargine)^1+p4);
+    elseif(XFine(i)>DomainLength-(1303+RightMargine))
+		p1 = -1.0463e-07;
+		p2 = 0.00039446;
+		p3 = -0.50792;
+		p4 = 166.49;
+		Bathymetry(i)=-(p1*(DomainLength-XFine(i)-RightMargine)^3+p2*(DomainLength-XFine(i)-RightMargine)^2+p3*(DomainLength-XFine(i)-RightMargine)^1+p4);
+    elseif(XFine(i)>DomainLength-(5400+RightMargine))
+		p1 = 3.9769e-07;
+		p2 = -0.0069956;
+		p3 = -48.817;
+		Bathymetry(i)=-(p1*(DomainLength-XFine(i)-RightMargine)^2+p2*(DomainLength-XFine(i)-RightMargine)^1+p3);
+	else
+		Bathymetry(i)=75;
+    end
+end
+left_color = [0 0 0];
+right_color = [0.5 0.5 0.5];
+set(FIG,'defaultAxesColorOrder',[left_color; right_color]);
+
+plot(45.2-XFine/1000,-Bathymetry,'Color',[0 0 0],'LineStyle','-','LineWidth',2);
+%set(gca, 'XDir','reverse')
+MyYLabel=ylabel('z $[m]$','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [-0.25,0.5, 0]);
+text(5,-6,'$b$','fontsize',24);
+xlim([0 6]);
+set(gca,'YTick',[-75:20:-5]);
+hold on;
+yyaxis right;
+BathymetryDiff=diff(Bathymetry)./diff(XFine);
+BathymetryDiff(end+1)=BathymetryDiff(end);
+BathymetryDiff([4417,4418,4370])=[];
+XFine([4417,4418,4370])=[];
+
+plot(45.2-XFine(3921:4518)/1000,-movmean(BathymetryDiff(3921:4518),20),'Color',right_color,'LineStyle','-','LineWidth',2);
+
+xlim([0 6]);
+ylim([0 0.075]);
+MyAxe=gca;
+MyAxe.YAxis(2).MinorTick='on';
+MyAxe.YAxis(2).MinorTickValues=0.0:0.005:0.07;
+MyAxe.YAxis(2).TickValues=0.02:0.03:0.06;
+
+MyAxe.YAxis(1).MinorTick='on';
+MyAxe.YAxis(1).MinorTickValues=-75:2.5:0;
+MyAxe.YAxis(1).TickValues=-70:10:0;
+
+MyAxe.XAxis(1).MinorTick='on';
+MyAxe.XAxis(1).MinorTickValues=0:1:5;
+MyAxe.XAxis(1).TickValues=0:5:5;
+
+set(gca,'fontsize',16);
+MyYLabel=xlabel('Offshore distance $[km]$','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [0.5,-0.12, 0]);
+MyYLabel=ylabel('Slope $[m.m^{-1}]$','fontsize',18);
+set(MyYLabel, 'Units', 'Normalized', 'Position', [1.3,0.5, 0]);
+set(gca,'FontWeight','bold');
+
+MyAxe.YAxis(1).TickLength=[0.02 0.03];
+MyAxe.YAxis(2).TickLength=[0.02 0.03];
+MyAxe.XAxis.TickLength=[0.02 0.03];
+
+savefig(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\InitialConditions');
+saveas(FIG,'D:\OneDrive - University of Georgia\Documents\Educational\Latex\Paper3\InitialConditions','epsc');
 %%
 %Fig 2-Two layered system due to XS wind
 close all;

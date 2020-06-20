@@ -1323,7 +1323,7 @@ bar([5:2.5:20],CaseValue);
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 ylim([-0.3 1.8]);
-lgd=legend('$M_2+K_1$','$M_2$','$K_1$','NTT','Orientation','horizontal','Location','northoutside');
+lgd=legend('$M_2+K_1$','$M_2$','$K_1$','NT','Orientation','horizontal','Location','northoutside');
 LGDPositio=lgd.Position;
 lgd.Position=[LGDPositio(1) LGDPositio(2)-0.01 LGDPositio(3) LGDPositio(4)];
 MyAxe=gca;
