@@ -4,7 +4,9 @@
 # Shell script to run a suntans test case.
 #
 ########################################################################
-ml SUNTANS/20180305-gmvolf-2016b
+
+ml load gmvolf/2018b
+ml load SUNTANS/20180305-gmvolf-2018b
 
 SUNTANSHOME=$(pwd)
 SUNTANSHOME=$(echo ${SUNTANSHOME%/*}/main)

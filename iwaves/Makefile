@@ -58,6 +58,8 @@ clean:
 	rm -f log*.pbs.scm.out
 	rm -f IW-*.e*
 	rm -f IW-*.o*
+	rm -f *.out
+	rm -f *.err
 
 clobber: clean
 	rm -rf *~ \#*\# PI* $(EXEC) gmon.out data rundata/*~

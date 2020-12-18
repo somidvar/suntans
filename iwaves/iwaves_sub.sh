@@ -1,23 +1,19 @@
-#PBS -S /bin/bash
-#PBS -q aquari_q
-#PBS -N IW-10001
-#PBS -l nodes=1:ppn=48:aquarinode
-#PBS -l walltime=24:00:00
-#PBS -l mem=120gb
-#PBS -M omidvar@uga.edu 
-#PBS -m f
+#!/bin/bash
+#SBATCH --partition=aquari_p
+#SBATCH --job-name=IW
+#SBATCH --nodes=1
+#SBATCH --ntasks=48
+#SBATCH --cpus-per-task=1
+#SBATCH --time=48:00:00
+#SBATCH --mem=100G
+#SBATCH --mail-user=omidvar@uga.edu
+#SBATCH --mail-type=BEGIN,END
+#SBATCH --output=IW%j.out
+#SBATCH --error=IW%j.err
 
-cd $PBS_O_WORKDIR
+ml load gmvolf/2018b
+ml load SUNTANS/20180305-gmvolf-2018b
 
-ml SUNTANS/20180305-gmvolf-2016b
-
-echo
-echo "Job ID: $PBS_JOBID"
-echo "Queue:  $PBS_QUEUE"
-echo "Cores:  $PBS_NP"
-echo "Nodes:  $(cat $PBS_NODEFILE | sort -u | tr '\n' ' ')"
-echo "mpirun: $(which mpirun)"
-echo
 
 SUNTANSHOME=$(pwd)
 SUNTANSHOME=$(echo ${SUNTANSHOME%/*}/main)
@@ -26,9 +22,10 @@ SUNPLOT=$SUNTANSHOME/sunplot
 . $SUNTANSHOME/Makefile.in
 maindatadir=rundata
 datadir=data
-NUMPROCS=$MOAB_PROCCOUNT
+NUMPROCS=SLURM_NTASKS
 
 make clobber
+make data
 
 if [ -z "$MPIHOME" ] ; then
     EXEC=$SUN
@@ -50,4 +47,4 @@ else
     cp $maindatadir/suntans.dat $datadir/.
 fi
 echo Running suntans...
-$EXEC -s -vv --datadir=$datadir > log_${PBS_JOBID}.out
+$EXEC -s -vv --datadir=$datadir
