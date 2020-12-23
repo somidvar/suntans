@@ -24,7 +24,7 @@ gamma 				1.0 		# Coefficient of expansivity of temperature.
 kappa_T             0       	# Vertical thermal diffusivity
 kappa_TH            0       	# Horizontal thermal diffusivity
 nu 					1e-3  		# Laminar viscosity of water (m^2 s^-1)
-nu_H 				0.01			# Horizontal laminar viscosity of water (m^2 s^-1)
+nu_H 				1			# Horizontal laminar viscosity of water (m^2 s^-1)
 z0T	                0.0 		# Top roughness
 z0B	                0.0			# Bottom roughness
 CdT	                0.0 		# Drag coefficient at surface
@@ -37,7 +37,7 @@ nsteps				104160			# Number of steps
 ntout   			20  		# How often to output data 20
 ntprog   			1 			# How often to report progress (in %)
 ntconserve 			1			# How often to output conserved data
-nonhydrostatic		0			# 0 = hydrostatic, 1 = nonhydrostatic
+nonhydrostatic		1			# 0 = hydrostatic, 1 = nonhydrostatic
 cgsolver			1			# 0 = GS, 1 = CG
 maxiters			1000		# Maximum number of CG iterations
 qmaxiters			2000		# Maximum number of CG iterations for nonhydrostatic pressure

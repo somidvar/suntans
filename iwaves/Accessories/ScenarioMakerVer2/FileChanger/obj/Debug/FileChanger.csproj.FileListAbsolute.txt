@@ -72,3 +72,13 @@ D:\github\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\Fil
 D:\github\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\FileChanger.exe
 D:\github\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\FileChanger.pdb
 D:\github\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.csprojAssemblyReference.cache
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\FileChanger.exe.config
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\FileChanger.exe
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\bin\Debug\FileChanger.pdb
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.csprojAssemblyReference.cache
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.Form1.resources
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.Properties.Resources.resources
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.csproj.GenerateResource.cache
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.csproj.CoreCompileInputs.cache
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.exe
+C:\GitHUb\suntans\iwaves\Accessories\ScenarioMakerVer2\FileChanger\obj\Debug\FileChanger.pdb

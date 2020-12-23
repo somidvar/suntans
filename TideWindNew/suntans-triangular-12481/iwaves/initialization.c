@@ -84,8 +84,8 @@ REAL ReturnDepth(REAL x, REAL y) {
 	REAL DomainLength=50000;
 	REAL p1,p2,p3,p4,p5,BathymetryDepth;
 	
-	if (x>DomainLength-(1+RightMargine-400))
-		BathymetryDepth=2.28;
+	if (x>DomainLength-(1+RightMargine))
+		BathymetryDepth=5;
 	else if(x>DomainLength-(300+RightMargine))
 	{
 		p1 = -1.4433e-05;

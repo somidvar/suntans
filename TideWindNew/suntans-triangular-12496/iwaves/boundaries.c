@@ -147,7 +147,7 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 		REAL UTides,M2InitialPhaseLag,M2Period,K1Period;
 		M2InitialPhaseLag=90;
 		M2Period=12.4*3600;
-		K1Period=20*3600;
+		K1Period=23.9*3600;
 		if (prop->rtime>=(360-M2InitialPhaseLag)*M2Period/360)
 			UTides =prop->M2TideAmplitude*sin(2*PI/M2Period*(prop->rtime-(360-M2InitialPhaseLag)*M2Period/360));
 		if (prop->rtime>=(360-prop->TidePhaseDifference)*K1Period/360)

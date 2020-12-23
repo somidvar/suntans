@@ -16,17 +16,16 @@ namespace FileChanger
     {
         string MotherDirectory;
         const bool CaseChecker = false;
-        const int CaseNumber = 513;
+        const int CaseNumber = 503;
         public Form1()
         {
             InitializeComponent();
-            MotherDirectory = @"D:\Newfolder\suntans-triangular-";
+            MotherDirectory = @"C:\GitHUb\suntans\TideWindNew\suntans-triangular-";
             SourceDirectoryTB.Text = MotherDirectory;
         }
         public void ArgumentInitializer()
         {
-
-            StreamReader CSVParamaters = new StreamReader("D:\\Parameters.csv");
+            StreamReader CSVParamaters = new StreamReader("C:\\GitHUb\\suntans\\TideWindNew\\Parameters.csv");
             string CSVContent = CSVParamaters.ReadLine();
             double[] PycnoclineDepth, M2Amplitude, K1Amplitude, K1Phase, WindSpeed, WindPhase;
             PycnoclineDepth = new double[CaseNumber];
@@ -73,7 +72,7 @@ namespace FileChanger
             {
                 for (FileCounter = 0; FileCounter < CaseNumber; FileCounter++)
                 {
-                    Address[FileCounter] = string.Concat(MotherDirectory, Convert.ToString(FileCounter + 110000));
+                    Address[FileCounter] = string.Concat(MotherDirectory, Convert.ToString(FileCounter + 12000));
                     DirectoryMaker(MotherDirectory, Address[FileCounter]);
                     SUNTANSDATModifier(Address[FileCounter], PycnoclineDepth[FileCounter], M2Amplitude[FileCounter], K1Amplitude[FileCounter], K1Phase[FileCounter], WindPhase[FileCounter], WindSpeed[FileCounter]);
                     IWavesModifier(Address[FileCounter]);
@@ -86,7 +85,7 @@ namespace FileChanger
             {
                 for (FileCounter = 0; FileCounter < CaseNumber; FileCounter++)
                 {
-                    Address[FileCounter] = string.Concat(MotherDirectory, Convert.ToString(FileCounter + 110000));
+                    Address[FileCounter] = string.Concat(MotherDirectory, Convert.ToString(FileCounter + 12000));
                     SUNTANSChecker(Address[FileCounter], PycnoclineDepth[FileCounter], M2Amplitude[FileCounter], K1Amplitude[FileCounter], K1Phase[FileCounter], WindPhase[FileCounter], WindSpeed[FileCounter]);
                 }
                 MessageBox.Show("The check was successfull.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -233,7 +232,7 @@ namespace FileChanger
         }
         public void IWavesModifier(string Address)
         {
-            string CaseNumber = Address.Substring(Address.LastIndexOf('-') + 1, 6);
+            string CaseNumber = Address.Substring(Address.LastIndexOf('-') + 1, 5);
             Address += "\\iwaves\\iwaves_sub.sh";
             try
             {
@@ -244,8 +243,7 @@ namespace FileChanger
                 {
                     if (IWavesCounter == 2)
                     {
-                        IWaves += @"#PBS -N ";
-                        IWaves += "IW-";
+                        IWaves += @"#SBATCH --job-name=IW-";
                         IWaves += CaseNumber;
                         IWaves += "\n";
                         IWavesReader.ReadLine();
