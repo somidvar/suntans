@@ -174,14 +174,20 @@ void BoundaryVelocities(gridT *grid, physT *phys, propT *prop, int myproc, MPI_C
 void WindStress(gridT *grid, physT *phys, propT *prop, metT *met, int myproc) {
 	int j, jptr;
 	REAL WindPeriod=24*3600;
+	REAL ReductionFactor=-10000;
+	if(prop->rtime<2*WindPeriod)
+		ReductionFactor=1.0*prop->rtime/(WindPeriod*2.0);
+	else
+		ReductionFactor=1;
 	for (jptr = grid->edgedist[0]; jptr < grid->edgedist[5]; jptr++) {
 		j = grid->edgep[jptr];
 		
 		if (prop->rtime>=(360-prop->WindPhaseDifference)*WindPeriod/360)
-			phys->tau_T[j] = grid->n1[j] * prop->tau_T*0.5*(1+sin(2*PI/WindPeriod*(prop->rtime-(360-prop->WindPhaseDifference)*WindPeriod/360)));
+			phys->tau_T[j] = grid->n1[j] * ReductionFactor*prop->tau_T*0.5*(1+sin(2*PI/WindPeriod*(prop->rtime-(360-prop->WindPhaseDifference)*WindPeriod/360)));
 		phys->tau_B[j] = 0;
 	}
 }
+
 
 void InitBoundaryData(propT *prop, gridT *grid, int myproc, MPI_Comm comm){}
 void AllocateBoundaryData(propT *prop, gridT *grid, boundT **bound, int myproc, MPI_Comm comm){}

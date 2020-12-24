@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=12
 #SBATCH --cpus-per-task=1
-#SBATCH --time=60:00:00
+#SBATCH --time=20:00:00
 #SBATCH --mem=25G
 ##SBATCH --mail-user=omidvar@uga.edu
 ##SBATCH --mail-type=BEGIN,END

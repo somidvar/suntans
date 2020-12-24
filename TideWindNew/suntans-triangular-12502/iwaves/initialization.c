@@ -147,7 +147,7 @@ REAL ReturnFreeSurface(REAL x, REAL y, REAL d, propT *prop) {
  *
  */
 REAL ReturnSalinity(REAL x, REAL y, REAL z, propT *prop) {
-	return (0.3977*tanh(0.4288*(-z-prop->PycnoclineDepth))+25)/1000;
+	return (0.3977*tanh(0.4288*(-z-prop->PycnoclineDepth))-z/1000+25)/1000;
 }
 
 /*
