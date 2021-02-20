@@ -499,8 +499,8 @@ hold on;
 box on;
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-pcolor(X/1000,ZC,K1Ri');
-axis([35 50 -75 -1]);
+pcolor((50000-X)/1000,ZC,K1Ri');
+axis([0 15 -75 -1]);
 shading flat;
 caxis([0 0.25]);
 
@@ -516,8 +516,8 @@ MyAxe.YAxis.TickValues=-60:15:-15;
 MyAxe.YAxis.MinorTickValues=-75:5:0;
 
 MyAxe.XAxis.MinorTick='on';
-MyAxe.XAxis.TickValues=40:5:45;
-MyAxe.XAxis.MinorTickValues=30:2.5:50;
+MyAxe.XAxis.TickValues=5:5:10;
+MyAxe.XAxis.MinorTickValues=0:2.5:15;
 MyAxe.XAxis.TickLabels='';
 
 MyAxe.YAxis.TickLength=[0.01 0.02];
@@ -535,8 +535,8 @@ hold on;
 box on;
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-pcolor(X/1000,ZC,M2Ri');
-axis([35 50 -75 -1]);
+pcolor((50000-X)/1000,ZC,M2Ri');
+axis([0 15 -75 -1]);
 shading flat;
 caxis([0 0.25]);
 colormap(bone);
@@ -559,8 +559,8 @@ MyAxe.YAxis.TickValues=-60:15:-15;
 MyAxe.YAxis.MinorTickValues=-75:5:0;
 
 MyAxe.XAxis.MinorTick='on';
-MyAxe.XAxis.TickValues=40:5:45;
-MyAxe.XAxis.MinorTickValues=30:2.5:50;
+MyAxe.XAxis.TickValues=5:5:10;
+MyAxe.XAxis.MinorTickValues=0:2.5:15;
 MyAxe.XAxis.TickLabels='';
 
 MyAxe.YAxis.TickLength=[0.01 0.02];
@@ -582,8 +582,8 @@ hold on;
 box on;
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-pcolor(X/1000,ZC,M2K1Ri');
-axis([35 50 -75 -1]);
+pcolor((50000-X)/1000,ZC,M2K1Ri');
+axis([0 15 -75 -1]);
 shading flat;
 caxis([0 0.25]);
 colormap(bone);
@@ -597,8 +597,8 @@ MyAxe.YAxis.TickValues=-60:15:-15;
 MyAxe.YAxis.MinorTickValues=-75:5:0;
 
 MyAxe.XAxis.MinorTick='on';
-MyAxe.XAxis.TickValues=40:5:45;
-MyAxe.XAxis.MinorTickValues=30:2.5:50;
+MyAxe.XAxis.TickValues=5:5:10;
+MyAxe.XAxis.MinorTickValues=0:2.5:15;
 
 MyAxe.YAxis.TickLength=[0.01 0.02];
 MyAxe.XAxis.TickLength=[0.01 0.02];
@@ -955,275 +955,276 @@ clear all;
 clc;
 close all;
 
-FIG=figure('position',[100 50 800 800]);
-MargineTop=0.08;
-MargineBot=0.12;
-
-MargineLeft=0.10+0*0.15+0*0.01;
-MargineRight=1-(MargineLeft+0.15);
-
-SubplotSpac=0.01;
-SubplotNumber=7;
-
-MapColorNumber=25;
-MapColors=cumsum(5*0.95.^(1:MapColorNumber));
-MapColors=MapColors-min(MapColors);
-MapColors=MapColors/(max(MapColors))/1.2;
-%Adding white color to the map
-CustomMap=zeros(2*size(MapColors,2)+1,3);
-CustomMap(1:size(MapColors,2),1)=MapColors;
-CustomMap(1:size(MapColors,2),2)=MapColors;
-CustomMap(1:size(MapColors,2),3)=1;
-CustomMap(size(MapColors,2)+1,1)=1;
-CustomMap(size(MapColors,2)+1,2)=1;
-CustomMap(size(MapColors,2)+1,3)=1;
-CustomMap(size(MapColors,2)+2:end,3)=fliplr(MapColors);
-CustomMap(size(MapColors,2)+2:end,2)=fliplr(MapColors);
-CustomMap(size(MapColors,2)+2:end,1)=1;
-
-FIG.Color='white';
-fig = gcf;
-fig.InvertHardcopy = 'off';
-
-FigureName={'$05.0$ $m$','$07.5$ $m$','$10.0$ $m$','$12.5$ $m$','$15.0$ $m$','$17.5$ $m$','$20.0$ $m$'};
-for counter=51:-1:45
-    SubplotCounter=counter-44;
-    subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-    set(gca, 'Color', 0.5*[1 1 1]);
-    hold on;
-
-    Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
-    load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    
-    pcolor(X/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
-    shading flat;
-    caxis([-8 8]);
-    colormap(CustomMap);
-    
-    xlim([44 45]);
-    ylim([-30 -1]);
-    
-    set(gca,'layer','top');
-    MyAxe=gca;
-    MyAxe.YAxis.MinorTick='on';
-    MyAxe.YAxis.MinorTickValues=-30:5:0;
-    MyAxe.YAxis.TickValues=-25:20:-5;
-    
-    MyAxe.XAxis.MinorTick='on';
-    MyAxe.XAxis.TickValues=44.25:0.5:44.75;
-    MyAxe.XAxis.MinorTickValues=44:0.25:45;
-    
-    set(gca,'fontsize',16);
-    set(gca,'FontWeight','bold');
-    if counter~=45
-        set(gca,'XTickLabel','');
-    end
-    MyAxe.TickLength=[0.04 0.04];
-    box on;
-    text(44.05,-7.5,FigureName{counter-44},'Fontsize',16);
-    text(44.05,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
-end
-text(44.25,200,'$0$ $m.s^{-1}$','Fontsize',18);
-
-MyLabel=ylabel('Z [$m$]','fontsize',18);
-LabelPos=MyLabel.Position;
-MyLabel.Position=[LabelPos(1) LabelPos(2)+100];
-
-MargineLeft=0.10+1*0.15+1*0.01;
-MargineRight=1-(MargineLeft+0.15);
-
-for counter=58:-1:52
-    SubplotCounter=counter-51;
-    subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-    set(gca, 'Color', 0.5*[1 1 1]);
-    hold on;
-
-    Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
-    load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    
-    pcolor(X/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
-    shading flat;
-    caxis([-8 8]);
-    colormap(CustomMap);
-    
-    xlim([44 45]);
-    ylim([-30 -1]);
-    
-    set(gca,'layer','top');
-    MyAxe=gca;
-    MyAxe.YAxis.MinorTick='on';
-    MyAxe.YAxis.MinorTickValues=-30:5:0;
-    MyAxe.YAxis.TickValues=-25:20:-5;
-    
-    MyAxe.YAxisLocation='left';
-    MyAxe.XAxis.MinorTick='on';
-    MyAxe.XAxis.TickValues=44.25:0.5:44.75;
-    MyAxe.XAxis.MinorTickValues=44:0.25:45;
-    
-    set(gca,'fontsize',16);
-    set(gca,'FontWeight','bold');
-    if counter~=52
-        set(gca,'XTickLabel','');
-    end
-    MyAxe.TickLength=[0.03 0.03];
-    set(gca,'YTickLabel','');
-    box on;
-    text(44.05,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
-end
-text(44.25,200,'$1.5$ $m.s^{-1}$','Fontsize',18);
-
-MargineLeft=0.10+2*0.15+2*0.01;
-MargineRight=1-(MargineLeft+0.15);
-
-for counter=65:-1:59
-    SubplotCounter=counter-58;
-    subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-    set(gca, 'Color', 0.5*[1 1 1]);
-    hold on;
-
-    Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
-    load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    
-    pcolor(X/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
-    shading flat;
-    caxis([-8 8]);
-    colormap(CustomMap);
-    
-    xlim([44 45]);
-    ylim([-30 -1]);
-    
-    set(gca,'layer','top');
-    MyAxe=gca;
-    MyAxe.YAxis.MinorTick='on';
-    MyAxe.YAxis.MinorTickValues=-30:5:0;
-    MyAxe.YAxis.TickValues=-25:20:-5;
-    
-    MyAxe.YAxisLocation='left';
-    MyAxe.XAxis.MinorTick='on';
-    MyAxe.XAxis.TickValues=44.25:0.5:44.75;
-    MyAxe.XAxis.MinorTickValues=44:0.25:45;
-    
-    set(gca,'fontsize',16);
-    set(gca,'FontWeight','bold');
-    if counter~=59
-        set(gca,'XTickLabel','');
-    end
-    MyAxe.TickLength=[0.03 0.03];
-    set(gca,'YTickLabel','');
-    box on;
-    text(44.05,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
-end
-text(44.25,200,'$3$ $m.s^{-1}$','Fontsize',18);
-
-MargineLeft=0.10+3*0.15+3*0.01;
-MargineRight=1-(MargineLeft+0.15);
-
-for counter=72:-1:66
-    SubplotCounter=counter-65;
-    subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-    set(gca, 'Color', 0.5*[1 1 1]);
-    hold on;
-
-    Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
-    load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    
-    pcolor(X/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
-    shading flat;
-    caxis([-8 8]);
-    colormap(CustomMap);
-    
-    xlim([44 45]);
-    ylim([-30 -1]);
-    
-    set(gca,'layer','top');
-    MyAxe=gca;
-    MyAxe.YAxis.MinorTick='on';
-    MyAxe.YAxis.MinorTickValues=-30:5:0;
-    MyAxe.YAxis.TickValues=-25:20:-5;
-    
-    MyAxe.YAxisLocation='left';
-    MyAxe.XAxis.MinorTick='on';
-    MyAxe.XAxis.TickValues=44.25:0.5:44.75;
-    MyAxe.XAxis.MinorTickValues=44:0.25:45;
-    
-    set(gca,'fontsize',16);
-    set(gca,'FontWeight','bold');
-    if counter~=66
-        set(gca,'XTickLabel','');
-    end
-    MyAxe.TickLength=[0.03 0.03];
-    set(gca,'YTickLabel','');
-    box on;
-    text(44.05,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
-end
-text(44.25,200,'$4.5$ $m.s^{-1}$','Fontsize',18);
-
-MargineLeft=0.10+4*0.15+4*0.01;
-MargineRight=1-(MargineLeft+0.15);
-
-for counter=79:-1:73
-    SubplotCounter=counter-72;
-    subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-    set(gca, 'Color', 0.5*[1 1 1]);
-    hold on;
-
-    Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
-    load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
-    ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    
-    pcolor(X/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
-    shading flat;
-    caxis([-8 8]);
-    colormap(CustomMap);
-    
-    xlim([44 45]);
-    ylim([-30 -1]);
-    
-    set(gca,'layer','top');
-    MyAxe=gca;
-    MyAxe.YAxis.MinorTick='on';
-    MyAxe.YAxis.MinorTickValues=-30:5:0;
-    MyAxe.YAxis.TickValues=-25:20:-5;
-    
-    MyAxe.YAxisLocation='left';
-    MyAxe.XAxis.MinorTick='on';
-    MyAxe.XAxis.TickValues=44.25:0.5:44.75;
-    MyAxe.XAxis.MinorTickValues=44:0.25:45;
-    
-    set(gca,'fontsize',16);
-    set(gca,'FontWeight','bold');
-    if counter~=73
-        set(gca,'XTickLabel','');
-    end
-    MyAxe.TickLength=[0.03 0.03];
-    set(gca,'YTickLabel','');
-    box on;
-    text(44.05,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
-end
-text(44.25,200,'$6$ $m.s^{-1}$','Fontsize',18);
-
-MyColorbar=colorbar('Location','eastoutside');
-MyColorbar.FontSize=18;
-MyColorbar.FontWeight='bold';
-MyColorbar.TickLabelInterpreter='latex';
-POS=MyColorbar.Position;
-MyColorbar.Position=[POS(1)+0.055 POS(2) POS(3) POS(4)+0.693];
-MyColorbar.Label.String='$\langle C \rangle$ [$10^{-4}$ $W.m^{-3}$]';
-MyColorbar.Label.Interpreter='latex';
-%MyColorbar.Label.Rotation=0;
-MyColorbarLabelPos=get(MyColorbar,'Position');
-MyColorbar.Label.Position=[MyColorbarLabelPos(1)+5 MyColorbarLabelPos(2)];
-
-MyLabel=xlabel('X [$km$]','fontsize',18);
-LabelPos=MyLabel.Position;
-MyLabel.Position=[LabelPos(1)-2 LabelPos(2)-10];
-
-savefig(FIG,'C:\suntans\plots\PycnoWindSpeedConversion');
-saveas(FIG,'C:\suntans\plots\PycnoWindSpeedConversion','epsc');
+% FIG=figure('position',[100 50 800 800]);
+% MargineTop=0.08;
+% MargineBot=0.12;
+% 
+% MargineLeft=0.10+0*0.15+0*0.01;
+% MargineRight=1-(MargineLeft+0.15);
+% 
+% SubplotSpac=0.01;
+% SubplotNumber=7;
+% 
+% MapColorNumber=25;
+% MapColors=cumsum(5*0.95.^(1:MapColorNumber));
+% MapColors=MapColors-min(MapColors);
+% MapColors=MapColors/(max(MapColors))/1.2;
+% %Adding white color to the map
+% CustomMap=zeros(2*size(MapColors,2)+1,3);
+% CustomMap(1:size(MapColors,2),1)=MapColors;
+% CustomMap(1:size(MapColors,2),2)=MapColors;
+% CustomMap(1:size(MapColors,2),3)=1;
+% CustomMap(size(MapColors,2)+1,1)=1;
+% CustomMap(size(MapColors,2)+1,2)=1;
+% CustomMap(size(MapColors,2)+1,3)=1;
+% CustomMap(size(MapColors,2)+2:end,3)=fliplr(MapColors);
+% CustomMap(size(MapColors,2)+2:end,2)=fliplr(MapColors);
+% CustomMap(size(MapColors,2)+2:end,1)=1;
+% 
+% FIG.Color='white';
+% fig = gcf;
+% fig.InvertHardcopy = 'off';
+% 
+% FigureName={'$05.0$ $m$','$07.5$ $m$','$10.0$ $m$','$12.5$ $m$','$15.0$ $m$','$17.5$ $m$','$20.0$ $m$'};
+% SubplotCounter=8;
+% for counter=45:51
+%     SubplotCounter=SubplotCounter-1;
+%     subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+%     set(gca, 'Color', 0.5*[1 1 1]);
+%     hold on;
+% 
+%     Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
+%     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
+%     
+%     pcolor((50000-X)/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
+%     shading flat;
+%     caxis([-8 8]);
+%     colormap(CustomMap);
+%     
+%     xlim([5 6]);
+%     ylim([-30 -1]);
+%     
+%     set(gca,'layer','top');
+%     MyAxe=gca;
+%     MyAxe.YAxis.MinorTick='on';
+%     MyAxe.YAxis.MinorTickValues=-30:5:0;
+%     MyAxe.YAxis.TickValues=-25:20:-5;
+%     
+%     MyAxe.XAxis.MinorTick='on';
+%     MyAxe.XAxis.TickValues=5.25:0.5:5.75;
+%     MyAxe.XAxis.MinorTickValues=5:0.25:6;
+%     
+%     set(gca,'fontsize',16);
+%     set(gca,'FontWeight','bold');
+%     if counter~=45
+%         set(gca,'XTickLabel','');
+%     end
+%     MyAxe.TickLength=[0.04 0.04];
+%     box on;
+%     text(5.45,-7.5,FigureName{counter-44},'Fontsize',16);
+%     text(5.6,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
+% end
+% text(5.25,200,'$0$ $m.s^{-1}$','Fontsize',18);
+% 
+% MyLabel=ylabel('$z$ [$m$]','fontsize',18);
+% LabelPos=MyLabel.Position;
+% MyLabel.Position=[LabelPos(1) LabelPos(2)+100];
+% 
+% MargineLeft=0.10+1*0.15+1*0.01;
+% MargineRight=1-(MargineLeft+0.15);
+% SubplotCounter=8;
+% for counter=52:58
+%     SubplotCounter=SubplotCounter-1;
+%     subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+%     set(gca, 'Color', 0.5*[1 1 1]);
+%     hold on;
+% 
+%     Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
+%     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
+%     
+%     pcolor((50000-X)/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
+%     shading flat;
+%     caxis([-8 8]);
+%     colormap(CustomMap);
+%     
+%     xlim([5 6]);
+%     ylim([-30 -1]);
+%     
+%     set(gca,'layer','top');
+%     MyAxe=gca;
+%     MyAxe.YAxis.MinorTick='on';
+%     MyAxe.YAxis.MinorTickValues=-30:5:0;
+%     MyAxe.YAxis.TickValues=-25:20:-5;
+%     
+%     MyAxe.YAxisLocation='left';
+%     MyAxe.XAxis.MinorTick='on';
+%     MyAxe.XAxis.TickValues=5.25:0.5:5.75;
+%     MyAxe.XAxis.MinorTickValues=5:0.25:6;
+%     
+%     set(gca,'fontsize',16);
+%     set(gca,'FontWeight','bold');
+%     if counter~=52
+%         set(gca,'XTickLabel','');
+%     end
+%     MyAxe.TickLength=[0.03 0.03];
+%     set(gca,'YTickLabel','');
+%     box on;
+%     text(5.6,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
+% end
+% text(5.25,200,'$1.5$ $m.s^{-1}$','Fontsize',18);
+% 
+% MargineLeft=0.10+2*0.15+2*0.01;
+% MargineRight=1-(MargineLeft+0.15);
+% SubplotCounter=8;
+% for counter=59:65
+%     SubplotCounter=SubplotCounter-1;
+%     subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+%     set(gca, 'Color', 0.5*[1 1 1]);
+%     hold on;
+% 
+%     Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
+%     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
+%     
+%     pcolor((50000-X)/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
+%     shading flat;
+%     caxis([-8 8]);
+%     colormap(CustomMap);
+%     
+%     xlim([5 6]);
+%     ylim([-30 -1]);
+%     
+%     set(gca,'layer','top');
+%     MyAxe=gca;
+%     MyAxe.YAxis.MinorTick='on';
+%     MyAxe.YAxis.MinorTickValues=-30:5:0;
+%     MyAxe.YAxis.TickValues=-25:20:-5;
+%     
+%     MyAxe.YAxisLocation='left';
+%     MyAxe.XAxis.MinorTick='on';
+%     MyAxe.XAxis.TickValues=5.25:0.5:5.75;
+%     MyAxe.XAxis.MinorTickValues=5:0.25:6;
+%     
+%     set(gca,'fontsize',16);
+%     set(gca,'FontWeight','bold');
+%     if counter~=59
+%         set(gca,'XTickLabel','');
+%     end
+%     MyAxe.TickLength=[0.03 0.03];
+%     set(gca,'YTickLabel','');
+%     box on;
+%     text(5.6,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
+% end
+% text(5.25,200,'$3$ $m.s^{-1}$','Fontsize',18);
+% 
+% MargineLeft=0.10+3*0.15+3*0.01;
+% MargineRight=1-(MargineLeft+0.15);
+% SubplotCounter=8;
+% for counter=66:72
+%     SubplotCounter=SubplotCounter-1;
+%     subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+%     set(gca, 'Color', 0.5*[1 1 1]);
+%     hold on;
+% 
+%     Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
+%     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
+%     
+%     pcolor((50000-X)/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
+%     shading flat;
+%     caxis([-8 8]);
+%     colormap(CustomMap);
+%     
+%     xlim([5 6]);
+%     ylim([-30 -1]);
+%     
+%     set(gca,'layer','top');
+%     MyAxe=gca;
+%     MyAxe.YAxis.MinorTick='on';
+%     MyAxe.YAxis.MinorTickValues=-30:5:0;
+%     MyAxe.YAxis.TickValues=-25:20:-5;
+%     
+%     MyAxe.YAxisLocation='left';
+%     MyAxe.XAxis.MinorTick='on';
+%     MyAxe.XAxis.TickValues=5.25:0.5:5.75;
+%     MyAxe.XAxis.MinorTickValues=5:0.25:6;
+%     
+%     set(gca,'fontsize',16);
+%     set(gca,'FontWeight','bold');
+%     if counter~=66
+%         set(gca,'XTickLabel','');
+%     end
+%     MyAxe.TickLength=[0.03 0.03];
+%     set(gca,'YTickLabel','');
+%     box on;
+%     text(5.6,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
+% end
+% text(5.25,200,'$4.5$ $m.s^{-1}$','Fontsize',18);
+% 
+% MargineLeft=0.10+4*0.15+4*0.01;
+% MargineRight=1-(MargineLeft+0.15);
+% SubplotCounter=8;
+% for counter=73:79
+%     SubplotCounter=SubplotCounter-1;
+%     subplot1=subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
+%     set(gca, 'Color', 0.5*[1 1 1]);
+%     hold on;
+% 
+%     Address=strcat('C:\suntans\Result-120',num2str(counter),'.mat');
+%     load(Address,'ZC','X','ConversionConventionalTimeAvrWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%     ConversionConventionalTimeAvrDepthIntWBar=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
+%     
+%     pcolor((50000-X)/1000,ZC,1e4*movmean(ConversionConventionalTimeAvrWBar,2,1)');
+%     shading flat;
+%     caxis([-8 8]);
+%     colormap(CustomMap);
+%     
+%     xlim([5 6]);
+%     ylim([-30 -1]);
+%     
+%     set(gca,'layer','top');
+%     MyAxe=gca;
+%     MyAxe.YAxis.MinorTick='on';
+%     MyAxe.YAxis.MinorTickValues=-30:5:0;
+%     MyAxe.YAxis.TickValues=-25:20:-5;
+%     
+%     MyAxe.YAxisLocation='left';
+%     MyAxe.XAxis.MinorTick='on';
+%     MyAxe.XAxis.TickValues=5.25:0.5:5.75;
+%     MyAxe.XAxis.MinorTickValues=5:0.25:6;
+%     
+%     set(gca,'fontsize',16);
+%     set(gca,'FontWeight','bold');
+%     if counter~=73
+%         set(gca,'XTickLabel','');
+%     end
+%     MyAxe.TickLength=[0.03 0.03];
+%     set(gca,'YTickLabel','');
+%     box on;
+%     text(5.6,-25,num2str(round(ConversionConventionalTimeAvrDepthIntWBar,3)),'Fontsize',14);
+% end
+% text(5.25,200,'$6$ $m.s^{-1}$','Fontsize',18);
+% 
+% MyColorbar=colorbar('Location','eastoutside');
+% MyColorbar.FontSize=18;
+% MyColorbar.FontWeight='bold';
+% MyColorbar.TickLabelInterpreter='latex';
+% POS=MyColorbar.Position;
+% MyColorbar.Position=[POS(1)+0.055 POS(2) POS(3) POS(4)+0.693];
+% MyColorbar.Label.String='$\langle C \rangle$ [$10^{-4}$ $W.m^{-3}$]';
+% MyColorbar.Label.Interpreter='latex';
+% %MyColorbar.Label.Rotation=0;
+% MyColorbarLabelPos=get(MyColorbar,'Position');
+% MyColorbar.Label.Position=[MyColorbarLabelPos(1)+5 MyColorbarLabelPos(2)];
+% 
+% MyLabel=xlabel('X [$km$]','fontsize',18);
+% LabelPos=MyLabel.Position;
+% MyLabel.Position=[LabelPos(1)-2 LabelPos(2)-10];
+% 
+% savefig(FIG,'C:\suntans\plots\PycnoWindSpeedConversion');
+% saveas(FIG,'C:\suntans\plots\PycnoWindSpeedConversion','epsc');
 %%
 %Figure 6- Dimesionless numbers at different pycno
 clear all;
@@ -1538,326 +1539,6 @@ lgd.Position=[LGDPositio(1) LGDPositio(2)+0.685 LGDPositio(3) LGDPositio(4)];
 
 savefig(FIG,'C:\suntans\plots\ConversionSample');
 saveas(FIG,'C:\suntans\plots\ConversionSample','epsc');
-%%
-%Figure 8- Nonlinear wind lag for M2, K1 and M2K1
-clear all;
-clc;
-close all;
-FIG=figure('position',[100 100 650 600]);
-
-MyColor=[ 0.85 0.325 0.098;...%red
-    0.929 0.6941 0.1255;...%yellow
-    0 0.447 0.741;...%blue
-    0.49 0.18 0.56;...%purple
-    0.47 0.67 0.19;...%green
-    0.56 0.81 0.91];%light blue
-
-RowCounter=1;
-ColumnCounter=1;
-K1=nan(6,1);
-for j=88:93
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    K1(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    RowCounter=RowCounter+1;
-end
-
-RowCounter=1;
-ColumnCounter=1;
-M2=nan(6,1);
-for j=81:86
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    M2(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    RowCounter=RowCounter+1;
-end
-
-RowCounter=1;
-ColumnCounter=1;
-K1Wind6=nan(6,12);
-for j=[21:32,259:270,197:208,321:332,383:394,445:456]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    K1Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    ColumnCounter=ColumnCounter+1;
-    if ColumnCounter==13
-        RowCounter=RowCounter+1;
-        ColumnCounter=1;
-    end
-end
-
-RowCounter=1;
-ColumnCounter=1;
-M2Wind6=nan(6,7);
-for j=[7:13,240:246,178:184,302:308,364:370,426:432]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    M2Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    ColumnCounter=ColumnCounter+1;
-    if ColumnCounter==8
-        RowCounter=RowCounter+1;
-        ColumnCounter=1;
-    end
-end
-
-RowCounter=1;
-ColumnCounter=1;
-M2K1Wind6=nan(6,12);
-for j=[159:170,283:294,221:232,345:356,407:418,469:480]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    M2K1Wind6(RowCounter,ColumnCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    ColumnCounter=ColumnCounter+1;
-    if ColumnCounter==13
-        RowCounter=RowCounter+1;
-        ColumnCounter=1;
-    end
-end
-
-RowCounter=1;
-ColumnCounter=1;
-M2K1=nan(6,1);
-for j=[46:51]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    M2K1(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    RowCounter=RowCounter+1;
-end
-
-RowCounter=1;
-ColumnCounter=1;
-Wind6=nan(6,1);
-for j=[483:488]%7.5, 10, 12.5, 15, 17.5, 20
-    Address=strcat('C:\compressed\Result-',num2str(j+12000),'.mat');
-    load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
-    Wind6(RowCounter)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
-    RowCounter=RowCounter+1;
-end
-
-MargineTop=0.07;
-MargineBot=0.13;
-MargineLeft=0.18;
-MargineRight=0.05;
-SubplotSpac=0.01;
-SubplotNumber=3;
-
-SubplotCounter=3;%K1
-subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-hold on;
-MyBar=bar(7.5:2.5:20,[Wind6,K1]);
-MyBar(1).FaceColor=MyColor(4,:);
-MyBar(1).EdgeColor=MyColor(4,:);
-MyBar(2).FaceColor=MyColor(1,:);
-MyBar(2).EdgeColor=MyColor(1,:);
-
-MaxK1WindError=max(K1Wind6,[],2)-K1-Wind6;
-MinK1WindError=min(K1Wind6,[],2)-K1-Wind6;
-errorbar([7.5:2.5:20]+1,(MaxK1WindError+MinK1WindError)/2,...
-    (MaxK1WindError-MinK1WindError)/2,'LineStyle','none','LineWidth',2,'CapSize',10,'Color',MyColor(6,:));
-scatter([7.5:2.5:20]+1,mean([MinK1WindError,MaxK1WindError],2),'filled','MarkerFaceColor',MyColor(6,:),'MarkerEdgeColor','none');
-set(gca,'fontsize',16);
-set(gca,'FontWeight','bold');
-box on;
-
-axis([6.2 21.5 -1 1]);
-MyAxe=gca;
-MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1.8:0.1:1.4;
-MyAxe.YAxis(1).TickValues=-0.6:0.6:0.6;
-
-MyAxe.XAxis.TickValues=7.5:2.5:20;
-set(gca,'XTickLabel','');
-
-MyAxe.YAxis.TickLength=[0.01 0.04];
-MyAxe.XAxis.TickLength=[0.01 0.04];
-text(6.5,-0.6,'$(a)$','fontsize',24,'Color','black','background','none');
-
-text(7,0.8,num2str(Wind6(1),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(7,0.6,num2str(K1(1),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(8.2,MaxK1WindError(1)+0.20,num2str(MaxK1WindError(1),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(8.0,MinK1WindError(1)-0.25,num2str(MinK1WindError(1),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
- 
-text(9.54,0.8,num2str(Wind6(2),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(9.54,0.6,num2str(K1(2),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(10.67,MaxK1WindError(2)+0.20,num2str(MaxK1WindError(2),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(10.47,MinK1WindError(2)-0.25,num2str(MinK1WindError(2),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(11.91,0.8,num2str(Wind6(3),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(11.91,0.6,num2str(K1(3),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(13.17,MaxK1WindError(3)+0.20,num2str(MaxK1WindError(3),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(12.97,MinK1WindError(3)-0.25,num2str(MinK1WindError(3),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(14.44,0.8,num2str(Wind6(4),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(14.44,0.6,num2str(K1(4),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(15.67,MaxK1WindError(4)+0.20,num2str(MaxK1WindError(4),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(15.47,MinK1WindError(4)-0.25,num2str(MinK1WindError(4),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(16.94,0.8,num2str(Wind6(5),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(16.94,0.6,num2str(K1(5),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(18.13,MaxK1WindError(5)+0.20,num2str(MaxK1WindError(5),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(17.93,MinK1WindError(5)-0.25,num2str(MinK1WindError(5),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(19.44,0.8,num2str(Wind6(6),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(19.44,0.6,num2str(K1(6),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(20.63,MaxK1WindError(6)+0.20,num2str(MaxK1WindError(6),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-text(20.43,MinK1WindError(6)-0.25,num2str(MinK1WindError(6),'%1.1f'),'fontsize',12,'Color',MyColor(6,:));
-
-SubplotCounter=2;%M2
-subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-hold on;
-MyBar=bar(7.5:2.5:20,[Wind6,M2]);
-MyBar(1).FaceColor=MyColor(4,:);
-MyBar(1).EdgeColor=MyColor(4,:);
-MyBar(2).FaceColor=MyColor(3,:);
-MyBar(2).EdgeColor=MyColor(3,:);
-
-MaxM2WindError=max(M2Wind6,[],2)-M2-Wind6;
-MinM2WindError=min(M2Wind6,[],2)-M2-Wind6;
-errorbar([7.5:2.5:20]+1,(MaxM2WindError+MinM2WindError)/2,...
-    (MaxM2WindError-MinM2WindError)/2,'LineStyle','none','LineWidth',2,'CapSize',10,'Color',MyColor(6,:));
-%scatter([7.5:2.5:20]+1,mean([MinM2WindError,MaxM2WindError],2),'filled','MarkerFaceColor',MyColor(6,:),'MarkerEdgeColor','none');
-set(gca,'fontsize',16);
-set(gca,'FontWeight','bold');
-box on;
-
-set(gca,'fontsize',16);
-set(gca,'FontWeight','bold');
-axis([6.2 21.5 -0.4 1.4]);
-box on;
-
-MyAxe=gca;
-MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-0.4:0.1:1.5;
-MyAxe.YAxis(1).TickValues=0:0.5:1;
-
-MyAxe.XAxis.TickValues=7.5:2.5:20;
-set(gca,'XTickLabel','');
-
-MyAxe.YAxis.TickLength=[0.01 0.04];
-MyAxe.XAxis.TickLength=[0.01 0.04];
-
-text(6.5,1.1,'$(b)$','fontsize',24,'Color','black','background','none');
-
-text(6.6,0.6,num2str(Wind6(1),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(6.6,0.4,num2str(M2(1),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(8.2,MaxM2WindError(1)+0.12,num2str(MaxM2WindError(1),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(8.2,MinM2WindError(1)-0.12,num2str(MinM2WindError(1),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
- 
-text(9.10,0.6,num2str(Wind6(2),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(9.10,0.4,num2str(M2(2),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(10.67,MaxM2WindError(2)+0.12,num2str(MaxM2WindError(2),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(10.67,MinM2WindError(2)-0.12,num2str(MinM2WindError(2),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(11.6,0.6,num2str(Wind6(3),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(11.6,0.4,num2str(M2(3),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(13.17,MaxM2WindError(3)+0.08,num2str(MaxM2WindError(3),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(13.17,MinM2WindError(3)-0.08,num2str(MinM2WindError(3),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(14.1,0.6,num2str(Wind6(4),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(14.1,0.4,num2str(M2(4),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(15.67,MaxM2WindError(4)+0.12,num2str(MaxM2WindError(4),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(15.67,MinM2WindError(4)-0.12,num2str(MinM2WindError(4),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(16.6,0.6,num2str(Wind6(5),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(16.6,0.4,num2str(M2(5),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(18.13,MaxM2WindError(5)+0.12,num2str(MaxM2WindError(5),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(18.13,MinM2WindError(5)-0.12,num2str(MinM2WindError(5),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(19.1,0.6,num2str(Wind6(6),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(19.1,0.4,num2str(M2(6),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(20.4,MaxM2WindError(6)+0.12,num2str(MaxM2WindError(6),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(20.4,MinM2WindError(6)-0.12,num2str(MinM2WindError(6),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-
-SubplotCounter=1;%M2K1
-subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
-hold on;
-bar(7.5:2.5:20,[M2,K1,M2K1,Wind6,M2K1-M2-K1]);
-MaxM2K1WindError=max(M2K1Wind6,[],2)-M2K1-Wind6;
-MinM2K1WindError=min(M2K1Wind6,[],2)-M2K1-Wind6;
-errorbar([7.5:2.5:20]+1.2,(MaxM2K1WindError+MinM2K1WindError)/2,...
-    (MaxM2K1WindError-MinM2K1WindError)/2,'LineStyle','none','LineWidth',2,'CapSize',10,'Color',MyColor(6,:));
-scatter([7.5:2.5:20]+1.2,mean([MinM2K1WindError,MaxM2K1WindError],2),'filled','MarkerFaceColor',MyColor(6,:),'MarkerEdgeColor','none');
-set(gca,'fontsize',16);
-set(gca,'FontWeight','bold');
-box on;
-
-axis([6.2 21.5 -1.8 1.6]);
-MyAxe=gca;
-MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1.8:0.1:1.5;
-MyAxe.YAxis(1).TickValues=-1:1:1;
-
-MyAxe.XAxis.TickValues=7.5:2.5:20;
-
-MyAxe.YAxis.TickLength=[0.01 0.04];
-MyAxe.XAxis.TickLength=[0.01 0.04];
-
-MyLabel=ylabel('$\widehat{\overline{\langle C \rangle}}$[$W.m^{-1}$]','fontsize',18);
-LabelPos=MyLabel.Position;
-MyLabel.Position=[LabelPos(1)-0.8 LabelPos(2)+3.5];
-
-MyLabel=xlabel('Pycnocline Depth [$m$]','fontsize',18);
-LabelPos=MyLabel.Position;
-MyLabel.Position=[LabelPos(1) LabelPos(2)-0.1];
-
-text(6.5,1.15,'$(c)$','fontsize',24,'Color','black','background','none');
-
-text(6.5,-0.2,num2str(M2(1),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(6.5,-0.5,num2str(K1(1),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(6.5,-0.8,num2str(M2K1(1),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(6.5,-1.1,num2str(Wind6(1),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(6.3,-1.4,num2str(M2K1(1)-M2(1)-K1(1),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(8,MaxM2K1WindError(1)+0.20,num2str(MaxM2K1WindError(1),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(8,MinM2K1WindError(1)-0.25,num2str(MinM2K1WindError(1),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(9.3,-0.2,num2str(M2(2),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(9.3,-0.5,num2str(K1(2),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(9.3,-0.8,num2str(M2K1(2),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(9.3,-1.1,num2str(Wind6(2),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(9.1,-1.4,num2str(M2K1(2)-M2(2)-K1(2),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(10.5,MaxM2K1WindError(2)+0.20,num2str(MaxM2K1WindError(2),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(10.5,MinM2K1WindError(2)-0.25,num2str(MinM2K1WindError(2),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(11.9,-0.2,num2str(M2(3),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(11.9,-0.5,num2str(K1(3),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(11.9,-0.8,num2str(M2K1(3),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(11.9,-1.1,num2str(Wind6(3),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(11.7,-1.4,num2str(M2K1(3)-M2(3)-K1(3),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(13.1,MaxM2K1WindError(3)+0.20,num2str(MaxM2K1WindError(3),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(13.1,MinM2K1WindError(3)-0.25,num2str(MinM2K1WindError(3),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(14.4,-0.2,num2str(M2(4),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(14.4,-0.5,num2str(K1(4),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(14.4,-0.8,num2str(M2K1(4),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(14.4,-1.1,num2str(Wind6(4),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(14.2,-1.4,num2str(M2K1(4)-M2(4)-K1(4),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(15.6,MaxM2K1WindError(4)+0.20,num2str(MaxM2K1WindError(4),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(15.6,MinM2K1WindError(4)-0.25,num2str(MinM2K1WindError(4),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(16.7,-0.2,num2str(M2(5),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(16.7,-0.5,num2str(K1(5),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(16.7,-0.8,num2str(M2K1(5),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(16.7,-1.1,num2str(Wind6(5),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(16.7,-1.4,num2str(M2K1(5)-M2(5)-K1(5),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(18,MaxM2K1WindError(5)+0.20,num2str(MaxM2K1WindError(5),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(18,MinM2K1WindError(5)-0.25,num2str(MinM2K1WindError(5),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-text(19,-0.2,num2str(M2(6),'%1.2f'),'fontsize',12,'Color',MyColor(3,:));
-text(19,-0.5,num2str(K1(6),'%1.2f'),'fontsize',12,'Color',MyColor(1,:));
-text(19,-0.8,num2str(M2K1(6),'%1.2f'),'fontsize',12,'Color',MyColor(2,:));
-text(19,-1.1,num2str(Wind6(6),'%1.2f'),'fontsize',12,'Color',MyColor(4,:));
-text(19,-1.4,num2str(M2K1(6)-M2(6)-K1(6),'%1.2f'),'fontsize',12,'Color',MyColor(5,:));
-text(20.5,MaxM2K1WindError(6)+0.2,num2str(MaxM2K1WindError(6),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-text(20.3,MinM2K1WindError(6)-0.25,num2str(MinM2K1WindError(6),'%1.2f'),'fontsize',12,'Color',MyColor(6,:));
-
-lgd=legend('$M_2$','$K_1$','$M_2K_1$','Wind','$NTT$','$NTW$','Orientation','horizontal','Location','northoutside');
-LGDPositio=lgd.Position;
-lgd.Position=[LGDPositio(1)+0.03 LGDPositio(2)+0.6 LGDPositio(3) LGDPositio(4)];
-lgd.FontSize=12;
-
-savefig(FIG,'C:\suntans\plots\M2K1WindNonlinear');
-saveas(FIG,'C:\suntans\plots\M2K1WindNonlinear','epsc');
 %%
 %Figure 8-Updated- Nonlinear wind lag for M2, K1 and M2K1
 clear all;
@@ -2421,7 +2102,6 @@ UBar=U;
 UBar(isnan(UBar))=0;
 UBar=-repmat(trapz(-ZC,UBar,2),1,size(ZC,1),1)./repmat(Depth,1,size(ZC,1),size(Time,1));
 Uprime=U-UBar;
-% RhoPrimeConventional=RhoPrimeConventional-repmat(nanmean(RhoPrimeConventional,3),1,1,size(Time,1)); 
 
 MargineTop=0.07;
 MargineBot=0.15;
@@ -2654,7 +2334,7 @@ MyLabel=xlabel('$\rho''$ $[kg.m^{-3}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
 
-text(-0.15,-1.7,'$(f)$','fontsize',24,'Color','black','BackgroundColor','none');
+text(-0.18,-2,'$(f)$','fontsize',24,'Color','black','BackgroundColor','none');
 
 MargineLeft=0.58;
 MargineRight=0.26;
@@ -2691,7 +2371,7 @@ set(gca,'FontWeight','bold');
 MyLabel=xlabel('$u$ $[cm$ $s^{-1}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
-text(0.35,-1.7,'$(g)$','fontsize',24,'Color','black','BackgroundColor','white');
+text(-0.9,-2,'$(g)$','fontsize',24,'Color','black','BackgroundColor','none');
 
 MargineLeft=0.75;
 MargineRight=0.09;
@@ -2732,13 +2412,13 @@ MyYLabel.Position=[LabelPos(1)+0.03 LabelPos(2)];
 MyLabel=xlabel('$w$ $[mm$ $s^{-1}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
-text(0.05,-1.7,'$(h)$','fontsize',24,'Color','black');
+text(-0.18,-2,'$(h)$','fontsize',24,'Color','black');
 
 savefig(FIG,'C:\suntans\plots\WindStructureDetails');
 saveas(FIG,'C:\suntans\plots\WindStructureDetails','epsc');
 %%
 %Figure 13- Profiles and TimeSeries in the presence of wind K1
-clear all;
+% clear all;
 close all;
 FIG=figure('position',[100 300 1000 600]);
 
@@ -2746,51 +2426,51 @@ TimeRange=3156+287;
 TimeRange=86+1;
 TimeIndex=2518;
 
-Data=cell(4,1);
-CaseNumber=4;
-Address=strcat('C:\suntans\Result-',num2str(12090),'.mat');
-Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','Density','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar','ConversionConventionalTimeAvrDepthIntWBar');
-Data{CaseNumber}.Density=Data{CaseNumber}.Density(:,:,TimeRange-86:end-86);
-Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange-86:end-86);
-Data{CaseNumber}.ConversionConventionalWBar=Data{CaseNumber}.ConversionConventionalWBar(:,:,TimeRange-86:end-86);
-Data{CaseNumber}.Eta=Data{CaseNumber}.Eta(:,TimeRange-86:end-86);
-Data{CaseNumber}.RhoPrimeConventional=Data{CaseNumber}.RhoPrimeConventional(:,:,TimeRange-86:end-86);
-Data{CaseNumber}.U=Data{CaseNumber}.U(:,:,TimeRange-86:end-86);
-
-load(Address,'X','ZC','Time');
-Time=Time(TimeRange:end);
-Depth=repmat(ZC,1,size(X,1))'+squeeze(Data{4}.U(:,:,1))*0;
-Depth=nanmin(Depth,[],2);
-
-CaseNumber=1;
-for counter=[12198 12202 12206]
-    Address=strcat('C:\suntans\Result-',num2str(counter),'.mat');
-    Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','Density','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar','ConversionConventionalTimeAvrDepthIntWBar');
-       
-    Data{CaseNumber}.ConversionConventionalWBar=Data{CaseNumber}.ConversionConventionalWBar(:,:,TimeRange:end);
-    Data{CaseNumber}.Eta=Data{CaseNumber}.Eta(:,TimeRange:end);
-    Data{CaseNumber}.RhoPrimeConventional=Data{CaseNumber}.RhoPrimeConventional(:,:,TimeRange:end);
-    Data{CaseNumber}.U=Data{CaseNumber}.U(:,:,TimeRange:end);
-    Data{CaseNumber}.Density=Data{CaseNumber}.Density(:,:,TimeRange:end);
-    Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange:end);
-    CaseNumber=CaseNumber+1;
-end
-
-
-for counter=1:4
-    Data{counter}.UBar=Data{counter}.U;
-    Data{counter}.UBar(isnan(Data{counter}.UBar))=0;
-    Data{counter}.UBar=-repmat(trapz(-ZC,Data{counter}.UBar,2),1,size(ZC,1),1)./repmat(Depth,1,size(ZC,1),size(Time,1));
-    Data{counter}.Uprime=Data{counter}.U-Data{counter}.UBar;
-end
-
-
-for counter=1:4
-    Data{counter}.UBar=Data{counter}.U;
-    Data{counter}.UBar(isnan(Data{counter}.UBar))=0;
-    Data{counter}.UBar=-repmat(trapz(-ZC,Data{counter}.UBar,2),1,size(ZC,1),1)./repmat(Depth,1,size(ZC,1),size(Time,1));
-    Data{counter}.Uprime=Data{counter}.U-Data{counter}.UBar;
-end
+% Data=cell(4,1);
+% CaseNumber=4;
+% Address=strcat('C:\suntans\Result-',num2str(12090),'.mat');
+% Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','Density','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar','ConversionConventionalTimeAvrDepthIntWBar');
+% Data{CaseNumber}.Density=Data{CaseNumber}.Density(:,:,TimeRange-86:end-86);
+% Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange-86:end-86);
+% Data{CaseNumber}.ConversionConventionalWBar=Data{CaseNumber}.ConversionConventionalWBar(:,:,TimeRange-86:end-86);
+% Data{CaseNumber}.Eta=Data{CaseNumber}.Eta(:,TimeRange-86:end-86);
+% Data{CaseNumber}.RhoPrimeConventional=Data{CaseNumber}.RhoPrimeConventional(:,:,TimeRange-86:end-86);
+% Data{CaseNumber}.U=Data{CaseNumber}.U(:,:,TimeRange-86:end-86);
+% 
+% load(Address,'X','ZC','Time');
+% Time=Time(TimeRange:end);
+% Depth=repmat(ZC,1,size(X,1))'+squeeze(Data{4}.U(:,:,1))*0;
+% Depth=nanmin(Depth,[],2);
+% 
+% CaseNumber=1;
+% for counter=[12198 12202 12206]
+%     Address=strcat('C:\suntans\Result-',num2str(counter),'.mat');
+%     Data{CaseNumber}=load(Address,'Eta','RhoPrimeConventional','U','Density','WBar','ConversionConventionalTimeAvrWBar','ConversionConventionalWBar','ConversionConventionalTimeAvrDepthIntWBar');
+%        
+%     Data{CaseNumber}.ConversionConventionalWBar=Data{CaseNumber}.ConversionConventionalWBar(:,:,TimeRange:end);
+%     Data{CaseNumber}.Eta=Data{CaseNumber}.Eta(:,TimeRange:end);
+%     Data{CaseNumber}.RhoPrimeConventional=Data{CaseNumber}.RhoPrimeConventional(:,:,TimeRange:end);
+%     Data{CaseNumber}.U=Data{CaseNumber}.U(:,:,TimeRange:end);
+%     Data{CaseNumber}.Density=Data{CaseNumber}.Density(:,:,TimeRange:end);
+%     Data{CaseNumber}.WBar=Data{CaseNumber}.WBar(:,:,TimeRange:end);
+%     CaseNumber=CaseNumber+1;
+% end
+% 
+% 
+% for counter=1:4
+%     Data{counter}.UBar=Data{counter}.U;
+%     Data{counter}.UBar(isnan(Data{counter}.UBar))=0;
+%     Data{counter}.UBar=-repmat(trapz(-ZC,Data{counter}.UBar,2),1,size(ZC,1),1)./repmat(Depth,1,size(ZC,1),size(Time,1));
+%     Data{counter}.Uprime=Data{counter}.U-Data{counter}.UBar;
+% end
+% 
+% 
+% for counter=1:4
+%     Data{counter}.UBar=Data{counter}.U;
+%     Data{counter}.UBar(isnan(Data{counter}.UBar))=0;
+%     Data{counter}.UBar=-repmat(trapz(-ZC,Data{counter}.UBar,2),1,size(ZC,1),1)./repmat(Depth,1,size(ZC,1),size(Time,1));
+%     Data{counter}.Uprime=Data{counter}.U-Data{counter}.UBar;
+% end
 
 [~,XIndex]=max(Data{4}.ConversionConventionalTimeAvrDepthIntWBar);
 [~,ZIndex]=max(squeeze(Data{4}.ConversionConventionalTimeAvrWBar(XIndex,:)));
@@ -3419,7 +3099,7 @@ MyAxe.XAxis(1).MinorTickValues=0:0.05:1;
 MyAxe.YAxis.TickLength=[0.02 0.04];
 MyAxe.XAxis.TickLength=[0.02 0.04];
 
-lgd=legend(PlotLgd,'$20.0$ $H$','$23.9$ $H$','$12.4$ $H$','orientation','horizontal','Location','northoutside');
+lgd=legend(PlotLgd,'$20.0$ $Hr$','$23.9$ $Hr$','$12.4$ $Hr$','orientation','horizontal','Location','northoutside');
 LGDPositio=lgd.Position;
 lgd.Position=[LGDPositio(1) LGDPositio(2)+0.08 LGDPositio(3) LGDPositio(4)];
 lgd.FontSize=12;
@@ -3735,16 +3415,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 282 -0.3 0.6]);
+axis([-48 282 0.4 1.2]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-0.4:0.1:1;
-MyAxe.YAxis(1).TickValues=-0:0.4:1;
+MyAxe.YAxis(1).MinorTickValues=0.4:0.1:1.2;
+MyAxe.YAxis(1).TickValues=0.6:0.4:1;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3754,13 +3435,12 @@ MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
 set(gca,'XTickLabel','');
-line([-48,282],[0 0],'LineStyle',':','color','black');
-lgd=legend('$3$ $m.s^{-1}$','$6$ $m.s^{-1}$','Orientation','horizontal','Location','northoutside');
+lgd=legend('$3$ $m.s^{-1}$','$6$ $m.s^{-1}$','No wind','Orientation','horizontal','Location','northoutside');
 LGDPositio=lgd.Position;
-lgd.Position=[LGDPositio(1)+0.32 LGDPositio(2)+0.09 LGDPositio(3) LGDPositio(4)];
+lgd.Position=[LGDPositio(1)+0.35 LGDPositio(2)+0.09 LGDPositio(3) LGDPositio(4)];
 lgd.FontSize=14;
 box on;
-text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -3782,16 +3462,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 282 -0.6 0.5]);
+axis([-48 282 0.8 1.9]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1.2:0.1:1;
-MyAxe.YAxis(1).TickValues=-0.4:0.4:0.4;
+MyAxe.YAxis(1).MinorTickValues=0.8:0.1:2;
+MyAxe.YAxis(1).TickValues=1.2:0.6:2;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3801,9 +3482,8 @@ set(gca,'XTickLabel','');
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,282],[0 0],'LineStyle',':','color','black');
 box on;
-text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -3825,16 +3505,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 282 -0.3 0.6]);
+axis([-48 282 1.4 2.1]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1.2:0.1:1;
-MyAxe.YAxis(1).TickValues=-0.4:0.4:0.4;
+MyAxe.YAxis(1).MinorTickValues=1.4:0.1:2.1;
+MyAxe.YAxis(1).TickValues=1.6:0.4:2;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3843,9 +3524,8 @@ MyAxe.XAxis.TickValues=-48+30:90:282;
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,282],[0 0],'LineStyle',':','color','black');
 box on;
-text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 %Middle
 MargineLeft=0.42;
@@ -3872,16 +3552,17 @@ for j=[0,-1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 282 -0.2 0.5]);
+axis([-48 282 0.1 0.8]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1:0.1:1.2;
-MyAxe.YAxis(1).TickValues=-0.4:0.4:0.4;
+MyAxe.YAxis(1).MinorTickValues=0.1:0.1:0.8;
+MyAxe.YAxis(1).TickValues=0.3:0.3:0.8;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3891,9 +3572,8 @@ set(gca,'XTickLabel','');
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,282],[0 0],'LineStyle',':','color','black');
 box on;
-text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -3915,16 +3595,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 282 -0.3 0.7]);
+axis([-48 282 0.1 1.1]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1.4:0.1:1.4;
-MyAxe.YAxis(1).TickValues=-0.4:0.4:0.4;
+MyAxe.YAxis(1).MinorTickValues=-0.2:0.1:1.1;
+MyAxe.YAxis(1).TickValues=-0.5:0.4:0.9;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3934,9 +3615,8 @@ set(gca,'XTickLabel','');
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,282],[0 0],'LineStyle',':','color','black');
 box on;
-text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.1,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -3958,16 +3638,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot(-48:30:282,CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot(-48:30:282,CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,282],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-49 282 -0.3 0.8]);
+axis([-49 282 0.1 1]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
-MyAxe.YAxis(1).MinorTickValues=-1:0.1:1.2;
-MyAxe.YAxis(1).TickValues=-0:0.5:0.5;
+MyAxe.YAxis(1).MinorTickValues=0.1:0.1:1;
+MyAxe.YAxis(1).TickValues=0.4:0.4:0.8;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:282;
@@ -3976,15 +3657,14 @@ MyAxe.XAxis.TickValues=-48+30:90:282;
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,282],[0 0],'LineStyle',':','color','black');
 box on;
-text(76,0.25,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(76,0.25,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
-MyLabel=ylabel('$\widehat{\langle\overline{C} \rangle}$ Difference [$W.m^{-1}$]','fontsize',18);
+MyLabel=ylabel('$\widehat{\langle\overline{C} \rangle}$ [$W.m^{-1}$]','fontsize',18);
 LabelPos=MyLabel.Position;
-MyLabel.Position=[LabelPos(1)-430 LabelPos(2)+1.2];
+MyLabel.Position=[LabelPos(1)-430 LabelPos(2)+1];
 
-MyLabel=xlabel('$\phi_{Wind, Tide}$ [$^\circ$]','fontsize',18);
+MyLabel=xlabel('$\phi_{Wind}$ [$^\circ$]','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.15];
 
@@ -4013,19 +3693,18 @@ for j=[0,-1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot([-48:30:102,126],CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot([-48:30:102,126],CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,126],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 126 -0.05 0.25]);
+axis([-48 126 0.6 0.9]);
 
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.MinorTickValues=-0.1:0.05:0.5;
-MyAxe.YAxis.TickValues=0:0.2:0.4;
-
-line([-48,250],[0 0],'LineStyle',':','color','black');
+MyAxe.YAxis.MinorTickValues=0.6:0.1:0.9;
+MyAxe.YAxis.TickValues=0.7:0.1:0.8;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:126;
@@ -4036,7 +3715,7 @@ MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
 box on;
-text(20,0.05,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(20,0.05,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=2;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -4058,16 +3737,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot([-48:30:102,126],CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot([-48:30:102,126],CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,126],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 126 -0.02 0.18]);
+axis([-48 126 1.2 1.5]);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.MinorTickValues=-0.02:0.01:0.18;
-MyAxe.YAxis.TickValues=0:0.1:0.16;
+MyAxe.YAxis.MinorTickValues=1.2:0.1:1.5;
+MyAxe.YAxis.TickValues=1.3:0.1:1.4;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:126;
@@ -4077,9 +3757,8 @@ set(gca,'XTickLabel','');
 MyAxe.YAxis.TickLength=[0.03 0.04];
 MyAxe.XAxis.TickLength=[0.03 0.04];
 
-line([-48,126],[0 0],'LineStyle',':','color','black');
 box on;
-text(20,0.02,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(20,0.02,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
 SubplotCounter=1;
 subplot('Position',[MargineLeft,MargineBot+(SubplotCounter-1)*SubplotSpac+(SubplotCounter-1)*(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber,1-MargineLeft-MargineRight,(1-(MargineBot+MargineTop+(SubplotNumber-1)*SubplotSpac))/SubplotNumber]);
@@ -4101,16 +3780,17 @@ for j=[0,1]
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot([-48:30:102,126],CaseValue-Baseline,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
+    plot([-48:30:102,126],CaseValue,'-s','color',PlotColor,'LineWidth',2,'MarkerSize',6);
 end
+line([-48,126],[Baseline,Baseline],'LineStyle','-','color','black');
 
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
-axis([-48 126 -0.04 0.30]);
+axis([-48 126 1.3 1.65]);
 MyAxe=gca;
 MyAxe.YAxis.MinorTick='on';
-MyAxe.YAxis.MinorTickValues=0:0.025:0.3;
-MyAxe.YAxis.TickValues=0:0.1:0.2;
+MyAxe.YAxis.MinorTickValues=1.3:0.1:1.6;
+MyAxe.YAxis.TickValues=1.4:0.1:1.5;
 
 MyAxe.XAxis.MinorTick='on';
 MyAxe.XAxis.MinorTickValues=-48:30:126;
@@ -4121,27 +3801,27 @@ MyAxe.XAxis.TickLength=[0.03 0.04];
 
 line([-48,126],[0 0],'LineStyle',':','color','black');
 box on;
-text(20,0.03,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
+% text(20,0.03,num2str(Baseline,'%2.2g'),'fontsize',18,'Color','black','background','none');
 
-text(130,0.85,'$7.50$ $m$','fontsize',18,'Color','black','background','none');
-text(130,0.50,'$12.5$ $m$','fontsize',18,'Color','black','background','none');
-text(130,0.11,'$17.5$ $m$','fontsize',18,'Color','black','background','none');
+text(130,2.23,'$7.50$ $m$','fontsize',18,'Color','black','background','none');
+text(130,1.86,'$12.5$ $m$','fontsize',18,'Color','black','background','none');
+text(130,1.47,'$17.5$ $m$','fontsize',18,'Color','black','background','none');
 
-text(-546,1.06,'$M_2K_1$','fontsize',18,'Color','black','background','none');
-text(-233,1.06,'$K_1$','fontsize',18,'Color','black','background','none');
-text(26,1.06,'$M_2$','fontsize',18,'Color','black','background','none');
+text(-546,2.44,'$M_2K_1$','fontsize',18,'Color','black','background','none');
+text(-233,2.44,'$K_1$','fontsize',18,'Color','black','background','none');
+text(26,2.44,'$M_2$','fontsize',18,'Color','black','background','none');
 
-text(-525,1,'$(a)$','fontsize',18,'Color','black','background','none');
-text(-525,0.63,'$(b)$','fontsize',18,'Color','black','background','none');
-text(-525,0.26,'$(c)$','fontsize',18,'Color','black','background','none');
+text(-525,2.36,'$(a)$','fontsize',18,'Color','black','background','none');
+text(-525,1.98,'$(b)$','fontsize',18,'Color','black','background','none');
+text(-525,1.60,'$(c)$','fontsize',18,'Color','black','background','none');
 
-text(-243,1,'$(d)$','fontsize',18,'Color','black','background','none');
-text(-243,0.63,'$(e)$','fontsize',18,'Color','black','background','none');
-text(-243,0.26,'$(f)$','fontsize',18,'Color','black','background','none');
+text(-243,2.36,'$(d)$','fontsize',18,'Color','black','background','none');
+text(-243,1.98,'$(e)$','fontsize',18,'Color','black','background','none');
+text(-243,1.60,'$(f)$','fontsize',18,'Color','black','background','none');
 
-text(-30,1,'$(g)$','fontsize',18,'Color','black','background','none');
-text(-30,0.63,'$(h)$','fontsize',18,'Color','black','background','none');
-text(-30,0.26,'$(i)$','fontsize',18,'Color','black','background','none');
+text(-30,2.36,'$(g)$','fontsize',18,'Color','black','background','none');
+text(-30,1.98,'$(h)$','fontsize',18,'Color','black','background','none');
+text(-30,1.60,'$(i)$','fontsize',18,'Color','black','background','none');
 
 
 savefig(FIG,'C:\suntans\plots\ConversionWindLag');
