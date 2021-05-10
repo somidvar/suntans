@@ -1822,28 +1822,28 @@ for j=[0,94,101]
     CaseNumber=[];
     CaseValue=[];
     for i=0+j:1:6+j
-        Address=strcat('C:\suntans\Result-',num2str(i+12000),'.mat');
+        Address=strcat('C:\suntans\compressed\Result-',num2str(i+12000),'.mat');
         load(Address,'X','ConversionConventionalTimeAvrDepthIntWBar');
         CaseValue(end+1)=trapz(X,ConversionConventionalTimeAvrDepthIntWBar);
         hold on;
         CaseNumber(end+1)=i;
     end
-    plot([-54:30:96,124],CaseValue,MyStyle{StyleCounter},'LineWidth',1.5,'MarkerSize',8,'color',MyColor(2,:));
+    plot([36:30:186,214],CaseValue,MyStyle{StyleCounter},'LineWidth',1.5,'MarkerSize',8,'color',MyColor(2,:));
     StyleCounter=StyleCounter+1;
 end
 set(gca,'fontsize',16);
 set(gca,'FontWeight','bold');
 lgd=legend('7.5m','15m','20m','Orientation','horizontal','Location','northoutside');
 LGDPositio=lgd.Position;
-lgd.Position=[LGDPositio(1) LGDPositio(2)+0.08 LGDPositio(3) LGDPositio(4)];
+lgd.Position=[LGDPositio(1) LGDPositio(2)+0.1 LGDPositio(3) LGDPositio(4)];
 ylim([0.5 1.6]);
 MyAxe=gca;
 MyAxe.YAxis(1).MinorTick='on';
 MyAxe.YAxis(1).MinorTickValues=0.5:0.1:1.5;
 MyAxe.YAxis(1).TickValues=1:0.5:1.5;
-xlim([-65 135]);
-set(gca,'XTick',[-54:30:96,124]);
-xlabel('$\phi_{M_2,K_1}$ [$^\circ$]','fontsize',18);
+xlim([25 225]);
+set(gca,'XTick',[36:30:186,214]);
+xlabel('$\phi_{K_1}$ [$^\circ$]','fontsize',18);
 box on;
 lgd.FontSize=14;
 MyLabel=ylabel('$\widehat{\langle\overline{C} \rangle}$ [$W.m^{-1}$]','fontsize',18);
@@ -2065,7 +2065,7 @@ savefig(FIG,'C:\suntans\plots\WindTwoLayered');
 saveas(FIG,'C:\suntans\plots\WindTwoLayered','epsc');
 %%
 %Figure 12- Profiles and TimeSeries in the presence of wind
-clear all;
+% clear all;
 close all;
 FIG=figure('position',[100 300 1000 600]);
 
@@ -2084,8 +2084,8 @@ ZIndex=17;
 TimeRange=3156;
 TimeIndex=540;
 
-Address=strcat('C:\suntans\Result-',num2str(12483),'.mat');
-load(Address,'WBar','Eta','RhoPrimeConventional','Density','U','W','ConversionConventionalWBar');
+% Address=strcat('C:\suntans\Result-',num2str(12483),'.mat');
+% load(Address,'WBar','Eta','RhoPrimeConventional','Density','U','W','ConversionConventionalWBar');
 W=W(:,:,TimeRange:end);
 WBar=WBar(:,:,TimeRange:end);
 ConversionConventionalWBar=ConversionConventionalWBar(:,:,TimeRange:end);
@@ -2941,7 +2941,7 @@ MyLabel=xlabel('$\rho''$ $[kg.m^{-3}]$','fontsize',18);
 LabelPos=MyLabel.Position;
 MyLabel.Position=[LabelPos(1) LabelPos(2)-0.5];
 
-lgd=legend('$12^\circ$','$-48^\circ$','$-18^\circ$','NW','Orientation','horizontal','Location','northoutside');
+lgd=legend('$-18^\circ$','$42^\circ$','$102^\circ$','NW','Orientation','horizontal','Location','northoutside');
 LGDPositio=lgd.Position;
 lgd.Position=[LGDPositio(1)+0.08 LGDPositio(2)+0.055 LGDPositio(3) LGDPositio(4)];
 text(-0.2,-11,'$(e)$','fontsize',24,'Color','black','BackgroundColor','none');

@@ -3,7 +3,7 @@
 #  Input file for SUNTANS.
 #
 ########################################################################
-Nkmax			    149			# Number of cells in the vertical
+Nkmax			    75			# Number of cells in the vertical
 stairstep			0			# 1 if stair-stepping, 0 if partial-stepping
 rstretch		    2			# Stretching factor for vertical grid (1<=rstretch<1.1)1.012
 CorrectVoronoi		0			# Whether or not to correct Voronoi points
@@ -24,7 +24,7 @@ gamma 				1.0 		# Coefficient of expansivity of temperature.
 kappa_T             0       	# Vertical thermal diffusivity
 kappa_TH            0       	# Horizontal thermal diffusivity
 nu 					1e-5  		# Laminar viscosity of water (m^2 s^-1)
-nu_H 				0.01			# Horizontal laminar viscosity of water (m^2 s^-1)
+nu_H 				1			# Horizontal laminar viscosity of water (m^2 s^-1)
 z0T	                0.0 		# Top roughness
 z0B	                0.0			# Bottom roughness
 CdT	                0.0 		# Drag coefficient at surface
@@ -60,12 +60,12 @@ sponge_distance	    3200 		# Decay distance scale for sponge layer
 sponge_decay	    7200		# Decay time scale for sponge layer
 readSalinity		0			# Whether or not to read initial salinity profile from file InitSalinityFile
 readTemperature		0			# Whether or not to read initial temperature profile from file InitTemperatureFile
-M2TideAmplitude		0.056# Semi-Diurnal Tidal amplitude at sea-side for U Barotropic 0.006 is 0.1454
-K1TideAmplitude		0.022# Diurnal Tidal amplitude at sea-side for U Barotropic 0.004 is 0.1027
+M2TideAmplitude		0.028# Semi-Diurnal Tidal amplitude at sea-side for U Barotropic 0.006 is 0.1454
+K1TideAmplitude		0.011# Diurnal Tidal amplitude at sea-side for U Barotropic 0.004 is 0.1027
 TidePhaseDifference		36# Initial phase of K1 tide by ----Sorush Omidvar----
 WindPhaseDifference	102# The lag time between wind and tide in sec used by Omidvar and Woodson
 PycnoclineDepth		15# Depth of the halocline Used by Omidvar and Woodson salinity=ASal*tanh(BSal*(-Z-CSal)+DSal
-tau_T				5.2704E-05# Wind shear stress
+tau_T				1.3176E-05# Wind shear stress
 ########################################################################
 #
 #  Grid Files
